@@ -208,7 +208,7 @@
     return r;
   });
 
-  const nomCompte = (n: string | null) => (n ? `${n} ${intitules.get(n) ?? ''}` : '');
+  const nomCompte = (n: string | null) => (n ? `${intitules.get(n) ?? ''} (${n})` : '');
 
   const ecrituresTriees = $derived(
     d.ecritures.map((e, i) => ({ e, i })).sort((a, b) => (a.e.date < b.e.date ? -1 : a.e.date > b.e.date ? 1 : a.i - b.i)).map((x) => x.e),
@@ -237,11 +237,11 @@
       <table>
         <thead>
           <tr>
-            <th style="width:112px">Date</th>
-            <th style="width:64px">Pièce</th>
+            <th style="width:104px">Date</th>
+            <th style="width:56px">Pièce</th>
             <th>Libellé</th>
-            <th style="width:128px">Compte au débit</th>
-            <th style="width:128px">Compte au crédit</th>
+            <th style="width:210px">Compte au débit</th>
+            <th style="width:210px">Compte au crédit</th>
             <th style="width:118px" class="montant">Montant CHF</th>
             <th style="width:30px"><span class="sr-only">Retirer</span></th>
           </tr>
@@ -314,8 +314,8 @@
               <th style="width:90px">Date</th>
               <th style="width:52px">Pièce</th>
               <th>Libellé</th>
-              <th style="width:130px">Débit</th>
-              <th style="width:130px">Crédit</th>
+              <th style="width:170px">Débit</th>
+              <th style="width:170px">Crédit</th>
               <th class="montant" style="width:96px">Montant</th>
               {#if retour}<th style="width:86px">Correction</th>{/if}
               <th style={`width:${modifAutorisee ? 140 : 84}px`}><span class="sr-only">Actions</span></th>
@@ -336,8 +336,8 @@
                   {:else}
                     <td></td><td></td><td></td>
                   {/if}
-                  <td class="num">{#if l.debit}{l.debit}<span class="int">{intitules.get(l.debit)}</span>{/if}</td>
-                  <td class="num">{#if l.credit}{l.credit}<span class="int">{intitules.get(l.credit)}</span>{/if}</td>
+                  <td>{#if l.debit}{intitules.get(l.debit)}<span class="int num">{l.debit}</span>{/if}</td>
+                  <td>{#if l.credit}{intitules.get(l.credit)}<span class="int num">{l.credit}</span>{/if}</td>
                   <td class="montant">{m(l.montant)}</td>
                   {#if retour}
                     <td>
@@ -487,7 +487,7 @@
   .enonce li.bouclement { display: grid; grid-template-columns: 26px 1fr; gap: 2px 4px; padding: 9px 14px; font-style: italic; }
   .etat { grid-column: 2; font-size: 12px; color: var(--c-texte-2); }
 
-  @media (max-width: 1280px) {
+  @media (max-width: 1440px) {
     .mise-en-page { grid-template-columns: 1fr; }
     .enonce ol { max-height: none; }
   }

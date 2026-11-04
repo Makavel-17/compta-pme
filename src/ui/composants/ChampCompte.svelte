@@ -1,6 +1,7 @@
 <!--
-  Champ compte : liste déroulante complète et neutre des comptes de l'exercice.
-  Clic ou flèche bas : ouvre la liste. Frappe d'un numéro ou d'un mot : filtre.
+  Champ compte : l'élève choisit le compte par son NOM (en cours, on apprend les noms, peu les numéros).
+  Clic ou flèche bas : ouvre la liste complète et neutre des comptes de l'exercice.
+  Frappe d'une partie du nom : filtre (le numéro reste accepté, sans être mis en avant).
   Flèches + Entrée, souris ou doigt : choix. Aucune contrepartie n'est suggérée.
 -->
 <script lang="ts">
@@ -33,24 +34,43 @@
     aligne?: 'gauche' | 'droite';
   } = $props();
 
-  let texte = $state(valeur ?? '');
+  const nomDe = (n: string | null) => comptes.find((c) => c.numero === n)?.intitule ?? '';
+  /** Compte désigné exactement par le texte : nom complet (sans tenir compte des accents ni des majuscules) ou numéro. */
+  const exact = (t: string) => {
+    const x = normaliser(t.trim());
+    return x ? comptes.find((c) => c.numero === x || normaliser(c.intitule) === x) : undefined;
+  };
+
+  // svelte-ignore state_referenced_locally
+  let texte = $state(nomDe(valeur));
   let ouvert = $state(false);
   let actif = $state(0);
+  let focus = $state(false);
   let liste: HTMLDivElement | undefined = $state();
 
-  // Synchronisation quand la valeur est changée de l'extérieur (remise à zéro de la ligne).
+  // Synchronisation quand la valeur est changée de l'extérieur (modification, remise à zéro de la ligne).
   $effect(() => {
     const v = valeur;
-    const t = untrack(() => texte).trim();
-    if (v !== null && v !== t) texte = v;
-    if (v === null && comptes.some((c) => c.numero === t)) texte = '';
+    if (untrack(() => focus)) return;
+    const t = untrack(() => texte);
+    if (v !== null) {
+      const n = nomDe(v);
+      if (n && t !== n) texte = n;
+    } else if (exact(t)) texte = '';
   });
 
   const resultats = $derived.by(() => {
     const t = normaliser(texte.trim());
-    if (!t || comptes.some((c) => c.numero === texte.trim())) return comptes;
+    if (!t || (valeur !== null && texte === nomDe(valeur))) return comptes;
     if (/^\d+$/.test(t)) return comptes.filter((c) => c.numero.startsWith(t));
-    return comptes.filter((c) => normaliser(c.intitule).includes(t));
+    // Les noms qui commencent par le texte saisi d'abord, puis ceux où un mot commence ainsi, puis les autres.
+    const rang = (c: Compte) => {
+      const n = normaliser(c.intitule);
+      return n.startsWith(t) ? 0 : n.split(/[\s/()'.,-]+/).some((m) => m.startsWith(t)) ? 1 : 2;
+    };
+    return comptes
+      .filter((c) => normaliser(c.intitule).includes(t))
+      .sort((a, b) => rang(a) - rang(b) || a.numero.localeCompare(b.numero));
   });
 
   const compte = $derived(comptes.find((c) => c.numero === valeur));
@@ -59,7 +79,7 @@
 
   function choisir(c: Compte) {
     valeur = c.numero;
-    texte = c.numero;
+    texte = c.intitule;
     ouvert = false;
   }
 
@@ -70,8 +90,7 @@
   }
 
   function saisie() {
-    const t = texte.trim();
-    valeur = comptes.some((c) => c.numero === t) ? t : null;
+    valeur = exact(texte)?.numero ?? null;
     ouvert = true;
     actif = 0;
     navigue = false;
@@ -107,7 +126,17 @@
     queueMicrotask(() => liste?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' }));
   }
 
+  function sortie() {
+    ouvert = false;
+    focus = false;
+    if (valeur !== null) texte = nomDe(valeur); // un numéro tapé s'affiche sous forme de nom
+  }
+
+  /** Liste complète : regroupée par classe ; liste filtrée : dans l'ordre de pertinence, sans titres. */
+  const filtre = $derived(resultats !== comptes);
+
   function groupes() {
+    if (filtre) return [{ classe: 0, items: resultats.map((c, i) => ({ c, i })) }];
     const g: { classe: number; items: { c: Compte; i: number }[] }[] = [];
     resultats.forEach((c, i) => {
       const dernier = g[g.length - 1];
@@ -121,7 +150,7 @@
 <div class="champ-compte">
   <input
     {id}
-    class="champ num"
+    class="champ"
     class:invalide={inconnu}
     role="combobox"
     aria-label={libelle}
@@ -129,13 +158,14 @@
     aria-controls={`${id}-liste`}
     aria-activedescendant={ouvert && resultats[actif] ? `${id}-o${actif}` : undefined}
     autocomplete="off"
-    placeholder="N° ou intitulé"
+    placeholder="Nom du compte"
     data-champ
     bind:value={texte}
     oninput={saisie}
     onclick={ouvrir}
+    onfocus={() => (focus = true)}
     onkeydown={touche}
-    onblur={() => (ouvert = false)}
+    onblur={sortie}
   />
   {#if ouvert}
     <div class="liste" class:droite={aligne === 'droite'} id={`${id}-liste`} role="listbox" bind:this={liste}>
@@ -143,7 +173,7 @@
         <div class="aucun">Aucun compte ne correspond à « {texte} ».</div>
       {/if}
       {#each groupes() as g}
-        <div class="groupe" role="presentation">{TITRES_CLASSES[g.classe] ?? `Classe ${g.classe}`}</div>
+        {#if !filtre}<div class="groupe" role="presentation">{TITRES_CLASSES[g.classe] ?? `Classe ${g.classe}`}</div>{/if}
         {#each g.items as { c, i }}
           <div
             id={`${id}-o${i}`}
@@ -157,16 +187,16 @@
               choisir(c);
             }}
           >
-            <span class="n num">{c.numero}</span>{c.intitule}
+            <span class="nom">{c.intitule}</span><span class="n num">{c.numero}</span>
           </div>
         {/each}
       {/each}
     </div>
   {/if}
   <div class="intitule" class:erreur={inconnu}>
-    {#if compte}{compte.intitule}{:else if inconnu}{resultats.length > 1
+    {#if compte}n° {compte.numero}{:else if inconnu}{resultats.length > 1
         ? 'Plusieurs comptes correspondent : choisissez dans la liste'
-        : 'Compte introuvable'}{/if}
+        : 'Aucun compte de ce nom : choisissez dans la liste'}{/if}
   </div>
 </div>
 
@@ -183,9 +213,10 @@
     position: sticky; top: 0; background: var(--c-fond-2); color: var(--c-structure);
     font-weight: bold; font-size: 12px; padding: 5px 10px; border-bottom: 1px solid var(--c-bordure-2);
   }
-  .option { padding: 6px 10px; display: flex; gap: 10px; cursor: pointer; }
+  .option { padding: 6px 10px; display: flex; gap: 10px; cursor: pointer; justify-content: space-between; }
+  .nom { min-width: 0; }
   .option:hover { background: var(--c-zebra); }
   .option.sel { background: var(--c-selection); }
-  .n { font-weight: bold; width: 40px; flex: none; }
+  .n { font-size: 12px; color: var(--c-texte-2); flex: none; }
   .aucun { padding: 10px; color: var(--c-texte-2); }
 </style>
