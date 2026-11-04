@@ -5,6 +5,7 @@
   import { ajouterEcriture, estExtournee, extourner, modifierEcriture, nouvelId } from '../../engine/journal';
   import { diagnostiquer, enregistrerTentative, solutionDisponible, INDICES, type Diagnostic } from '../../engine/correction';
   import type { Dossier, Ecriture } from '../../engine/dossier';
+  import { bouclementCorrige, corrigeBouclement, diagnostiquerBouclement, PIECE_BOUCLEMENT } from '../../engine/correction-bouclement';
   import { operationsSaisies } from '../../engine/exercice';
   import { annee, lireDate } from '../../engine/dates';
   import type { Centimes } from '../../engine/money';
@@ -26,17 +27,33 @@
 
   // ---- Retour gradué (entraînement) ----
   const corrigeParPiece = $derived(new Map((ex.corrige ?? []).map((c) => [c.piece, c])));
+  const avecBouclement = $derived(bouclementCorrige(ex));
   const retour = $derived(
-    ex.mode === 'entrainement' && etat.session!.role === 'eleve' && corrigeParPiece.size > 0 && operations.length > 0,
+    ex.mode === 'entrainement' &&
+      etat.session!.role === 'eleve' &&
+      (corrigeParPiece.size > 0 || avecBouclement) &&
+      operations.length > 0,
   );
+  /** Clé de suivi : le numéro d'opération, ou « Bouclement » pour les écritures de bouclement. */
+  function cle(piece: string): string {
+    return avecBouclement && !operations.some((o) => o.numero === piece) ? PIECE_BOUCLEMENT : piece;
+  }
+  function solutionDe(k: string) {
+    return k === PIECE_BOUCLEMENT ? corrigeBouclement(d, ex) : corrigeParPiece.get(k);
+  }
   const modifAutorisee = $derived(ex.mode === 'entrainement' && ex.parametres.modificationDirecte && etat.session!.role === 'eleve');
   const suivi = $derived(etat.session!.suivi);
 
-  function evaluer(dossier: Dossier, p: string, compter: boolean) {
+  function evaluer(dossier: Dossier, piece: string, compter: boolean) {
     if (!retour) return;
-    const c = corrigeParPiece.get(p);
-    if (!c) return;
-    const diag = diagnostiquer(dossier.ecritures, c);
+    const p = cle(piece);
+    let diag: Diagnostic | null;
+    if (p === PIECE_BOUCLEMENT) diag = diagnostiquerBouclement(dossier, ex);
+    else {
+      const c = corrigeParPiece.get(p);
+      diag = c ? diagnostiquer(dossier.ecritures, c) : null;
+    }
+    if (!diag) return;
     if (compter) etat.majSuivi(enregistrerTentative(suivi, p, diag));
     else {
       const ancien = suivi[p] ?? { essais: 0, solutionVue: false, dernier: diag };
@@ -121,6 +138,8 @@
     etat.majDossier(r.valeur);
     if (ancienne && ancienne.piece !== p) evaluer(r.valeur, ancienne.piece, false);
     evaluer(r.valeur, p, true);
+    // Les écritures attendues du bouclement dépendent des comptes : on met son état à jour.
+    if (cle(p) !== PIECE_BOUCLEMENT && etat.session!.suivi[PIECE_BOUCLEMENT]) evaluer(etat.dossier, PIECE_BOUCLEMENT, false);
     reinitialiser();
     await tick();
     document.getElementById('saisie-libelle')?.focus();
@@ -185,7 +204,7 @@
 
   const derniereParPiece = $derived.by(() => {
     const r = new Map<string, string>();
-    for (const e of ecrituresTriees) if (!e.extourneDe && !estExtournee(d, e.id)) r.set(e.piece, e.id);
+    for (const e of ecrituresTriees) if (!e.extourneDe && !estExtournee(d, e.id)) r.set(cle(e.piece), e.id);
     return r;
   });
 
@@ -323,7 +342,7 @@
                   {#if retour}
                     <td>
                       {#if j === 0 && !extournee && !e.extourneDe}
-                        <span class={`statut ${classeStatut(statut(e.piece))}`}>{libelleStatut(statut(e.piece))}</span>
+                        <span class={`statut ${classeStatut(statut(cle(e.piece)))}`}>{libelleStatut(statut(cle(e.piece)))}</span>
                       {/if}
                     </td>
                   {/if}
@@ -335,9 +354,11 @@
                   </td>
                 </tr>
               {/each}
-              {@const st = statut(e.piece)}
-              {#if retour && derniereParPiece.get(e.piece) === e.id && st && st !== 'juste' && st !== 'manquante'}
-                {@const s = suivi[e.piece]}
+              {@const kc = cle(e.piece)}
+              {@const st = statut(kc)}
+              {#if retour && derniereParPiece.get(kc) === e.id && st && st !== 'juste' && st !== 'manquante'}
+                {@const s = suivi[kc]}
+                {@const solution = s?.solutionVue ? solutionDe(kc) : null}
                 <tr class="ligne-retour" class:zebre={k % 2 === 1}>
                   <td></td><td></td>
                   <td colspan="6">
@@ -346,19 +367,20 @@
                     {:else}
                       <div class="retour">
                         <b>Indice :</b> {INDICES[st]}
+                        {kc === PIECE_BOUCLEMENT ? '(Écritures de bouclement prises ensemble.) ' : ''}
                         {modifAutorisee
                           ? "Corrigez par une extourne ou modifiez l'écriture."
                           : "Corrigez par une extourne, puis saisissez à nouveau l'opération."}
                         {#if solutionDisponible(s) && !s?.solutionVue}
-                          <button class="btn-lien solution" onclick={() => voirSolution(e.piece)}>Voir la solution</button>
+                          <button class="btn-lien solution" onclick={() => voirSolution(kc)}>Voir la solution</button>
                         {/if}
                       </div>
-                      {#if s?.solutionVue && corrigeParPiece.get(e.piece)}
+                      {#if solution}
                         <div class="solution-detail">
-                          <b>Solution de l'opération {e.piece} :</b>
+                          <b>{kc === PIECE_BOUCLEMENT ? 'Écritures de bouclement attendues, d\'après vos comptes :' : `Solution de l'opération ${kc} :`}</b>
                           <table>
                             <tbody>
-                              {#each corrigeParPiece.get(e.piece)!.lignes as l}
+                              {#each solution.lignes as l}
                                 <tr>
                                   <td>{l.debit ? 'Débit ' + nomCompte(l.debit) : ''}</td>
                                   <td>{l.credit ? 'Crédit ' + nomCompte(l.credit) : ''}</td>
@@ -397,6 +419,15 @@
             </button>
           </li>
         {/each}
+        {#if retour && avecBouclement}
+          <li class="bouclement">
+            <span class="no"></span>
+            <span class="texte">Écritures de bouclement</span>
+            {#if statut(PIECE_BOUCLEMENT) && statut(PIECE_BOUCLEMENT) !== 'manquante'}
+              <span class={`etat statut ${classeStatut(statut(PIECE_BOUCLEMENT))}`}>{libelleStatut(statut(PIECE_BOUCLEMENT))}</span>
+            {/if}
+          </li>
+        {/if}
       </ol>
     {/if}
   </aside>
@@ -453,6 +484,7 @@
   .enonce li button:hover { background: var(--c-zebra); }
   .enonce li.courante button { background: var(--c-selection); }
   .no { font-weight: bold; color: var(--c-structure); }
+  .enonce li.bouclement { display: grid; grid-template-columns: 26px 1fr; gap: 2px 4px; padding: 9px 14px; font-style: italic; }
   .etat { grid-column: 2; font-size: 12px; color: var(--c-texte-2); }
 
   @media (max-width: 1280px) {

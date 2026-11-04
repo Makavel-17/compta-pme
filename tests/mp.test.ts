@@ -91,7 +91,7 @@ describe('ratios d\'analyse', () => {
       liquidite2: 133.33,
       endettement: 46.3,
       financementPropre: 53.7,
-      autofinancement: 13.79,
+      autofinancement: 0, // raison individuelle : le bénéfice va au capital
       couverture2: 114.71,
       margeBrute: 37.5,
       margeEconomique: 20,
@@ -99,6 +99,11 @@ describe('ratios d\'analyse', () => {
       roi: 7.69,
       rfp: 14.81,
     });
+  });
+
+  it("degré d'autofinancement : une société compte le bénéfice de l'exercice (il rejoint 2970)", () => {
+    const sa: Dossier = { ...d, formeJuridique: 'SA' };
+    expect(Math.round(ratios(sa).autofinancement! * 100) / 100).toBe(13.79);
   });
 
   it('accepte un écart d\'arrondi de 0.1 point', () => {

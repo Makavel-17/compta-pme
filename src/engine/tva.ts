@@ -31,7 +31,7 @@ export function tvaSurTTC(ttc: Centimes, taux: TauxTva): Centimes {
 
 export const COMPTE_TVA_DUE = '2200';
 export const COMPTES_IP = ['1170', '1171'] as const;
-export const COMPTE_DETTE_AFC = '2206';
+export const COMPTE_DETTE_AFC = '2205';
 
 export interface DecompteTva {
   tvaDue: Centimes;

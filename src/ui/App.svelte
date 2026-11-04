@@ -30,6 +30,7 @@
       mode: s.exercice.mode,
       dossier: s.dossier,
       suivi: s.suivi,
+      fiches: s.fiches,
     });
     telecharger(nomFichier([s.eleve.nom, s.eleve.prenom, s.eleve.classe, s.exercice.titre], EXT_COPIE), texte);
   }

@@ -22,7 +22,10 @@
     { cle: 'impotAnticipe', libelle: `Impôt anticipé (${TAUX_IMPOT_ANTICIPE} % des dividendes)` },
     { cle: 'dividendeNet', libelle: 'Dividendes nets versés aux associés' },
   ];
-  let saisies = $state(Object.fromEntries(lignes.map((l) => [l.cle, null])) as Record<Cle, number | null>);
+  // La fiche est enregistrée avec le travail de l'élève.
+  const session = etat.session!;
+  if (!session.fiches.repartition) session.fiches.repartition = Object.fromEntries(lignes.map((l) => [l.cle, null]));
+  const saisies = session.fiches.repartition as Record<Cle, number | null>;
 
   function faux(cle: Cle): boolean {
     const v = saisies[cle];

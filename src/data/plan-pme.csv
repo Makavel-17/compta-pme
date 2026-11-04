@@ -39,7 +39,7 @@ numero;intitule;classe;type;niveau_min
 2171;Dette LPP;2;passif;CFC2
 2172;Dette ALFA;2;passif;CFC2
 2200;TVA due;2;passif;CFC2
-2206;Dettes AFC;2;passif;CFC2
+2205;Dettes AFC;2;passif;CFC2
 2230;Dividendes;2;passif;MP
 2235;Tantièmes;2;passif;MP
 2300;Passifs transitoires;2;passif;CFC2

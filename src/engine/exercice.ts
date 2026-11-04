@@ -56,6 +56,8 @@ export interface Exercice {
     ficheSalaire?: boolean;
     /** Calculatrice de TVA (aide au calcul, désactivée par défaut). */
     calculatriceTva?: boolean;
+    /** Corriger (entraînement) et noter (évaluation) les écritures de bouclement. */
+    corrigerBouclement?: boolean;
     /** MP, sociétés : données de la répartition du bénéfice décidée par l'assemblée générale. */
     repartition?: DonneesRepartition;
   };

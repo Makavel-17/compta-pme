@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { corrigerCopie, noteSuisse, pointsOperation, statistiquesOperations } from '../src/engine/notation';
-import { demoCfc1 } from '../src/data/demo-cfc1';
+import { demoCfc1 as demo } from '../src/data/demo-cfc1';
+
+// Ces tests portent sur les opérations seules : bouclement non noté.
+const demoCfc1 = { ...demo, parametres: { ...demo.parametres, corrigerBouclement: false } };
 import { creerDossier, type EcritureCorrigee } from '../src/engine/exercice';
 import { ajouterEcriture } from '../src/engine/journal';
 import type { Dossier, Ecriture, LigneEcriture } from '../src/engine/dossier';

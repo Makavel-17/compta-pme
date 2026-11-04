@@ -40,7 +40,7 @@ describe('exercice de démonstration MP', () => {
     expect(bilan(d).equilibre).toBe(true);
     expect(compteDeResultat(d).resultat).toBe(chf(76415));
     expect(soldeDe(d, '2970')).toBe(chf(-16000));
-    expect(soldeDe(d, '2206')).toBe(0);
+    expect(soldeDe(d, '2205')).toBe(0);
     const b = boucler(d);
     if (!b.ok) throw new Error(b.erreurs.join());
     expect(soldeDe(b.valeur, '2970')).toBe(chf(-92415));

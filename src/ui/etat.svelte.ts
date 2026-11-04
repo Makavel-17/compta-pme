@@ -38,6 +38,19 @@ export interface Session {
   suivi: Suivi;
   /** 'corrige' : l'enseignant saisit le corrigé d'un exercice dans le journal. */
   role: 'eleve' | 'corrige';
+  /** Contenu des fiches de calcul, enregistré avec le travail de l'élève. */
+  fiches: Fiches;
+}
+
+export interface FicheSalaire {
+  brut: number | null;
+  lignes: { cle: number; libelle: string; taux: string; montant: number | null }[];
+}
+
+export interface Fiches {
+  salaire?: FicheSalaire;
+  repartition?: Record<string, number | null>;
+  analyse?: Record<string, string>;
 }
 
 interface Preferences {
@@ -71,8 +84,10 @@ class Etat {
     const s = lire<Sauvegarde>();
     if (s) {
       // Sessions enregistrées avant l'ajout du suivi et du rôle : valeurs par défaut.
-      const ancienne = s.session as (Partial<Session> & Omit<Session, 'suivi' | 'role'>) | null;
-      this.session = ancienne ? { ...ancienne, suivi: ancienne.suivi ?? {}, role: ancienne.role ?? 'eleve' } : null;
+      const ancienne = s.session as (Partial<Session> & Omit<Session, 'suivi' | 'role' | 'fiches'>) | null;
+      this.session = ancienne
+        ? { ...ancienne, suivi: ancienne.suivi ?? {}, role: ancienne.role ?? 'eleve', fiches: ancienne.fiches ?? {} }
+        : null;
       this.prefs = { ...this.prefs, ...s.prefs };
       this.sessionMiseDeCote = s.sessionMiseDeCote ?? null;
     }
@@ -101,7 +116,7 @@ class Etat {
   }
 
   commencer(eleve: Eleve, exercice: Exercice, role: Session['role'] = 'eleve') {
-    this.session = { eleve, exercice, dossier: creerDossier(exercice, planParDefaut), archives: [], suivi: {}, role };
+    this.session = { eleve, exercice, dossier: creerDossier(exercice, planParDefaut), archives: [], suivi: {}, role, fiches: {} };
     this.aller('journal');
     if (!this.prefs.visiteVue && role === 'eleve') this.visiteOuverte = true;
   }
@@ -115,6 +130,7 @@ class Etat {
     s.dossier = creerDossier(s.exercice, s.dossier.plan);
     s.archives = [];
     s.suivi = {};
+    s.fiches = {};
   }
 
   /** L'enseignant saisit le corrigé dans le journal ; les écritures existantes du corrigé sont reprises. */

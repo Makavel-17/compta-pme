@@ -9,6 +9,7 @@
   import type { Exercice } from '../../engine/exercice';
   import { corrigerCopie, statistiquesOperations, type CorrectionCopie } from '../../engine/notation';
   import { LIBELLES_DIAGNOSTIC } from '../../engine/correction';
+  import { bouclementCorrige, PIECE_BOUCLEMENT } from '../../engine/correction-bouclement';
   import { EXT_COPIE, ErreurFichier, importerCopie, nomFichier, type Copie } from '../../io/fichiers';
   import { choisirFichiers, telecharger } from '../fichiers-navigateur';
 
@@ -31,7 +32,8 @@
   );
   const stats = $derived(statistiquesOperations(lignes.map((l) => l.correction)));
   const moyenne = $derived(lignes.length ? lignes.reduce((s, l) => s + l.correction.note, 0) / lignes.length : 0);
-  const texteOp = (piece: string) => exercice?.operations.find((o) => o.numero === piece)?.texte ?? '';
+  const texteOp = (piece: string) =>
+    piece === PIECE_BOUCLEMENT ? 'Écritures de bouclement' : (exercice?.operations.find((o) => o.numero === piece)?.texte ?? '');
 
   async function importer() {
     messages = [];
@@ -60,7 +62,8 @@
 
   function exporterCsv() {
     if (!exercice) return;
-    const entete = ['Nom', 'Prénom', 'Classe', 'Points', 'Maximum', 'Note', ...exercice.operations.map((o) => `Op. ${o.numero}`)];
+    const pieces = [...exercice.operations.map((o) => o.numero), ...(bouclementCorrige(exercice) ? [PIECE_BOUCLEMENT] : [])];
+    const entete = ['Nom', 'Prénom', 'Classe', 'Points', 'Maximum', 'Note', ...pieces.map((p) => (p === PIECE_BOUCLEMENT ? p : `Op. ${p}`))];
     const rangs = lignes.map((l) => [
       l.copie.eleve.nom,
       l.copie.eleve.prenom,
@@ -68,7 +71,7 @@
       String(l.correction.points),
       String(l.correction.max),
       l.correction.note.toFixed(1),
-      ...exercice!.operations.map((o) => String(l.correction.operations.find((x) => x.piece === o.numero)?.points ?? '')),
+      ...pieces.map((p) => String(l.correction.operations.find((x) => x.piece === p)?.points ?? '')),
     ]);
     const csv = [entete, ...rangs].map((r) => r.map((x) => `"${x.replace(/"/g, '""')}"`).join(';')).join('\r\n');
     telecharger(nomFichier([exercice.titre, 'resultats'], '.csv'), '﻿' + csv, 'text/csv');

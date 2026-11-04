@@ -18,7 +18,12 @@ export interface Agregats {
   ceLongTerme: Centimes;
   capitauxPropres: Centimes; // résultat de l'exercice compris
   capitauxPropresOuverture: Centimes;
-  reservesEtReporte: Centimes; // réserves issues du bénéfice + bénéfice reporté (+ résultat non réparti)
+  /**
+   * Réserves issues du bénéfice + bénéfice reporté (cours : « capital de croissance »).
+   * Société : le bénéfice de l'exercice rejoint le bénéfice reporté (2970), il est compris.
+   * Raison individuelle : le bénéfice est viré au capital, il n'est pas compris.
+   */
+  reservesEtReporte: Centimes;
   chiffreAffairesNet: Centimes;
   margeBrute: Centimes;
   ebitda: Centimes;
@@ -74,7 +79,7 @@ export function agregats(d: Dossier): Agregats {
     totalActifOuverture: actifOuv,
     capitauxPropres: cp + beneficeNet,
     capitauxPropresOuverture: cpOuv,
-    reservesEtReporte: r.reservesEtReporte + beneficeNet,
+    reservesEtReporte: r.reservesEtReporte + (d.formeJuridique === 'raison individuelle' ? 0 : beneficeNet),
     margeBrute,
     ebitda,
     ebit,

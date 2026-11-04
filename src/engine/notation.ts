@@ -11,6 +11,13 @@
 import type { Dossier, Ecriture, LigneEcriture } from './dossier';
 import type { EcritureCorrigee, Exercice } from './exercice';
 import { diagnostiquer, ecrituresRetenues, TOLERANCE, type Diagnostic } from './correction';
+import {
+  bouclementCorrige,
+  corrigeBouclement,
+  ecrituresPourNotation,
+  PIECE_BOUCLEMENT,
+  POINTS_BOUCLEMENT_PAR_DEFAUT,
+} from './correction-bouclement';
 
 export const POINTS_PAR_DEFAUT = 1;
 
@@ -80,9 +87,15 @@ export interface CorrectionCopie {
 export function corrigerCopie(ex: Exercice, d: Dossier): CorrectionCopie {
   const bareme = ex.bareme ?? {};
   const partiels = ex.pointsPartiels ?? true;
+  const ecritures = ecrituresPourNotation(d, ex);
   const operations = (ex.corrige ?? [])
     .filter((c) => ex.operations.some((o) => o.numero === c.piece))
-    .map((c) => pointsOperation(d.ecritures, c, bareme[c.piece] ?? POINTS_PAR_DEFAUT, partiels));
+    .map((c) => pointsOperation(ecritures, c, bareme[c.piece] ?? POINTS_PAR_DEFAUT, partiels));
+  if (bouclementCorrige(ex)) {
+    const max = bareme[PIECE_BOUCLEMENT] ?? POINTS_BOUCLEMENT_PAR_DEFAUT;
+    const c = corrigeBouclement(d, ex);
+    if (c && max > 0) operations.push(pointsOperation(ecritures, c, max, partiels));
+  }
   const points = operations.reduce((s, o) => s + o.points, 0);
   const max = operations.reduce((s, o) => s + o.max, 0);
   return { operations, points, max, note: noteSuisse(points, max) };

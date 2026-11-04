@@ -43,7 +43,7 @@
     </tbody>
   </table>
   <p class="discret pied">
-    Solde actuel du compte 2206 {intitules.get('2206')} : <b class="num">{m(dec.detteAfc)}</b>.
+    Solde actuel du compte 2205 {intitules.get('2205')} : <b class="num">{m(dec.detteAfc)}</b>.
   </p>
 </section>
 

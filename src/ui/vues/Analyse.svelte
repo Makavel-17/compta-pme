@@ -5,7 +5,10 @@
 
   const attendus = $derived(ratios(etat.dossier));
   const entrainement = $derived(etat.exercice.mode === 'entrainement');
-  let saisies = $state<Record<string, string>>({});
+  // La fiche est enregistrée avec le travail de l'élève.
+  const session = etat.session!;
+  if (!session.fiches.analyse) session.fiches.analyse = {};
+  const saisies = session.fiches.analyse;
 
   function etatRatio(cle: (typeof RATIOS)[number]['cle']): 'juste' | 'faux' | null {
     const t = (saisies[cle] ?? '').trim().replace(',', '.').replace('%', '');

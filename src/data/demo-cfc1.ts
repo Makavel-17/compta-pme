@@ -52,6 +52,7 @@ export const demoCfc1: Exercice = {
   parametres: {
     libellesT: 'SI/SF',
     modificationDirecte: false,
+    corrigerBouclement: true,
     modeBouclement: 'compteDeResultat',
     comptesAjoutes: [],
     comptesMasques: [],

@@ -17,6 +17,7 @@
   import { dt, m } from '../format';
   import ChampCompte from '../composants/ChampCompte.svelte';
   import ChampMontant from '../composants/ChampMontant.svelte';
+  import { PIECE_BOUCLEMENT, POINTS_BOUCLEMENT_PAR_DEFAUT } from '../../engine/correction-bouclement';
 
   let { id }: { id: string } = $props();
 
@@ -61,6 +62,8 @@
     source.operations.map((o) => ({ cle: ++n, numero: o.numero, date: dt(o.date), texte: o.texte, points: source.bareme?.[o.numero] ?? 1 })),
   );
   let pointsPartiels = $state(source.pointsPartiels ?? true);
+  let corrigerBouclement = $state(source.parametres.corrigerBouclement ?? false);
+  let pointsBouclement = $state<number>(source.bareme?.[PIECE_BOUCLEMENT] ?? POINTS_BOUCLEMENT_PAR_DEFAUT);
   const totalPoints = $derived(operations.reduce((s, o) => s + (Number(o.points) || 0), 0));
   let message = $state('');
 
@@ -90,7 +93,10 @@
       introduction: introduction.trim(),
       mode,
       operations: operations.map((o) => ({ numero: o.numero.trim(), date: lireDate(o.date, Number(fin.slice(-4))) ?? '', texte: o.texte.trim() })),
-      bareme: Object.fromEntries(operations.map((o) => [o.numero.trim(), Math.max(0, Number(o.points) || 0)])),
+      bareme: {
+        ...Object.fromEntries(operations.map((o) => [o.numero.trim(), Math.max(0, Number(o.points) || 0)])),
+        [PIECE_BOUCLEMENT]: Math.max(0, Number(pointsBouclement) || 0),
+      },
       pointsPartiels,
       ouvertureActif: versRecord(actif),
       ouverturePassif: versRecord(passif),
@@ -99,6 +105,7 @@
         modificationDirecte: mode === 'entrainement' && modificationDirecte,
         libellesT,
         modeBouclement,
+        corrigerBouclement: modeBouclement === 'compteDeResultat' && corrigerBouclement,
         tvaMethode,
         ficheSalaire,
         calculatriceTva,
@@ -228,6 +235,17 @@
         <option value="aLaReouverture">Intégration à la réouverture</option>
       </select>
     </div>
+    {#if modeBouclement === 'compteDeResultat'}
+      <label class="case">
+        <input type="checkbox" bind:checked={corrigerBouclement} /> Corriger et noter les écritures de bouclement
+      </label>
+      {#if corrigerBouclement}
+        <label class="case">
+          Points du bouclement
+          <input class="champ num points-b" type="number" min="0" step="0.5" bind:value={pointsBouclement} />
+        </label>
+      {/if}
+    {/if}
     {#if niveau !== 'CFC1'}
       <div>
         <label class="bloc" for="ex-tva">Comptabilisation de la TVA</label>
@@ -330,7 +348,7 @@
     <div class="pied-ops">
       <button class="btn" onclick={ajouterOperation}>Ajouter une opération</button>
       <label class="case"><input type="checkbox" bind:checked={pointsPartiels} /> Points partiels pour les écritures multiples</label>
-      <span>Total du barème : <b class="num">{totalPoints}</b> points</span>
+      <span>Total du barème : <b class="num">{totalPoints + (modeBouclement === 'compteDeResultat' && corrigerBouclement ? Number(pointsBouclement) || 0 : 0)}</b> points</span>
     </div>
   </div>
 </section>
@@ -380,6 +398,7 @@
   .retirer:hover { color: var(--c-negatif); }
   .pied-ops { display: flex; gap: 18px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
   .points { text-align: right; }
+  .points-b { width: 80px; text-align: right; margin-left: 8px; }
   .ecart-bilan { margin: 0 14px 14px; }
   .info { margin: 0 0 14px; }
   .info ul, .alerte ul { margin: 4px 0 0; padding-left: 18px; }

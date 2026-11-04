@@ -34,6 +34,7 @@ interface FichierCopie {
   mode: Exercice['mode'];
   dossier: Dossier;
   suivi: Suivi;
+  fiches?: unknown;
   exporteLe: string;
 }
 
@@ -44,6 +45,8 @@ export interface Copie {
   mode: Exercice['mode'];
   dossier: Dossier;
   suivi: Suivi;
+  /** Contenu des fiches de calcul (salaire, répartition, analyse). */
+  fiches?: unknown;
   exporteLe: string;
 }
 
@@ -170,6 +173,7 @@ export function importerCopie(texte: string): Copie {
     mode: c.mode,
     dossier: c.dossier,
     suivi: c.suivi ?? {},
+    fiches: c.fiches,
     exporteLe: c.exporteLe,
   };
 }

@@ -6,17 +6,23 @@
   import { m } from '../format';
   import ChampMontant from '../composants/ChampMontant.svelte';
 
-  type Ligne = { cle: number; libelle: string; taux: string; montant: number | null };
-  let n = 0;
+  import type { FicheSalaire } from '../etat.svelte';
+
+  type Ligne = FicheSalaire['lignes'][number];
+  const session = etat.session!;
+  let n = Math.max(0, ...(session.fiches.salaire?.lignes.map((l) => l.cle) ?? [0]));
   const ligne = (libelle: string): Ligne => ({ cle: ++n, libelle, taux: '', montant: null });
 
-  let brut = $state<number | null>(null);
-  let lignes = $state<Ligne[]>([
-    ligne('AVS/AI/APG/AC'),
-    ligne('LPP'),
-    ligne('Assurance accidents non professionnels (AANP)'),
-    ligne('Avance de salaire'),
-  ]);
+  // La fiche est enregistrée avec le travail de l'élève.
+  if (!session.fiches.salaire) {
+    session.fiches.salaire = {
+      brut: null,
+      lignes: [ligne('AVS/AI/APG/AC'), ligne('LPP'), ligne('Assurance accidents non professionnels (AANP)'), ligne('Avance de salaire')],
+    };
+  }
+  const fiche = session.fiches.salaire;
+  const lignes = $derived(fiche.lignes);
+  const brut = $derived(fiche.brut);
 
   /** « 6,4 » ou « 6.4 » → 640 (centièmes de pour cent). */
   const lireTaux = (t: string): number | null => (t.trim() === '' ? null : lireMontant(t));
@@ -48,7 +54,7 @@
       <tr class="brut">
         <td><b>Salaire brut</b></td>
         <td></td>
-        <td><ChampMontant id="fiche-brut" libelle="Salaire brut" bind:valeur={brut} /></td>
+        <td><ChampMontant id="fiche-brut" libelle="Salaire brut" bind:valeur={fiche.brut} /></td>
         <td></td>
       </tr>
       {#each lignes as l, i (l.cle)}
@@ -59,7 +65,7 @@
             <ChampMontant id={`fiche-${l.cle}`} libelle={`Montant ${l.libelle}`} bind:valeur={l.montant} />
             {#if fausses.has(i)}<div class="faux">Montant à revoir (taux × salaire brut, arrondi aux 5 centimes)</div>{/if}
           </td>
-          <td><button class="retirer" aria-label="Retirer la ligne" onclick={() => lignes.splice(i, 1)}>×</button></td>
+          <td><button class="retirer" aria-label="Retirer la ligne" onclick={() => fiche.lignes.splice(i, 1)}>×</button></td>
         </tr>
       {/each}
       <tr class="total">
@@ -77,7 +83,7 @@
     </tbody>
   </table>
   <div class="actions">
-    <button class="btn-lien" onclick={() => lignes.push(ligne(''))}>Ajouter une rubrique</button>
+    <button class="btn-lien" onclick={() => fiche.lignes.push(ligne(''))}>Ajouter une rubrique</button>
     <span class="discret">Taux vide = montant fixe (par exemple une avance de salaire).</span>
   </div>
 </section>
