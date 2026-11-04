@@ -1,0 +1,28 @@
+/* Charte visuelle — voir CLAUDE.md. Valeurs provisoires, affinées avec les maquettes (phase 2a). */
+:root {
+  --c-structure: #1f4e78;     /* barre latérale, titres, en-têtes de tableaux */
+  --c-selection: #d6e4f0;     /* sélection, lignes alternées */
+  --c-action: #e8601c;        /* bouton principal (texte blanc en gras ≥ 14 pt) */
+  --c-alerte-texte: #b34a12;  /* orange foncé pour le texte d'alerte (contraste AA) */
+  --c-negatif: #b00020;       /* soldes négatifs */
+  --c-fond: #ffffff;
+  --c-fond-2: #f5f7fa;
+  --c-texte: #1a1a1a;
+  --c-bordure: #c9d3de;
+  --font: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--c-fond);
+  color: var(--c-texte);
+  font-family: var(--font);
+  font-size: 14px;
+}
+
+.montant {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

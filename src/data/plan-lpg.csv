@@ -1,0 +1,279 @@
+numero;intitule;classe;type;niveau_min
+1000;Caisse;1;actif;CFC1
+1010;Compte postal;1;actif;CFC1
+1020;Banque;1;actif;CFC1
+1100;Créances envers des tiers suisses;1;actif;CFC1
+1109;Ducroire;1;actif;CFC2
+1140;Avances à court terme;1;actif;-
+1149;Provisions pertes s/autres créances envers tiers;1;actif;-
+1160;Créances d'emprunt envers l'actionnaire X;1;actif;-
+1169;Provisions pertes s/autres créances actionnaires;1;actif;-
+1170;TVA: déductible s/achats de matières et services;1;actif;CFC2
+1171;TVA: déductible s/investissement et autres charges;1;actif;CFC2
+1176;Impôt anticipé à récupérer;1;actif;MP
+1177;Créances envers l'administration des douanes;1;actif;-
+1178;Créances envers la SUVA;1;actif;-
+1190;Créances envers des sociétés de virement;1;actif;-
+1192;Acomptes aux fournisseurs;1;actif;-
+1200;Stocks de marchandises A;1;actif;CFC1
+1201;Stocks de marchandises B;1;actif;-
+1209;Corrections valeur s/stocks de marchandises;1;actif;-
+1300;Charges payées d'avance;1;actif;CFC2
+1301;Produits à recevoir;1;actif;CFC2
+1490;Actions propres;1;actif;-
+1499;Corrections valeur s/actions propres;1;actif;-
+1500;Machines et appareils;1;actif;CFC1
+1510;Mobilier d'exploitation;1;actif;CFC1
+1511;Installations d'ateliers;1;actif;-
+1512;Installations d'entrepôts;1;actif;-
+1513;Mobilier de bureau;1;actif;CFC1
+1520;Machines de bureau;1;actif;CFC1
+1521;Infrastructures informatiques;1;actif;CFC1
+1522;Systèmes de communication;1;actif;-
+1523;Systèmes à commande automatique;1;actif;-
+1524;Installations de sécurité;1;actif;-
+1525;Appareils électroniques de mesure et de contrôle;1;actif;-
+1526;Logiciels;1;actif;-
+1530;Automobiles;1;actif;CFC1
+1531;Camionnettes;1;actif;CFC1
+1532;Camions;1;actif;-
+1533;Véhicules spéciaux;1;actif;-
+1540;Instruments et outillage;1;actif;-
+1550;Installations de stockage;1;actif;-
+1551;Entrepôts à hauts rayonnages;1;actif;-
+1590;Lingerie et habits de travail;1;actif;-
+1591;Moules et modèles;1;actif;-
+1600;Bâtiments d'exploitation;1;actif;CFC1
+1601;Entretien, réparation ou remplacement;1;actif;-
+1609;Amortissement cumulé s/bâtiments d'exploitation;1;actif;CFC2
+1800;Frais de fondation;1;actif;-
+1801;Frais d'augmentation de capital;1;actif;-
+1802;Frais d'organisation;1;actif;-
+1850;Capital-actions non libéré;1;actif;-
+1859;Corrections de valeur s/capital-actions non libéré;1;actif;-
+2000;Dettes c/achats de matières et marchandises;2;passif;CFC1
+2001;Dettes c/prestations de services envers des tiers;2;passif;CFC1
+2002;Dettes c/charges de personnel;2;passif;CFC2
+2003;Dettes c/assurances sociales;2;passif;CFC2
+2004;Dettes c/autres charges d'exploitation;2;passif;-
+2005;Dettes c/opérations de crédit-bail;2;passif;-
+2030;Acomptes de clients;2;passif;-
+2100;Dettes bancaires à court terme;2;passif;CFC1
+2110;Dettes envers les chèques postaux;2;passif;-
+2111;Dettes envers les sociétés de virement;2;passif;-
+2140;Autres dettes financières à court terme à tiers;2;passif;-
+2160;Dettes financières à court terme c/actionnaire X;2;passif;-
+2170;Dettes financières à court terme fonds prévoyance;2;passif;-
+2180;Hypothèque à rembourser;2;passif;-
+2181;Prêt à rembourser;2;passif;-
+2200;TVA à payer;2;passif;CFC2
+2205;AFC - TVA;2;passif;-
+2206;Impôt anticipé dû;2;passif;MP
+2207;Droits de timbre dus;2;passif;-
+2208;Impôts directs dus;2;passif;MP
+2230;Dividendes non encaissés de l'exercice;2;passif;MP
+2231;Dividendes non encaissés des exercices précédents;2;passif;-
+2232;Coupons d'obligations non encaissés;2;passif;-
+2300;Charges à payer;2;passif;CFC2
+2301;Produits encaissés d'avance;2;passif;CFC2
+2340;Provisions pour impôts directs;2;passif;MP
+2341;Provisions pour impôts indirects;2;passif;-
+2400;Dettes bancaires à long terme;2;passif;CFC1
+2420;Dettes résultant d'opérations de crédit-bail;2;passif;-
+2440;Hypothèques sur bâtiments d'exploitation;2;passif;CFC1
+2500;Emprunts à long terme à des tiers;2;passif;-
+2560;Emprunts à long terme à des actionnaires;2;passif;-
+2570;Emprunts à long terme à des institutions LPP;2;passif;-
+2600;Provision pour réparations;2;passif;MP
+2601;Provision pour assainissements;2;passif;-
+2602;Provision pour rénovations;2;passif;-
+2630;Provisions pour travaux de garantie;2;passif;MP
+2800;Capital propre;2;passif;CFC1
+2801;Capital propre du conjoint;2;passif;-
+2810;Compte de capital, associé A;2;passif;-
+2811;Compte de capital, associé B;2;passif;-
+2812;Compte de commandite, commanditaire C;2;passif;-
+2820;Capital social de la S.à.r.l;2;passif;MP
+2840;Capital-actions;2;passif;MP
+2841;Capital-participation;2;passif;-
+2850;Prélèvements privés en espèces;2;passif;CFC1
+2851;Prélèvements privés en nature;2;passif;-
+2852;Participations privées aux charges d'exploitation;2;passif;-
+2853;Valeur locative de l'appartement privé;2;passif;-
+2854;Primes d'assurance privées;2;passif;-
+2855;Cotisations privées à titre de prévoyance;2;passif;-
+2856;Impôts privés;2;passif;-
+2880;Immeuble privé A;2;passif;-
+2900;Réserve générale;2;passif;MP
+2901;Réserve pour actions propres;2;passif;-
+2903;Réserve de réévaluation;2;passif;-
+2910;Réserves statutaires;2;passif;MP
+2990;Bénéfice reporté / Déficit reporté;2;passif;MP
+2991;Bénéfice de l'exercice / Déficit de l'exercice;2;passif;MP
+3210;Ventes brutes au comptant;3;produit;CFC1
+3211;Ventes de détail brutes à crédit;3;produit;CFC1
+3212;Ventes en gros brutes à crédit;3;produit;-
+3220;Ventes brutes TVA taux normal (TVA 8.00% net);3;produit;-
+3221;Ventes brutes TVA taux réduit (TVA 2.50% net);3;produit;-
+3222;Ventes brutes tva taux zéro (TVA 0.00% net);3;produit;-
+3300;Autres matériaux directement incorporables;3;produit;-
+3720;Consommation propre;3;produit;-
+3900;Escomptes;3;produit;MP
+3901;Rabais et réductions de prix;3;produit;MP
+3902;Remises;3;produit;-
+3903;Commissions de tiers;3;produit;-
+3904;Frais d'encaissement;3;produit;-
+3905;Pertes s/clients;3;produit;CFC2
+3906;Différences de change;3;produit;MP
+3907;Ports ou Fret;3;produit;-
+4200;Achats de marchandises;4;charge;CFC1
+4208;Variations de stocks;4;charge;CFC1
+4209;Déductions obtenues s/achats;4;charge;-
+4210;Achats de marchandises TVA taux normal (TVA 8.00% net);4;charge;-
+4211;Achats de marchandises TVA taux réduit (TVA 2.50% net);4;charge;-
+4212;Achats de marchandises TVA taux zéro (TVA 0.00% net);4;charge;-
+4215;Achats de matériel d'emballage;4;charge;-
+4217;Charges directes d'achat;4;charge;-
+4270;Frets à l'achat;4;charge;MP
+4271;Droits de douane à l'importation;4;charge;-
+4272;Frais de transport à l'achat;4;charge;MP
+4290;Escomptes;4;charge;MP
+4291;Rabais et réductions de prix;4;charge;MP
+4292;Remises;4;charge;-
+4293;Ristournes obtenues s/achats;4;charge;-
+4296;Différences de change;4;charge;MP
+5200;Salaires;5;charge;CFC1
+5205;Prestations des assurances sociales;5;charge;-
+5270;AVS, AI, APG, assurance-chômage;5;charge;CFC2
+5271;Caisse de compensation familiale;5;charge;CFC2
+5272;Prévoyance professionnelle;5;charge;CFC2
+5273;Assurance-accidents;5;charge;CFC2
+5274;Assurance indemnités journalières en cas maladie;5;charge;-
+5279;Impôts à la source;5;charge;-
+5280;Recherche de personnel;5;charge;-
+5281;Formation et formation continue;5;charge;-
+5282;Indemnités effectives;5;charge;-
+5283;Indemnités de frais forfaitaires;5;charge;-
+5289;Autres charges de personnel;5;charge;-
+5290;Employés temporaires;5;charge;-
+6000;Loyer;6;charge;CFC1
+6030;Charges accessoires;6;charge;-
+6040;Nettoyage;6;charge;-
+6050;Entretien;6;charge;-
+6090;Charges de locaux comme prélèvements privés;6;charge;-
+6100;Entretien, réparation ou remplacement de machines;6;charge;-
+6102;Entretien, réparation ou remplacement d'outils matériel;6;charge;-
+6130;Entretien, réparation ou remplacement du mobilier de bureau;6;charge;-
+6131;Entretien, réparation ou remplacement des machines de bureau;6;charge;-
+6200;Réparation, service et nettoyage;6;charge;CFC1
+6210;Carburants;6;charge;CFC1
+6220;Assurances et taxes;6;charge;-
+6260;Charges de location pour voitures en crédit-bail;6;charge;-
+6270;Charges de véhicules comme prélèvements privés;6;charge;-
+6300;Assurance pour dommages;6;charge;CFC1
+6310;Assurance responsabilité civile;6;charge;-
+6330;Primes pour assurance-vie;6;charge;-
+6331;Primes pour cautionnement;6;charge;-
+6360;Droits;6;charge;-
+6361;Taxes;6;charge;-
+6370;Autorisations;6;charge;-
+6371;Patentes;6;charge;-
+6400;Force motrice;6;charge;CFC1
+6420;Mazout;6;charge;-
+6430;Eau;6;charge;-
+6460;Evacuation de déchets;6;charge;-
+6462;Eaux usées;6;charge;-
+6500;Matériel de bureau;6;charge;CFC1
+6501;Imprimés;6;charge;-
+6502;Photocopies;6;charge;-
+6503;Littérature technique;6;charge;-
+6510;Téléphone;6;charge;CFC1
+6511;Téléfax;6;charge;-
+6512;Internet;6;charge;-
+6513;Frais de port;6;charge;-
+6520;Cotisations;6;charge;-
+6521;Dons et cadeaux;6;charge;-
+6522;Pourboires;6;charge;-
+6530;Honoraires pour fiduciaire;6;charge;-
+6531;Honoraires pour conseil;6;charge;-
+6532;Honoraires pour conseil juridique;6;charge;-
+6540;Charges pour conseil d'administration;6;charge;-
+6541;Charges pour assemblée générale;6;charge;-
+6542;Charges pour organe de révision;6;charge;-
+6550;Charges d'administration comme prélèvements privés;6;charge;-
+6560;Location en crédit-bail de matériel;6;charge;-
+6561;Location en crédit-bail de logiciels;6;charge;-
+6562;Location de matériel;6;charge;-
+6570;Charges de licence/Update;6;charge;-
+6573;Disquettes, CD-Rom, cassettes, fournitures;6;charge;-
+6575;Frais de réseau;6;charge;-
+6600;Publicité dans les journaux;6;charge;CFC1
+6610;Imprimés publicitaires, matériel de publicité;6;charge;-
+6611;Articles de publicité, échantillons;6;charge;-
+6620;Vitrines, décoration;6;charge;-
+6621;Foires, expositions;6;charge;-
+6640;Frais de voyage;6;charge;-
+6641;Conseils à la clientèle;6;charge;-
+6642;Cadeaux à la clientèle;6;charge;-
+6700;Informations économiques;6;charge;-
+6701;Poursuites;6;charge;-
+6710;Sécurité;6;charge;-
+6711;Surveillance;6;charge;-
+6800;Charges financières pour crédit bancaire;6;charge;MP
+6801;Charges financières pour emprunts;6;charge;MP
+6802;Charges financières pour emprunts hypothécaires;6;charge;MP
+6803;Intérêts moratoires;6;charge;-
+6804;Charges financières pour acomptes de clients;6;charge;-
+6820;Charges financières s/compte courant actionnaire A;6;charge;-
+6830;Charges financières pour financement LPP;6;charge;-
+6840;Frais de banque et des chèques postaux;6;charge;MP
+6841;Frais de dépôt;6;charge;-
+6842;Pertes de change s/liquidités et titres;6;charge;MP
+6850;Produits financiers s/avoirs postaux, bancaires;6;produit;MP
+6851;Produits financiers s/avoirs à court terme;6;produit;-
+6880;Produits financiers s/compte courant actionnaire X;6;produit;-
+6890;Produits financiers c/intérêts moratoires, escptes;6;produit;-
+6891;Produits financiers s/acomptes versés;6;produit;-
+6892;Gains de change sur liquidités et titres;6;produit;MP
+6920;Amortissements s/machines et outillage;6;charge;CFC2
+6921;Amortissements s/mobilier et installations;6;charge;CFC2
+6922;Amortissements s/machines de bureau, informatique;6;charge;CFC2
+6923;Amortissements s/véhicules;6;charge;CFC2
+6930;Amortissements s/bâtiments d'exploitation;6;charge;CFC2
+6950;Amortissements s/charges de fondation;6;charge;-
+7910;Bénéfices s/ventes d'équipements d'exploitation;7;produit;-
+7920;Bénéfices s/ventes d'immeubles;7;produit;-
+8002;Réévaluations comptables;8;produit;-
+8004;Bénéfices exceptionnels s/aliénations actifs immob;8;produit;-
+8005;Subventions obtenues;8;produit;-
+8006;Produits pour indemnités pour préjudices;8;produit;-
+8011;Dotations exceptionnelles aux provisions;8;charge;-
+8012;Dotations exceptionnelles aux amortissements;8;charge;-
+8014;Pertes exceptionnelles s/aliénations actifs immob;8;charge;-
+8015;Pertes exceptionnelles s/débiteurs;8;charge;-
+8016;Charges pour indemnités pour préjudices;8;charge;-
+8500;Loyers des locaux;8;produit;-
+8501;Loyers des appartements;8;produit;-
+8502;Loyers des garages;8;produit;-
+8503;Loyer interne;8;produit;-
+8510;Intérêts hypothécaires;8;charge;-
+8511;Entretien d'immeuble;8;charge;-
+8512;Droits, taxes, impôts fonciers;8;charge;-
+8513;Primes d'assurance;8;charge;-
+8514;Eau, eaux usées;8;charge;-
+8515;Ordures, évacuation des déchets;8;charge;-
+8516;Charges d'administration;8;charge;-
+8700;Honoraires pour expertises, conférences;8;produit;-
+8701;Jetons de présence;8;produit;-
+8710;Charges pour des activités hors exploitation;8;charge;-
+8900;Impôts sur le bénéfice;8;charge;MP
+8901;Impôts sur le capital;8;charge;-
+8902;Impôts hors exercices;8;charge;-
+9000;Compte de résultat;9;bouclement;-
+9100;Bilan d'ouverture;9;bouclement;-
+9101;Bilan de clôture;9;bouclement;-
+9200;Participation au bénéfice de l'associé X;9;bouclement;-
+9201;Participation au bénéfice de l'associé Y;9;bouclement;-
+9900;Ecritures de regroupements des débiteurs;9;bouclement;-
+9901;Ecritures de regroupements des créditeurs;9;bouclement;-
+9910;Ecriture de correction;9;bouclement;-
