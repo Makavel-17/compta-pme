@@ -3,7 +3,7 @@
   import { LIBELLES_MODE, LIBELLES_NIVEAU } from '../engine/exercice';
   import { enseignant } from './enseignant.svelte';
   import { EXT_COPIE, exporterCopie, nomFichier } from '../io/fichiers';
-  import { telecharger } from './fichiers-navigateur';
+  import { telecharger, telechargerBlob } from './fichiers-navigateur';
   import EspaceEnseignant from './vues/EspaceEnseignant.svelte';
   import { periode } from './format';
   import Accueil from './vues/Accueil.svelte';
@@ -30,6 +30,21 @@
       suivi: s.suivi,
     });
     telecharger(nomFichier([s.eleve.nom, s.eleve.prenom, s.eleve.classe, s.exercice.titre], EXT_COPIE), texte);
+  }
+
+  let pdfEnCours = $state(false);
+  async function exporterPdf() {
+    const s = etat.session!;
+    pdfEnCours = true;
+    try {
+      const { genererPdfCopie } = await import('../pdf/copie');
+      const nom = nomFichier([s.eleve.nom, s.eleve.prenom, s.eleve.classe, s.exercice.titre], '.pdf');
+      telechargerBlob(nom, await genererPdfCopie(s.eleve, s.exercice, s.dossier, nom));
+    } catch {
+      alert("Le PDF n'a pas pu être créé. Vérifiez votre connexion lors du premier export, puis réessayez.");
+    } finally {
+      pdfEnCours = false;
+    }
   }
 
   function terminerCorrige(garder: boolean) {
@@ -125,6 +140,7 @@
           <button class="action-lateral" onclick={() => terminerCorrige(false)}>Abandonner</button>
         {:else}
           <button class="action-lateral principale" onclick={exporterMaCopie}>Exporter ma copie</button>
+          <button class="action-lateral" onclick={exporterPdf} disabled={pdfEnCours}>{pdfEnCours ? 'Création du PDF…' : 'Exporter en PDF'}</button>
           <button class="action-lateral discrete" onclick={() => (enseignant.ouvert = true)}>Espace enseignant</button>
         {/if}
       </div>

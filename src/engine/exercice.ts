@@ -57,6 +57,10 @@ export interface Exercice {
     calculatriceTva?: boolean;
   };
   corrige?: EcritureCorrigee[];
+  /** Points par opération (numéro → points) ; 1 point par défaut. */
+  bareme?: Record<string, number>;
+  /** Points partiels pour les écritures multiples (oui par défaut). */
+  pointsPartiels?: boolean;
 }
 
 /** Fonctions activées par défaut selon le niveau (TVA dès CFC 2). */

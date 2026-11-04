@@ -39,6 +39,19 @@ export const INDICES: Record<Diagnostic, string> = {
   erronee: "L'écriture ne correspond pas à l'opération. Relisez l'énoncé.",
 };
 
+/** Libellés courts pour la synthèse de l'enseignant. */
+export const LIBELLES_DIAGNOSTIC: Record<Diagnostic, string> = {
+  juste: 'Juste',
+  manquante: 'Non saisie',
+  incomplete: 'Incomplète',
+  inversee: 'Débit et crédit inversés',
+  tva_oubliee: 'TVA oubliée',
+  montant: 'Montant erroné',
+  compte_classe: 'Bonne classe, mauvais compte',
+  compte: 'Mauvais compte',
+  erronee: 'Écriture erronée',
+};
+
 type Agregat = Map<string, Centimes>; // clé « compte|D » ou « compte|C »
 
 function agreger(lignes: { debit: string | null; credit: string | null; montant: Centimes }[]): Agregat {

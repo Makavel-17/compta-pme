@@ -2,7 +2,12 @@
 
 /** Propose l'enregistrement d'un fichier texte. */
 export function telecharger(nom: string, contenu: string, type = 'application/json'): void {
-  const url = URL.createObjectURL(new Blob([contenu], { type: `${type};charset=utf-8` }));
+  telechargerBlob(nom, new Blob([contenu], { type: `${type};charset=utf-8` }));
+}
+
+/** Propose l'enregistrement d'un fichier binaire (PDF). */
+export function telechargerBlob(nom: string, blob: Blob): void {
+  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = nom;

@@ -13,11 +13,12 @@
   } from '../../io/fichiers';
   import { choisirFichiers, telecharger } from '../fichiers-navigateur';
   import EditeurExercice from './EditeurExercice.svelte';
+  import SyntheseCopies from './SyntheseCopies.svelte';
 
   let code = $state('');
   let confirmation = $state('');
   let message = $state('');
-  let onglet = $state<'exercices' | 'parametres'>('exercices');
+  let onglet = $state<'exercices' | 'copies' | 'parametres'>('exercices');
   let nouveauCode = $state('');
 
   function deverrouiller(e: SubmitEvent) {
@@ -128,9 +129,10 @@
   {:else}
     <main class="contenu">
       <div class="titre">
-        <h1>Exercices</h1>
+        <h1>{onglet === 'copies' ? 'Copies des élèves' : onglet === 'parametres' ? 'Paramètres' : 'Exercices'}</h1>
         <div class="segments" role="group" aria-label="Rubrique">
           <button aria-pressed={onglet === 'exercices'} onclick={() => (onglet = 'exercices')}>Exercices</button>
+          <button aria-pressed={onglet === 'copies'} onclick={() => (onglet = 'copies')}>Copies</button>
           <button aria-pressed={onglet === 'parametres'} onclick={() => (onglet = 'parametres')}>Paramètres</button>
         </div>
       </div>
@@ -188,6 +190,8 @@
           « Exporter pour les élèves » crée le fichier à distribuer : sans corrigé en évaluation, avec corrigé encodé en
           entraînement. « Version enseignant » contient le corrigé en clair : conservez-la pour corriger les copies.
         </p>
+      {:else if onglet === 'copies'}
+        <SyntheseCopies />
       {:else}
         <form class="carte etroit" onsubmit={changerCode}>
           <h2>Code d'accès</h2>

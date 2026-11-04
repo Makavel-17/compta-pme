@@ -21,7 +21,7 @@
   let { id }: { id: string } = $props();
 
   type LigneBilan = { cle: number; compte: string | null; montant: Centimes | null };
-  type LigneOp = { cle: number; numero: string; date: string; texte: string };
+  type LigneOp = { cle: number; numero: string; date: string; texte: string; points: number };
   let n = 0;
 
   // Brouillon initialisé une seule fois : le parent recrée l'éditeur quand l'exercice change ({#key}).
@@ -46,7 +46,11 @@
   let calculatriceTva = $state(source.parametres.calculatriceTva ?? false);
   let actif = $state<LigneBilan[]>(versLignes(source.ouvertureActif));
   let passif = $state<LigneBilan[]>(versLignes(source.ouverturePassif));
-  let operations = $state<LigneOp[]>(source.operations.map((o) => ({ cle: ++n, numero: o.numero, date: dt(o.date), texte: o.texte })));
+  let operations = $state<LigneOp[]>(
+    source.operations.map((o) => ({ cle: ++n, numero: o.numero, date: dt(o.date), texte: o.texte, points: source.bareme?.[o.numero] ?? 1 })),
+  );
+  let pointsPartiels = $state(source.pointsPartiels ?? true);
+  const totalPoints = $derived(operations.reduce((s, o) => s + (Number(o.points) || 0), 0));
   let message = $state('');
 
   const comptesBilan = $derived(
@@ -75,6 +79,8 @@
       introduction: introduction.trim(),
       mode,
       operations: operations.map((o) => ({ numero: o.numero.trim(), date: lireDate(o.date, Number(fin.slice(-4))) ?? '', texte: o.texte.trim() })),
+      bareme: Object.fromEntries(operations.map((o) => [o.numero.trim(), Math.max(0, Number(o.points) || 0)])),
+      pointsPartiels,
       ouvertureActif: versRecord(actif),
       ouverturePassif: versRecord(passif),
       parametres: {
@@ -104,7 +110,7 @@
   function ajouterOperation() {
     const dernier = operations.at(-1);
     const suivant = String((Number(dernier?.numero) || operations.length) + 1);
-    operations.push({ cle: ++n, numero: suivant, date: dernier?.date ?? debut, texte: '' });
+    operations.push({ cle: ++n, numero: suivant, date: dernier?.date ?? debut, texte: '', points: 1 });
   }
 
   function saisirCorrige() {
@@ -252,6 +258,7 @@
             <th style="width:70px">N°</th>
             <th style="width:120px">Date</th>
             <th>Texte de l'opération</th>
+            <th style="width:80px">Points</th>
             <th style="width:110px">Corrigé</th>
             <th style="width:30px"><span class="sr-only">Retirer</span></th>
           </tr>
@@ -263,13 +270,18 @@
             <td><input class="champ num" aria-label="Numéro" bind:value={o.numero} /></td>
             <td><input class="champ num" aria-label="Date" bind:value={o.date} /></td>
             <td><textarea class="champ" aria-label="Texte" rows="2" bind:value={o.texte}></textarea></td>
+            <td><input class="champ num points" type="number" min="0" step="0.5" aria-label="Points" bind:value={o.points} /></td>
             <td class="petit">{corrigeSaisi.has(o.numero.trim()) ? 'Saisi' : 'À saisir'}</td>
             <td><button class="retirer" aria-label="Retirer l'opération" onclick={() => operations.splice(i, 1)}>×</button></td>
           </tr>
         {/each}
       </tbody>
     </table>
-    <button class="btn" style="margin-top:10px" onclick={ajouterOperation}>Ajouter une opération</button>
+    <div class="pied-ops">
+      <button class="btn" onclick={ajouterOperation}>Ajouter une opération</button>
+      <label class="case"><input type="checkbox" bind:checked={pointsPartiels} /> Points partiels pour les écritures multiples</label>
+      <span>Total du barème : <b class="num">{totalPoints}</b> points</span>
+    </div>
   </div>
 </section>
 
@@ -316,6 +328,8 @@
   .pied-bilan { display: flex; justify-content: space-between; padding: 6px 4px; border-top: 1px solid var(--c-texte); margin-top: 4px; }
   .retirer { border: none; background: none; color: var(--c-texte-2); font-size: 18px; cursor: pointer; padding: 6px 4px; }
   .retirer:hover { color: var(--c-negatif); }
+  .pied-ops { display: flex; gap: 18px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+  .points { text-align: right; }
   .ecart-bilan { margin: 0 14px 14px; }
   .info { margin: 0 0 14px; }
   .info ul, .alerte ul { margin: 4px 0 0; padding-left: 18px; }
