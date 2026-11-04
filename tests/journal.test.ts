@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { controlerOuverture } from '../src/engine/dossier';
 import {
   ajouterEcriture,
-  contrePasser,
+  extourner,
   controlerEcriture,
   difference,
   modifierEcriture,
@@ -93,32 +93,32 @@ describe('contrôle des écritures', () => {
   });
 });
 
-describe('contre-passation', () => {
+describe('extourne', () => {
   it("annule l'effet de l'écriture en gardant l'historique", () => {
     let d = passer(dossierVide(), { ...ecr('1', simple('6000', '1020', 1200)), id: 'E1' });
-    const r = contrePasser(d, 'E1', '2026-04-01');
+    const r = extourner(d, 'E1', '2026-04-01');
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     d = r.valeur;
     expect(d.ecritures).toHaveLength(2);
     const cp = d.ecritures[1]!;
     expect(cp.piece).toBe('1');
-    expect(cp.contrePassationDe).toBe('E1');
-    expect(cp.libelle).toBe('Contre-passation : Opération 1');
+    expect(cp.extourneDe).toBe('E1');
+    expect(cp.libelle).toBe('Extourne : Opération 1');
     expect(cp.lignes).toEqual([{ debit: '1020', credit: '6000', montant: chf(1200) }]);
     expect(soldeDe(d, '6000')).toBe(0);
     expect(soldeDe(d, '1020')).toBe(chf(15000));
   });
 
-  it('refuse une double contre-passation', () => {
+  it('refuse une double extourne', () => {
     const d = passer(dossierVide(), { ...ecr('1', simple('6000', '1020', 1)), id: 'E1' });
-    const r1 = contrePasser(d, 'E1', '2026-04-01');
+    const r1 = extourner(d, 'E1', '2026-04-01');
     if (!r1.ok) throw new Error();
-    expect(contrePasser(r1.valeur, 'E1', '2026-04-01')).toEqual({
+    expect(extourner(r1.valeur, 'E1', '2026-04-01')).toEqual({
       ok: false,
-      erreurs: ['La pièce 1 a déjà été contre-passée.'],
+      erreurs: ['La pièce 1 a déjà été extournée.'],
     });
-    expect(contrePasser(r1.valeur, 'E2', '2026-04-01').ok).toBe(false);
+    expect(extourner(r1.valeur, 'E2', '2026-04-01').ok).toBe(false);
   });
 });
 

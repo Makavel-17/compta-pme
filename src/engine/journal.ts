@@ -1,4 +1,4 @@
-// Journal : contrôle des écritures, ajout, contre-passation, modification directe.
+// Journal : contrôle des écritures, ajout, extourne, modification directe.
 
 import type { Centimes } from './money';
 import { formatMontant, somme } from './money';
@@ -75,26 +75,26 @@ export function ajouterEcriture(d: Dossier, e: Ecriture): Resultat<Dossier> {
   return ok({ ...d, ecritures: [...d.ecritures, e] });
 }
 
-export function estContrePassee(d: Dossier, id: string): boolean {
-  return d.ecritures.some((e) => e.contrePassationDe === id);
+export function estExtournee(d: Dossier, id: string): boolean {
+  return d.ecritures.some((e) => e.extourneDe === id);
 }
 
 /**
- * Corrige une écriture validée par contre-passation : nouvelle écriture, même pièce,
+ * Corrige une écriture validée par extourne : nouvelle écriture, même pièce,
  * débit et crédit inversés. L'écriture d'origine reste visible dans le journal.
  */
-export function contrePasser(d: Dossier, id: string, date: string): Resultat<Dossier> {
+export function extourner(d: Dossier, id: string, date: string): Resultat<Dossier> {
   const origine = d.ecritures.find((e) => e.id === id);
   if (!origine) return echec(`Écriture ${id} introuvable.`);
-  if (origine.contrePassationDe) return echec('Une contre-passation ne peut pas elle-même être contre-passée.');
-  if (estContrePassee(d, id)) return echec(`La pièce ${origine.piece} a déjà été contre-passée.`);
+  if (origine.extourneDe) return echec('Une extourne ne peut pas elle-même être extournée.');
+  if (estExtournee(d, id)) return echec(`La pièce ${origine.piece} a déjà été extournée.`);
   const inverse: Ecriture = {
     id: nouvelId(d),
     date,
     piece: origine.piece,
-    libelle: `Contre-passation : ${origine.libelle}`,
+    libelle: `Extourne : ${origine.libelle}`,
     lignes: origine.lignes.map((l) => ({ debit: l.credit, credit: l.debit, montant: l.montant })),
-    contrePassationDe: origine.id,
+    extourneDe: origine.id,
   };
   return ajouterEcriture(d, inverse);
 }
@@ -104,8 +104,8 @@ export function modifierEcriture(d: Dossier, id: string, nouvelle: Omit<Ecriture
   const i = d.ecritures.findIndex((e) => e.id === id);
   if (i < 0) return echec(`Écriture ${id} introuvable.`);
   const ancienne = d.ecritures[i]!;
-  if (ancienne.contrePassationDe || estContrePassee(d, id)) {
-    return echec('Une écriture liée à une contre-passation ne peut plus être modifiée.');
+  if (ancienne.extourneDe || estExtournee(d, id)) {
+    return echec('Une écriture liée à une extourne ne peut plus être modifiée.');
   }
   const e: Ecriture = { ...nouvelle, id };
   const erreurs = controlerEcriture(d, e);

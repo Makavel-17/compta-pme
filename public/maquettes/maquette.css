@@ -203,3 +203,10 @@ tr.annulee td .barre { text-decoration: line-through; }
   .principal { padding: 16px; }
   .bilan .poste { grid-template-columns: 40px 1fr 90px 90px; }
 }
+
+/* Liste déroulante des comptes */
+.liste-comptes { width: 380px; max-height: 300px; overflow-y: auto; }
+.liste-comptes .groupe-comptes {
+  position: sticky; top: 0; background: var(--c-fond-2); color: var(--c-structure);
+  font-weight: bold; font-size: 12px; padding: 5px 10px; border-bottom: 1px solid var(--c-bordure-2);
+}

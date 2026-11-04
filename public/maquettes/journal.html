@@ -87,9 +87,47 @@
                 <td></td><td></td><td></td>
                 <td><input class="champ vide"><div class="intitule-compte"></div></td>
                 <td class="pos">
-                  <input class="champ num focus" value="11">
+                  <input class="champ num focus" placeholder="N° ou intitulé">
                   <div class="liste-comptes" role="listbox">
-                    <div class="sel"><span class="n">1100</span>Créances envers des tiers suisses</div>
+                    <div class="groupe-comptes">Classe 1 : Actif</div>
+                    <div class="sel"><span class="n">1000</span>Caisse</div>
+                    <div><span class="n">1010</span>Compte postal</div>
+                    <div><span class="n">1020</span>Banque</div>
+                    <div><span class="n">1100</span>Créances envers des tiers suisses</div>
+                    <div><span class="n">1200</span>Stocks de marchandises A</div>
+                    <div><span class="n">1500</span>Machines et appareils</div>
+                    <div><span class="n">1510</span>Mobilier d'exploitation</div>
+                    <div><span class="n">1513</span>Mobilier de bureau</div>
+                    <div><span class="n">1520</span>Machines de bureau</div>
+                    <div><span class="n">1521</span>Infrastructures informatiques</div>
+                    <div><span class="n">1530</span>Automobiles</div>
+                    <div><span class="n">1531</span>Camionnettes</div>
+                    <div><span class="n">1600</span>Bâtiments d'exploitation</div>
+                    <div class="groupe-comptes">Classe 2 : Passif</div>
+                    <div><span class="n">2000</span>Dettes c/achats de matières et marchandises</div>
+                    <div><span class="n">2001</span>Dettes c/prestations de services envers des tiers</div>
+                    <div><span class="n">2100</span>Dettes bancaires à court terme</div>
+                    <div><span class="n">2400</span>Dettes bancaires à long terme</div>
+                    <div><span class="n">2440</span>Hypothèques sur bâtiments d'exploitation</div>
+                    <div><span class="n">2800</span>Capital propre</div>
+                    <div><span class="n">2850</span>Prélèvements privés en espèces</div>
+                    <div class="groupe-comptes">Classe 3 : Ventes de marchandises</div>
+                    <div><span class="n">3210</span>Ventes brutes au comptant</div>
+                    <div><span class="n">3211</span>Ventes de détail brutes à crédit</div>
+                    <div class="groupe-comptes">Classe 4 : Charges liées aux marchandises</div>
+                    <div><span class="n">4200</span>Achats de marchandises</div>
+                    <div><span class="n">4208</span>Variations de stocks</div>
+                    <div class="groupe-comptes">Classe 5 : Charges liées aux employés</div>
+                    <div><span class="n">5200</span>Salaires</div>
+                    <div class="groupe-comptes">Classe 6 : Charges d'exploitation et résultat financier</div>
+                    <div><span class="n">6000</span>Loyer</div>
+                    <div><span class="n">6200</span>Réparation, service et nettoyage</div>
+                    <div><span class="n">6210</span>Carburants</div>
+                    <div><span class="n">6300</span>Assurance pour dommages</div>
+                    <div><span class="n">6400</span>Force motrice</div>
+                    <div><span class="n">6500</span>Matériel de bureau</div>
+                    <div><span class="n">6510</span>Téléphone</div>
+                    <div><span class="n">6600</span>Publicité dans les journaux</div>
                   </div>
                   <div class="intitule-compte"></div>
                 </td>
@@ -136,30 +174,30 @@
                 <td class="num">4200<span class="int">Achats de marchandises</span></td>
                 <td class="num">2000<span class="int">Dettes c/achats…</span></td>
                 <td class="montant">3'000.00</td><td><span class="statut juste">Juste</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr class="zebre">
                 <td class="num">15.01.2026</td><td class="num">2</td><td>Ventes au comptant</td>
                 <td class="num">1000<span class="int">Caisse</span></td>
                 <td class="num">3210<span class="int">Ventes brutes au comptant</span></td>
                 <td class="montant">2'500.00</td><td><span class="statut juste">Juste</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr>
                 <td class="num">03.02.2026</td><td class="num">3</td><td>Vente à crédit</td>
                 <td class="num">1100<span class="int">Créances envers…</span></td>
                 <td class="num">3211<span class="int">Ventes de détail…</span></td>
                 <td class="montant">4'000.00</td><td><span class="statut juste">Juste</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr class="zebre annulee">
-                <td class="num">28.02.2026</td><td class="num">4</td><td><span class="barre">Loyer de février</span> <span class="mention">contre-passée</span></td>
+                <td class="num">28.02.2026</td><td class="num">4</td><td><span class="barre">Loyer de février</span> <span class="mention">extournée</span></td>
                 <td class="num">1020<span class="int">Banque</span></td>
                 <td class="num">6000<span class="int">Loyer</span></td>
                 <td class="montant">1'200.00</td><td></td><td></td>
               </tr>
               <tr class="annulee">
-                <td class="num">28.02.2026</td><td class="num">4</td><td>Contre-passation : Loyer de février</td>
+                <td class="num">28.02.2026</td><td class="num">4</td><td>Extourne : Loyer de février</td>
                 <td class="num">6000<span class="int">Loyer</span></td>
                 <td class="num">1020<span class="int">Banque</span></td>
                 <td class="montant">1'200.00</td><td></td><td></td>
@@ -169,20 +207,20 @@
                 <td class="num">6000<span class="int">Loyer</span></td>
                 <td class="num">1020<span class="int">Banque</span></td>
                 <td class="montant">1'200.00</td><td><span class="statut juste">Juste</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr>
                 <td class="num">05.03.2026</td><td class="num">5</td><td>Prélèvement privé en espèces</td>
                 <td class="num">2850<span class="int">Prélèvements privés…</span></td>
                 <td class="num">1000<span class="int">Caisse</span></td>
                 <td class="montant">500.00</td><td><span class="statut juste">Juste</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr class="zebre">
                 <td class="num">20.03.2026</td><td class="num">6</td><td>Paiement fournisseur, banque et caisse</td>
                 <td class="num">2000<span class="int">Dettes c/achats…</span></td><td></td>
                 <td class="montant">2'000.00</td><td><span class="statut juste">Juste</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr class="zebre">
                 <td class="suite"></td><td class="suite"></td><td></td><td></td>
@@ -200,11 +238,11 @@
                 <td class="num">5200<span class="int">Salaires</span></td>
                 <td class="num">1020<span class="int">Banque</span></td>
                 <td class="montant">1'080.00</td><td><span class="statut revoir">À revoir</span></td>
-                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+                <td class="actions"><button class="btn-lien">Extourner</button></td>
               </tr>
               <tr class="selection ligne-indice">
                 <td></td><td></td>
-                <td colspan="6"><div class="indice"><b>Indice :</b> le montant ne correspond pas à l'opération. Relisez l'énoncé, puis corrigez par contre-passation.</div></td>
+                <td colspan="6"><div class="indice"><b>Indice :</b> le montant ne correspond pas à l'opération. Relisez l'énoncé, puis corrigez par une extourne.</div></td>
               </tr>
             </tbody>
           </table>
@@ -231,8 +269,9 @@
     <div class="note-maquette">
       <h3>Note de maquette (n'apparaîtra pas dans l'application)</h3>
       <ul>
-        <li>Opération 8 : l'élève saisit une écriture composée. Le champ compte au crédit est en cours de saisie (« 11 ») : la liste propose les comptes dont le numéro ou l'intitulé correspond, sans jamais suggérer de contrepartie.</li>
-        <li>Opération 4 : erreur corrigée par contre-passation. L'écriture fausse et sa contre-passation restent visibles, en gris.</li>
+        <li>Opération 8 : l'élève saisit une écriture composée. Il vient de cliquer dans le champ « Compte au crédit » : la liste déroulante affiche tous les comptes de l'exercice, groupés par classe. Il choisit à la souris, au doigt ou avec les flèches et Entrée.</li>
+        <li>S'il tape un numéro ou un mot (« 11 », « ban »), la liste se réduit aux comptes correspondants. Elle est toujours complète et neutre : aucune contrepartie n'est suggérée.</li>
+        <li>Opération 4 : erreur corrigée par extourne. L'écriture fausse et son extourne restent visibles, en gris.</li>
         <li>Opération 7 : retour en mode entraînement, 1er niveau (indice). Le bouton « Voir la solution » n'apparaît qu'après une nouvelle tentative fausse.</li>
         <li>En mode évaluation, la colonne « Correction », les indices et l'état des opérations dans l'énoncé disparaissent.</li>
         <li>L'opération en cours est rappelée en haut de la grille de saisie. Sur tablette, la liste complète de l'énoncé passe sous le journal.</li>

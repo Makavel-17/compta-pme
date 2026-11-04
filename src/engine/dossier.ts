@@ -25,8 +25,8 @@ export interface Ecriture {
   piece: string;
   libelle: string;
   lignes: LigneEcriture[];
-  /** Renseigné si cette écriture est la contre-passation d'une autre. */
-  contrePassationDe?: string;
+  /** Renseigné si cette écriture est l'extourne d'une autre. */
+  extourneDe?: string;
 }
 
 export interface Dossier {
