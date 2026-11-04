@@ -17,6 +17,8 @@
   import Bouclement from './vues/Bouclement.svelte';
   import Tva from './vues/Tva.svelte';
   import Salaire from './vues/Salaire.svelte';
+  import Repartition from './vues/Repartition.svelte';
+  import Analyse from './vues/Analyse.svelte';
   import Visite from './composants/Visite.svelte';
 
   function exporterMaCopie() {
@@ -85,6 +87,7 @@
         entrees: [
           { vue: 'bilan', libelle: 'Bilan' },
           { vue: 'resultat', libelle: 'Compte de résultat' },
+          ...(f.has('analyse') ? [{ vue: 'analyse' as Vue, libelle: 'Analyse' }] : []),
         ],
       },
       {
@@ -92,6 +95,7 @@
         entrees: [
           ...(f.has('tva') ? [{ vue: 'tva' as Vue, libelle: 'TVA' }] : []),
           { vue: 'bouclement', libelle: 'Bouclement' },
+          ...(f.has('repartition') ? [{ vue: 'repartition' as Vue, libelle: 'Répartition du bénéfice' }] : []),
         ],
       },
     ];
@@ -163,6 +167,8 @@
       {:else if etat.vue === 'bouclement'}<Bouclement />
       {:else if etat.vue === 'tva' && etat.fonctions.has('tva')}<Tva />
       {:else if etat.vue === 'salaire' && etat.fonctions.has('salaire')}<Salaire />
+      {:else if etat.vue === 'repartition' && etat.fonctions.has('repartition')}<Repartition />
+      {:else if etat.vue === 'analyse' && etat.fonctions.has('analyse')}<Analyse />
       {:else}<TableauDeBord />
       {/if}
     </main>

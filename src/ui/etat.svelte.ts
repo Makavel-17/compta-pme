@@ -18,6 +18,8 @@ export type Vue =
   | 'resultat'
   | 'tva'
   | 'salaire'
+  | 'repartition'
+  | 'analyse'
   | 'bouclement';
 
 export interface Eleve {
@@ -49,7 +51,7 @@ interface Sauvegarde {
   prefs: Preferences;
 }
 
-const VUES: Vue[] = ['tableau', 'journal', 'comptes', 'grandlivre', 'balance', 'bilan', 'resultat', 'tva', 'salaire', 'bouclement'];
+const VUES: Vue[] = ['tableau', 'journal', 'comptes', 'grandlivre', 'balance', 'bilan', 'resultat', 'tva', 'salaire', 'repartition', 'analyse', 'bouclement'];
 
 function vueDepuisAdresse(): Vue {
   const h = location.hash.replace('#', '') as Vue;

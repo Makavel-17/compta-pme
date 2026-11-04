@@ -44,6 +44,17 @@
   let tvaMethode = $state<'net' | 'brut'>(source.parametres.tvaMethode ?? 'net');
   let ficheSalaire = $state(source.parametres.ficheSalaire ?? false);
   let calculatriceTva = $state(source.parametres.calculatriceTva ?? false);
+  const rep0 = source.parametres.repartition;
+  let repBenefice = $state<number | null>(rep0?.benefice ?? null);
+  let repReporte = $state<number | null>(rep0 ? Math.abs(rep0.reporte) : null);
+  let repPerte = $state(rep0 ? rep0.reporte < 0 : false);
+  let repCapital = $state<number | null>(rep0?.capital ?? null);
+  let repResCapital = $state<number | null>(rep0?.reserveLegaleCapital ?? null);
+  let repResBenefice = $state<number | null>(rep0?.reserveLegaleBenefice ?? null);
+  let repTaux = $state(rep0 ? String(rep0.tauxDividende / 100) : '');
+  let repTantiemes = $state<number | null>(rep0?.tantiemes ?? null);
+  let repLibres = $state<number | null>(rep0?.reservesLibres ?? null);
+  let repHolding = $state(rep0?.holding ?? false);
   let actif = $state<LigneBilan[]>(versLignes(source.ouvertureActif));
   let passif = $state<LigneBilan[]>(versLignes(source.ouverturePassif));
   let operations = $state<LigneOp[]>(
@@ -91,6 +102,20 @@
         tvaMethode,
         ficheSalaire,
         calculatriceTva,
+        repartition:
+          niveau === 'MP' && formeJuridique !== 'raison individuelle' && repBenefice !== null && repCapital !== null
+            ? {
+                benefice: repBenefice,
+                reporte: (repPerte ? -1 : 1) * (repReporte ?? 0),
+                capital: repCapital,
+                reserveLegaleCapital: repResCapital ?? 0,
+                reserveLegaleBenefice: repResBenefice ?? 0,
+                holding: repHolding,
+                tauxDividende: Math.round((Number(repTaux.replace(',', '.')) || 0) * 100),
+                tantiemes: repTantiemes ?? 0,
+                reservesLibres: repLibres ?? 0,
+              }
+            : undefined,
       },
     };
   }
@@ -168,8 +193,12 @@
       <label class="bloc" for="ex-forme">Forme juridique</label>
       <select id="ex-forme" class="champ" bind:value={formeJuridique}>
         <option value="raison individuelle">Raison individuelle</option>
+        {#if niveau === 'MP'}
+          <option value="Sàrl">Sàrl</option>
+          <option value="SA">SA</option>
+        {/if}
       </select>
-      <span class="discret petit">Sàrl et SA : niveau MP (phase 6).</span>
+      {#if niveau !== 'MP'}<span class="discret petit">Sàrl et SA : niveau MP.</span>{/if}
     </div>
     <div class="dates">
       <div>
@@ -215,6 +244,27 @@
     {/if}
   </div>
 </section>
+
+{#if niveau === 'MP' && formeJuridique !== 'raison individuelle'}
+  <section class="carte">
+    <h2>Répartition du bénéfice (fiche de l'élève)</h2>
+    <div class="corps-carte grille">
+      <div><label class="bloc" for="rep-b">Bénéfice de l'exercice</label><ChampMontant id="rep-b" libelle="Bénéfice de l'exercice" bind:valeur={repBenefice} /></div>
+      <div>
+        <label class="bloc" for="rep-r">Report de l'exercice précédent</label>
+        <ChampMontant id="rep-r" libelle="Report" bind:valeur={repReporte} />
+        <label class="case petit"><input type="checkbox" bind:checked={repPerte} /> Il s'agit d'une perte reportée</label>
+      </div>
+      <div><label class="bloc" for="rep-c">Capital inscrit au RC</label><ChampMontant id="rep-c" libelle="Capital" bind:valeur={repCapital} /></div>
+      <div><label class="bloc" for="rep-t">Dividende (% du capital)</label><input id="rep-t" class="champ montant num" bind:value={repTaux} inputmode="decimal" /></div>
+      <div><label class="bloc" for="rep-rc">Réserve légale issue du capital</label><ChampMontant id="rep-rc" libelle="Réserve légale issue du capital" bind:valeur={repResCapital} /></div>
+      <div><label class="bloc" for="rep-rb">Réserve légale issue du bénéfice</label><ChampMontant id="rep-rb" libelle="Réserve légale issue du bénéfice" bind:valeur={repResBenefice} /></div>
+      <div><label class="bloc" for="rep-ta">Tantièmes</label><ChampMontant id="rep-ta" libelle="Tantièmes" bind:valeur={repTantiemes} /></div>
+      <div><label class="bloc" for="rep-l">Réserves libres</label><ChampMontant id="rep-l" libelle="Réserves libres" bind:valeur={repLibres} /></div>
+      <label class="case large"><input type="checkbox" bind:checked={repHolding} /> Société holding (plafond de 20 %)</label>
+    </div>
+  </section>
+{/if}
 
 <section class="carte">
   <h2>Bilan d'ouverture</h2>

@@ -32,10 +32,20 @@ export const OPTIONS_RI: OptionsBouclement = {
   prefixePiece: 'B',
 };
 
-function verifierForme(d: Dossier): string | null {
-  return d.formeJuridique === 'raison individuelle'
-    ? null
-    : 'Le bouclement des sociétés (Sàrl, SA) sera disponible au niveau MP.';
+/** Sociétés (Sàrl, SA) : le résultat est viré au bénéfice reporté (2970), il n'y a pas de compte privé. */
+export const OPTIONS_SOCIETE: OptionsBouclement = {
+  compteCapital: '2970',
+  comptesPrives: [],
+  compteResultat: '9000',
+  prefixePiece: 'B',
+};
+
+export function optionsBouclement(forme: Dossier['formeJuridique']): OptionsBouclement {
+  return forme === 'raison individuelle' ? OPTIONS_RI : OPTIONS_SOCIETE;
+}
+
+function verifierForme(_d: Dossier): string | null {
+  return null;
 }
 
 /**
@@ -44,7 +54,7 @@ function verifierForme(d: Dossier): string | null {
  * 2. clôture des charges et produits par le compte de résultat ;
  * 3. virement du résultat au capital.
  */
-export function ecrituresDeBouclement(d: Dossier, o: OptionsBouclement = OPTIONS_RI): Resultat<Ecriture[]> {
+export function ecrituresDeBouclement(d: Dossier, o: OptionsBouclement = optionsBouclement(d.formeJuridique)): Resultat<Ecriture[]> {
   const err = verifierForme(d);
   if (err) return echec(err);
   const plan = indexPlan(d.plan);
@@ -116,7 +126,7 @@ function simplifier(lignes: LigneEcriture[]): LigneEcriture[] {
 }
 
 /** Passe les écritures de bouclement dans le journal. */
-export function boucler(d: Dossier, o: OptionsBouclement = OPTIONS_RI): Resultat<Dossier> {
+export function boucler(d: Dossier, o: OptionsBouclement = optionsBouclement(d.formeJuridique)): Resultat<Dossier> {
   const e = ecrituresDeBouclement(d, o);
   if (!e.ok) return e;
   // Les comptes de bouclement sont toujours utilisables pour ces écritures.
@@ -134,7 +144,7 @@ export function boucler(d: Dossier, o: OptionsBouclement = OPTIONS_RI): Resultat
 }
 
 /** Vrai si les charges, produits, comptes privés et de bouclement sont tous soldés. */
-export function estBoucle(d: Dossier, o: OptionsBouclement = OPTIONS_RI): boolean {
+export function estBoucle(d: Dossier, o: OptionsBouclement = optionsBouclement(d.formeJuridique)): boolean {
   const plan = indexPlan(d.plan);
   for (const [n, x] of soldes(d)) {
     const t = plan.get(n)?.type;
@@ -150,7 +160,7 @@ export function estBoucle(d: Dossier, o: OptionsBouclement = OPTIONS_RI): boolea
  * Mode 'compteDeResultat' : le dossier doit être bouclé.
  * Mode 'aLaReouverture' : le compte privé et le résultat sont intégrés au capital.
  */
-export function reouvrir(d: Dossier, mode: ModeBouclement, o: OptionsBouclement = OPTIONS_RI): Resultat<Dossier> {
+export function reouvrir(d: Dossier, mode: ModeBouclement, o: OptionsBouclement = optionsBouclement(d.formeJuridique)): Resultat<Dossier> {
   const err = verifierForme(d);
   if (err) return echec(err);
   if (mode === 'compteDeResultat' && !estBoucle(d, o)) {

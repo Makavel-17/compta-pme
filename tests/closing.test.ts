@@ -46,9 +46,20 @@ describe('bouclement par le compte de résultat (9000)', () => {
     expect(r.valeur.at(-1)!.libelle).toBe("Perte de l'exercice");
   });
 
-  it('refuse les sociétés à ce stade', () => {
-    const d = { ...dossierExemple(), formeJuridique: 'SA' as const };
-    expect(boucler(d).ok).toBe(false);
+  it('SA : le bénéfice est viré au bénéfice reporté (2970), sans compte privé', () => {
+    const base = dossierExemple();
+    const d = {
+      ...base,
+      formeJuridique: 'SA' as const,
+      niveau: 'MP' as const,
+      ecritures: base.ecritures.filter((e) => e.piece !== '5'), // pas de prélèvement privé dans une SA
+    };
+    const r = ecrituresDeBouclement(d);
+    if (!r.ok) throw new Error(r.erreurs.join());
+    expect(r.valeur.at(-1)!.lignes).toEqual([{ debit: '9000', credit: '2970', montant: chf(500) }]);
+    const b = boucler(d);
+    if (!b.ok) throw new Error(b.erreurs.join());
+    expect(soldeDe(b.valeur, '2970')).toBe(chf(-500));
   });
 });
 

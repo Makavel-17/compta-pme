@@ -9,12 +9,13 @@ import { estDateValide } from './dates';
 import type { ModeBouclement } from './closing';
 import type { Compte, Niveau } from './plan';
 import { NIVEAUX } from './plan';
+import type { DonneesRepartition } from './repartition';
 
 export type LibellesT = 'SI/SF' | 'San/Spb';
 export type Mode = 'entrainement' | 'evaluation';
 
 /** Rubriques de l'application ; une rubrique non activée n'apparaît pas. */
-export type Fonction = 'tva' | 'salaire' | 'calculatriceTva';
+export type Fonction = 'tva' | 'salaire' | 'calculatriceTva' | 'repartition' | 'analyse';
 
 export interface Operation {
   numero: string;
@@ -55,6 +56,8 @@ export interface Exercice {
     ficheSalaire?: boolean;
     /** Calculatrice de TVA (aide au calcul, désactivée par défaut). */
     calculatriceTva?: boolean;
+    /** MP, sociétés : données de la répartition du bénéfice décidée par l'assemblée générale. */
+    repartition?: DonneesRepartition;
   };
   corrige?: EcritureCorrigee[];
   /** Points par opération (numéro → points) ; 1 point par défaut. */
@@ -70,12 +73,27 @@ export function fonctionsDuNiveau(niveau: Niveau): Set<Fonction> {
   return f;
 }
 
+export const INTITULE_CAPITAL: Record<FormeJuridique, string> = {
+  'raison individuelle': 'Capital',
+  SA: 'Capital-actions',
+  Sàrl: 'Capital social',
+};
+
+/** Le compte 2800 porte l'intitulé correspondant à la forme juridique. */
+export function planSelonForme(plan: Compte[], forme: FormeJuridique): Compte[] {
+  return plan.map((c) => (c.numero === '2800' ? { ...c, intitule: INTITULE_CAPITAL[forme] } : c));
+}
+
 /** Fonctions visibles pour un exercice : celles du niveau, plus les options choisies par l'enseignant. */
 export function fonctionsExercice(ex: Exercice): Set<Fonction> {
   const f = fonctionsDuNiveau(ex.niveau);
   const cfc2 = NIVEAUX.indexOf(ex.niveau) >= NIVEAUX.indexOf('CFC2');
   if (cfc2 && ex.parametres.ficheSalaire) f.add('salaire');
   if (cfc2 && ex.parametres.calculatriceTva) f.add('calculatriceTva');
+  if (ex.niveau === 'MP') {
+    f.add('analyse');
+    if (ex.formeJuridique !== 'raison individuelle') f.add('repartition');
+  }
   return f;
 }
 
@@ -90,7 +108,7 @@ export function creerDossier(ex: Exercice, plan: Compte[]): Dossier {
     debut: ex.debut,
     fin: ex.fin,
     niveau: ex.niveau,
-    plan,
+    plan: planSelonForme(plan, ex.formeJuridique),
     comptesAjoutes: ajoutes,
     comptesMasques: [...ex.parametres.comptesMasques],
     ouverture: ouvertureDepuisBilan(ex.ouvertureActif, ex.ouverturePassif),
