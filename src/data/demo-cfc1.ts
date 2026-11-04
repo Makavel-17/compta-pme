@@ -58,8 +58,8 @@ export const demoCfc1: Exercice = {
   },
   corrige: [
     { piece: '1', lignes: s('4200', '2000', 4800) },
-    { piece: '2', lignes: s('1000', '3210', 12350) },
-    { piece: '3', lignes: s('1100', '3211', 6400) },
+    { piece: '2', lignes: s('1000', '3200', 12350) },
+    { piece: '3', lignes: s('1100', '3200', 6400) },
     { piece: '4', lignes: s('1020', '1000', 9000) },
     { piece: '5', lignes: s('6000', '1020', 1850) },
     { piece: '6', lignes: s('2000', '1020', 4800) },
@@ -68,7 +68,7 @@ export const demoCfc1: Exercice = {
     { piece: '9', lignes: s('6400', '1010', 240) },
     { piece: '10', lignes: s('5200', '1020', 4200) },
     { piece: '11', lignes: s('2850', '1000', 800) },
-    { piece: '12', lignes: s('6600', '2001', 650) },
+    { piece: '12', lignes: s('6600', '2010', 650) },
     { piece: '13', lignes: s('2400', '1020', 5000) },
     {
       piece: '14',

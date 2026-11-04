@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import csv from '../src/data/plan-lpg.csv?raw';
+import csv from '../src/data/plan-pme.csv?raw';
 import { comptesDuNiveau, ecrirePlanCsv, ErreurPlan, lirePlanCsv } from '../src/engine/plan';
 
-describe('plan comptable LPG', () => {
+describe('plan comptable PME du cours', () => {
   const plan = lirePlanCsv(csv);
 
   it('se charge sans erreur et contient les comptes attendus', () => {
-    expect(plan.length).toBeGreaterThan(250);
-    expect(plan.find((c) => c.numero === '1020')?.intitule).toBe('Banque');
-    expect(plan.find((c) => c.numero === '2200')?.intitule).toBe('TVA à payer');
+    expect(plan.length).toBeGreaterThan(90);
+    expect(plan.find((c) => c.numero === '1020')?.intitule).toBe('Banque (n/avoir)');
+    expect(plan.find((c) => c.numero === '2200')?.intitule).toBe('TVA due');
   });
 
   it('respecte la relecture CSV aller-retour', () => {

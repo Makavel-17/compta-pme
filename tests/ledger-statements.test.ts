@@ -11,7 +11,7 @@ describe('soldes', () => {
     ['1100', 4000],
     ['2000', -6000],
     ['2850', 500],
-    ['3210', -2500],
+    ['3200', -6500],
     ['4200', 3000],
   ])('compte %s : %i', (n, francs) => {
     expect(s.get(n)?.solde).toBe(chf(francs));
@@ -45,7 +45,7 @@ describe('grand livre', () => {
   it('donne un solde progressif par compte, comptes triés', () => {
     const gl = grandLivre(dossierExemple());
     expect(gl.map((c) => c.numero)).toEqual([
-      '1000', '1020', '1100', '1200', '1510', '2000', '2400', '2800', '2850', '3210', '3211', '4200', '5200', '6000',
+      '1000', '1020', '1100', '1200', '1510', '2000', '2400', '2800', '2850', '3200', '4200', '5200', '6000',
     ]);
     const banque = gl.find((c) => c.numero === '1020')!;
     expect(banque.lignes.map((l) => l.soldeProgressif)).toEqual([chf(15000), chf(13800), chf(12300), chf(10500)]);
@@ -78,9 +78,9 @@ describe('états financiers', () => {
     expect(cr.resultat).toBe(chf(500));
     expect(cr.totalEquilibre).toBe(chf(6500));
     expect(cr.charges.map((g) => g.titre)).toEqual([
-      'Charges liées aux marchandises',
-      'Charges liées aux employés',
-      "Charges d'exploitation",
+      'Charges de marchandises et de services',
+      'Charges de personnel',
+      "Autres charges d'exploitation",
     ]);
   });
 

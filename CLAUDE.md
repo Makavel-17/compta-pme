@@ -37,13 +37,20 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - Bouclement : deux modes — `compteDeResultat` (via 9000, **par défaut**) et `aLaReouverture` (résultat et privé intégrés au capital à la réouverture).
 - Versionnement : Git, dépôt GitHub, déploiement GitHub Pages par GitHub Actions (`.github/workflows/`).
 
+## Supports de cours de référence (inspiration uniquement)
+
+- `D:\E&S_Edition 2022\` (manuel romand Économie & Société, CREME-CIIP : volumes CFC profils B/E, F&C profil M), `D:\Cours_Compta\`, `D:\Cours gestion\`.
+- **Protégés : s'en inspirer uniquement, ne jamais reproduire de texte, d'exemple ni d'exercice.** Certains PDF F&C sont verrouillés : ne pas contourner.
+- Usages relevés (04.11.2026) : TVA au net (B : calcul ; E/M : comptabilisation), 1170 IP s/marchandises et services + 1171 IP s/investissements et autres charges d'exploitation, décompte 2200/1170, 2200/1171, solde 2200/2205 puis paiement 2205/1020 ; amortissement direct (B) et indirect (E) avec « Fonds d'amortissements cumulés » en xxx9, linéaire/dégressif, prorata temporis ; transitoires 1300/2300 avec extourne au 01.01 par l'élève ; ducroire 3805↔1109 (ajustement de la différence), 1108 Créances douteuses, pas de correction TVA sur pertes ; salaires : retenues 5200/dettes par assurance, net 5200/1020, charges patronales 5270/dettes ; comptes en T avec San/Spb. Le plan comptable du manuel suit la numérotation PME (≠ plan LPG).
+
 ## Plan comptable
 
-- Source retenue par l'enseignant : **plan LPG Fiduciaire** (lpg-fiduciaire-de-suisse.ch, version du 28.10.2020), **numéros et intitulés repris tels quels** dans `src/data/plan-lpg.csv`.
+- **Plan du cours (numérotation PME du manuel E&S)**, choisi par l'enseignant le 04.11.2026 à la place du plan LPG : `src/data/plan-pme.csv`. Numéros et intitulés alignés sur le cours (ex. 1020 Banque (n/avoir), 2170 Dette AVS, 3200 Ventes de marchandises, 3805 Pertes s/créances, 6800 Amortissements, 6900 Charges financières, 9000 Compte de résultat), sans recopier l'annexe du manuel.
 - CSV `numero;intitule;classe;type;niveau_min`. Types : actif, passif, charge, produit, bouclement (classe 9). `niveau_min` : CFC1, CFC2, MP ou `-` (non utilisé par défaut, activable par l'enseignant).
-- Les valeurs `niveau_min` du CSV sont **validées par l'enseignant** (04.11.2026).
-- Titres de groupes du bilan et du compte de résultat : **ceux du plan LPG** (validé).
-- Points connus à trancher plus tard : intitulés 3220-3222 / 4210-4212 mentionnant des taux périmés (8.00 %, 2.50 %) ; « 2900 Réserve générale » (terminologie antérieure au droit 2023) ; absence de comptes de correction pour l'amortissement indirect hors 1209/1609 ; absence de comptes de titres et produits de titres.
+- Les valeurs `niveau_min` du nouveau plan sont **une proposition à faire valider**.
+- Titres de groupes du bilan et du compte de résultat : classes du plan du cours (actifs circulants / immobilisés ; capitaux étrangers à court / long terme ; capitaux propres ; chiffre d'affaires ; charges de marchandises et de services ; charges de personnel ; autres charges d'exploitation ; amortissements ; charges et produits financiers ; hors exploitation ; exceptionnels ; impôts).
+- Points à trancher : 2205 ou 2206 pour la dette envers l'AFC (le chapitre TVA du manuel et son annexe diffèrent) ; 2800 s'intitule « Capital » (raison individuelle) ou « Capital-actions » (SA) selon la forme juridique (phase 6).
+- Les maquettes validées (`public/maquettes/`) montrent encore des numéros LPG : ce sont des archives.
 
 ## Niveaux (validés)
 
@@ -60,7 +67,7 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - Bilan avant bouclement : bénéfice dans les capitaux propres ; **perte de l'exercice du côté de l'actif**, sur une ligne séparée (choix de l'enseignant).
 - Comptes en T : abréviations **SI / SF** par défaut (solde initial / solde final) ; variante **San / Spb** (solde à nouveau / solde pour bilan) proposée en paramètre.
 - Bouclement : l'enseignant n'a pas de préférence. **Par défaut, écritures de bouclement via 9000 Compte de résultat** (le compte en T 9000 reproduit le compte de résultat, lien avec le travail à la main) ; le mode « intégration à la réouverture » reste disponible en paramètre d'exercice.
-- TVA méthode effective, taux 8,1 % / 2,6 % / 3,8 %. **Méthodes nette et brute** toutes deux disponibles (choix par exercice). **Arrondi aux 5 centimes.** Décompte simplifié : tableau TVA due − impôt préalable, compensation 2200/1170, paiement 2200/1020.
+- TVA méthode effective, taux 8,1 % / 2,6 % / 3,8 %. **Méthodes nette et brute** toutes deux disponibles (choix par exercice). **Arrondi aux 5 centimes.** Décompte simplifié : tableau TVA due − impôt préalable. Écritures proposées d'après le cours (à valider en phase 4) : 2200/1170, 2200/1171, solde 2200/2206 (ou 2205), paiement 2206/1020.
 - Répartition du bénéfice : **règle du droit révisé (art. 672 CO, dès 2023)** ; relire le texte de loi avant d'implémenter.
 - Salaires : les cotisations sont données par l'énoncé ; l'enseignant veut **plusieurs façons de comptabiliser et d'effectuer les calculs**, au choix par exercice. Variantes concrètes à proposer et faire valider au début de la phase 4.
 

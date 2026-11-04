@@ -32,7 +32,7 @@ describe('contrôle des écritures', () => {
   const d = dossierVide();
 
   it('accepte une écriture simple', () => {
-    expect(controlerEcriture(d, ecr('1', simple('1000', '3210', 100)))).toEqual([]);
+    expect(controlerEcriture(d, ecr('1', simple('1000', '3200', 100)))).toEqual([]);
   });
 
   it('accepte une écriture composée équilibrée', () => {
@@ -78,7 +78,7 @@ describe('contrôle des écritures', () => {
   });
 
   it('refuse une date hors exercice, une pièce et un libellé vides', () => {
-    const e = { ...ecr('', simple('1000', '3210', 1), '2027-01-01'), libelle: ' ' };
+    const e = { ...ecr('', simple('1000', '3200', 1), '2027-01-01'), libelle: ' ' };
     expect(controlerEcriture(d, e)).toEqual([
       "La date 01.01.2027 est hors de l'exercice (du 01.01.2026 au 31.12.2026).",
       "Indiquez le numéro de pièce (numéro de l'opération).",

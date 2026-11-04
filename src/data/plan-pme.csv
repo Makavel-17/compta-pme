@@ -1,0 +1,98 @@
+numero;intitule;classe;type;niveau_min
+1000;Caisse;1;actif;CFC1
+1010;Poste (CP);1;actif;CFC1
+1020;Banque (n/avoir);1;actif;CFC1
+1060;Titres de placement;1;actif;MP
+1100;Créances clients;1;actif;CFC1
+1108;Créances douteuses;1;actif;CFC2
+1109;Ducroire;1;actif;CFC2
+1140;Avances de salaire;1;actif;CFC2
+1170;IP s/marchandises et services;1;actif;CFC2
+1171;IP s/investissements et AGE;1;actif;CFC2
+1176;Créances AFC;1;actif;MP
+1190;Autres créances;1;actif;-
+1200;Stock de marchandises;1;actif;CFC1
+1210;Stock de matières premières;1;actif;-
+1300;Actifs transitoires;1;actif;CFC2
+1400;Titres de participations;1;actif;MP
+1500;Machines et appareils;1;actif;CFC1
+1509;FAC s/machines et appareils;1;actif;CFC2
+1510;Mobilier et installations;1;actif;CFC1
+1519;FAC s/mobilier et installations;1;actif;CFC2
+1520;Machines de bureau;1;actif;CFC1
+1521;Infrastructure informatique;1;actif;CFC1
+1529;FAC s/machines de bureau et infrastructure informatique;1;actif;CFC2
+1530;Véhicules;1;actif;CFC1
+1539;FAC s/véhicules;1;actif;CFC2
+1540;Instruments et outillage;1;actif;-
+1549;FAC s/instruments et outillage;1;actif;-
+1600;Immeubles;1;actif;CFC1
+1609;FAC s/immeubles;1;actif;CFC2
+1700;Brevets;1;actif;MP
+1709;FAC s/brevets;1;actif;MP
+1850;Actionnaires (capital non versé);1;actif;MP
+1860;Participants (capital non versé);1;actif;-
+2000;Dettes fournisseurs;2;passif;CFC1
+2010;Autres dettes;2;passif;CFC1
+2100;Banque (n/dette);2;passif;CFC1
+2170;Dette AVS;2;passif;CFC2
+2171;Dette LPP;2;passif;CFC2
+2172;Dette ALFA;2;passif;CFC2
+2200;TVA due;2;passif;CFC2
+2206;Dettes AFC;2;passif;CFC2
+2230;Dividendes;2;passif;MP
+2235;Tantièmes;2;passif;MP
+2300;Passifs transitoires;2;passif;CFC2
+2400;Emprunt bancaire à long terme;2;passif;CFC1
+2401;Dettes hypothécaires;2;passif;CFC1
+2500;Emprunt à long terme auprès de tiers;2;passif;-
+2600;Provision pour réparations;2;passif;MP
+2640;Provision pour impôts;2;passif;MP
+2660;Provision pour litiges;2;passif;MP
+2690;Autres provisions;2;passif;MP
+2800;Capital;2;passif;CFC1
+2810;Capital-participations;2;passif;-
+2850;Privé;2;passif;CFC1
+2900;Réserves légales issues du capital;2;passif;MP
+2950;Réserves légales issues du bénéfice;2;passif;MP
+2960;Réserves libres;2;passif;MP
+2970;Bénéfice reporté (./. Perte reportée);2;passif;MP
+2979;Bénéfice d'exercice (./. Perte d'exercice);2;passif;MP
+3200;Ventes de marchandises;3;produit;CFC1
+3209;Déductions accordées;3;produit;MP
+3210;Frais de ventes;3;produit;-
+3400;Honoraires;3;produit;-
+3410;Produits des travaux;3;produit;-
+3420;Produits des courses;3;produit;-
+3430;Autres produits;3;produit;-
+3720;Prestations propres;3;produit;-
+3805;Pertes s/créances;3;produit;CFC2
+4200;Achats de marchandises;4;charge;CFC1
+4209;Déductions obtenues;4;charge;MP
+4270;Frais d'achats;4;charge;MP
+4280;Variation de stocks;4;charge;CFC1
+5200;Salaires;5;charge;CFC1
+5270;Charges sociales;5;charge;CFC2
+5280;Autres charges du personnel;5;charge;-
+6000;Loyers;6;charge;CFC1
+6100;Entretien et réparations;6;charge;CFC1
+6200;Frais de véhicules;6;charge;CFC1
+6280;Frais d'expédition;6;charge;-
+6300;Assurances;6;charge;CFC1
+6400;Électricité, gaz (autres énergies);6;charge;CFC1
+6500;Frais d'administration;6;charge;CFC1
+6510;Téléphone, fax, Internet;6;charge;CFC1
+6550;FAO (frais de fondation, d'augmentation de capital et d'organisation);6;charge;-
+6570;Frais d'informatique;6;charge;-
+6600;Publicité;6;charge;CFC1
+6700;Autres charges d'exploitation (AGE);6;charge;CFC1
+6740;Différence de caisse;6;charge;-
+6800;Amortissements;6;charge;CFC2
+6900;Charges financières (intérêts-charges et frais bancaires);6;charge;MP
+6950;Produits financiers (intérêts-produits);6;produit;MP
+8000;Charges hors exploitation;8;charge;MP
+8100;Produits hors exploitation;8;produit;MP
+8500;Charges exceptionnelles;8;charge;CFC2
+8510;Produits exceptionnels;8;produit;CFC2
+8900;Impôts (personnes morales);8;charge;MP
+9000;Compte de résultat;9;bouclement;CFC1

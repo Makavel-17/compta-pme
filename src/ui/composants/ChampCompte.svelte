@@ -9,15 +9,14 @@
   import { normaliser } from '../format';
 
   const TITRES_CLASSES: Record<number, string> = {
-    1: 'Classe 1 : Actif',
-    2: 'Classe 2 : Passif',
-    3: 'Classe 3 : Ventes de marchandises',
-    4: 'Classe 4 : Charges liées aux marchandises',
-    5: 'Classe 5 : Charges liées aux employés',
-    6: "Classe 6 : Charges d'exploitation et résultat financier",
-    7: "Classe 7 : Bénéfice sur vente d'actifs",
-    8: 'Classe 8 : Résultat exceptionnel ou hors exploitation',
-    9: 'Classe 9 : Compte de bilan et de résultat',
+    1: 'Classe 1 : Actifs',
+    2: 'Classe 2 : Passifs',
+    3: "Classe 3 : Chiffre d'affaires (ventes et prestations de service)",
+    4: 'Classe 4 : Charges de marchandises et de services',
+    5: 'Classe 5 : Charges de personnel',
+    6: "Classe 6 : Autres charges d'exploitation, amortissements, résultat financier",
+    8: 'Classe 8 : Résultats hors exploitation et exceptionnels',
+    9: 'Classe 9 : Clôture',
   };
 
   let {

@@ -1,5 +1,5 @@
 // Bilan et compte de résultat en forme de compte (deux colonnes).
-// Les intitulés de groupes reprennent ceux du plan LPG.
+// Les intitulés de groupes reprennent les classes du plan comptable PME du cours.
 
 import type { Centimes } from './money';
 import type { Dossier } from './dossier';
@@ -33,24 +33,25 @@ const GROUPES_ACTIF: DefGroupe[] = [
   { titre: 'Actifs immobilisés', de: '1400', a: '1999', type: 'actif' },
 ];
 const GROUPES_PASSIF: DefGroupe[] = [
-  { titre: 'Dettes à court terme', de: '2000', a: '2399', type: 'passif' },
-  { titre: 'Dettes à long terme', de: '2400', a: '2799', type: 'passif' },
+  { titre: 'Capitaux étrangers à court terme', de: '2000', a: '2399', type: 'passif' },
+  { titre: 'Capitaux étrangers à long terme', de: '2400', a: '2799', type: 'passif' },
   { titre: 'Capitaux propres', de: '2800', a: '2999', type: 'passif' },
 ];
 const GROUPES_CHARGES: DefGroupe[] = [
-  { titre: 'Charges liées aux marchandises', de: '4000', a: '4999', type: 'charge' },
-  { titre: 'Charges liées aux employés', de: '5000', a: '5999', type: 'charge' },
-  { titre: "Charges d'exploitation", de: '6000', a: '6799', type: 'charge' },
-  { titre: 'Charges financières', de: '6800', a: '6849', type: 'charge' },
-  { titre: 'Amortissements', de: '6900', a: '6999', type: 'charge' },
-  { titre: 'Charges exceptionnelles et hors exploitation', de: '8000', a: '8899', type: 'charge' },
-  { titre: "Charges d'impôt", de: '8900', a: '8999', type: 'charge' },
+  { titre: 'Charges de marchandises et de services', de: '4000', a: '4999', type: 'charge' },
+  { titre: 'Charges de personnel', de: '5000', a: '5999', type: 'charge' },
+  { titre: "Autres charges d'exploitation", de: '6000', a: '6799', type: 'charge' },
+  { titre: 'Amortissements', de: '6800', a: '6899', type: 'charge' },
+  { titre: 'Charges financières', de: '6900', a: '6949', type: 'charge' },
+  { titre: 'Charges hors exploitation', de: '8000', a: '8099', type: 'charge' },
+  { titre: 'Charges exceptionnelles', de: '8500', a: '8509', type: 'charge' },
+  { titre: 'Impôts', de: '8900', a: '8999', type: 'charge' },
 ];
 const GROUPES_PRODUITS: DefGroupe[] = [
-  { titre: 'Ventes de marchandises', de: '3000', a: '3999', type: 'produit' },
-  { titre: 'Produits financiers', de: '6850', a: '6899', type: 'produit' },
-  { titre: "Bénéfice sur vente d'actifs", de: '7000', a: '7999', type: 'produit' },
-  { titre: 'Produits exceptionnels et hors exploitation', de: '8000', a: '8999', type: 'produit' },
+  { titre: "Chiffre d'affaires", de: '3000', a: '3999', type: 'produit' },
+  { titre: 'Produits financiers', de: '6950', a: '6999', type: 'produit' },
+  { titre: 'Produits hors exploitation', de: '8100', a: '8199', type: 'produit' },
+  { titre: 'Produits exceptionnels', de: '8510', a: '8599', type: 'produit' },
 ];
 
 function construire(defs: DefGroupe[], plan: Map<string, Compte>, s: Map<string, { solde: Centimes }>): Groupe[] {

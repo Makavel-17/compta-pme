@@ -1,5 +1,5 @@
 // Jeu d'essai : petite raison individuelle (niveau CFC1).
-import csv from '../src/data/plan-lpg.csv?raw';
+import csv from '../src/data/plan-pme.csv?raw';
 import type { Dossier, Ecriture, LigneEcriture } from '../src/engine/dossier';
 import { ouvertureDepuisBilan } from '../src/engine/dossier';
 import { ajouterEcriture } from '../src/engine/journal';
@@ -55,8 +55,8 @@ export function dossierExemple(): Dossier {
   return passer(
     dossierVide(),
     ecr('1', simple('4200', '2000', 3000), '2026-01-10', 'Achat de marchandises à crédit'),
-    ecr('2', simple('1000', '3210', 2500), '2026-01-15', 'Ventes au comptant'),
-    ecr('3', simple('1100', '3211', 4000), '2026-02-03', 'Vente à crédit'),
+    ecr('2', simple('1000', '3200', 2500), '2026-01-15', 'Ventes au comptant'),
+    ecr('3', simple('1100', '3200', 4000), '2026-02-03', 'Vente à crédit'),
     ecr('4', simple('6000', '1020', 1200), '2026-02-28', 'Loyer de février'),
     ecr('5', simple('2850', '1000', 500), '2026-03-05', 'Prélèvement privé en espèces'),
     ecr(

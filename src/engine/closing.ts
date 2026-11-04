@@ -27,7 +27,7 @@ export interface OptionsBouclement {
 
 export const OPTIONS_RI: OptionsBouclement = {
   compteCapital: '2800',
-  comptesPrives: ['2850', '2851', '2852', '2853', '2854', '2855', '2856'],
+  comptesPrives: ['2850'],
   compteResultat: '9000',
   prefixePiece: 'B',
 };
