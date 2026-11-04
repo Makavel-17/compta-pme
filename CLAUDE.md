@@ -14,8 +14,8 @@ Interlocuteur : l'enseignant de comptabilité. Toujours répondre en français, 
 ## Phases
 
 0. Squelette, plan comptable, CLAUDE.md — *terminée*
-1. Moteur comptable et tests — *terminée, en attente de validation* (montants, dates, journal, extourne, soldes, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement RI, réouverture). TVA, correction et répartition du bénéfice sont testées dans leurs phases respectives.
-2. 2a maquettes Journal + Bilan (validation) ; 2b interface CFC1 (journal, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement, visite guidée)
+1. Moteur comptable et tests — *terminée* (montants, dates, journal, extourne, soldes, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement RI, réouverture). TVA, correction et répartition du bénéfice sont testées dans leurs phases respectives.
+2. 2a maquettes Journal + Bilan — *validées* (public/maquettes/) ; 2b interface CFC1 (journal, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement, visite guidée, hors ligne) — *terminée, en attente de validation*. Exercice de démo CFC1 : `src/data/demo-cfc1.ts` (Cycles du Léman, 15 opérations, bénéfice 3'530.00).
 3. Mode enseignant, création d'exercice, import/export, correction automatique, retour gradué
 4. CFC2 : TVA, amortissements, régularisations, ducroire, salaires
 5. Mode évaluation, barème, note, PDF, synthèse enseignant
@@ -33,6 +33,7 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - `src/ui/` : composants Svelte. `src/io/` : fichiers, CSV, localStorage. `src/data/` : plan comptable, exercices de démo.
 - Commandes : `npm run dev`, `npm test`, `npm run check`, `npm run build`.
 - Conventions du moteur : solde positif = débiteur ; dates ISO `AAAA-MM-JJ` en interne ; fonctions pures retournant `Resultat<T>` (`ok` / `erreurs` en français) ; écriture = lignes `{debit, credit, montant}` (une ligne à deux comptes = écriture simple, lignes à un seul côté = écriture composée) ; une extourne garde le même numéro de pièce.
+- Bouclement : en mode `compteDeResultat`, l'élève passe lui-même les écritures de bouclement au journal (pièces B1, B2…) ; question ouverte à l'enseignant : génération automatique ou non.
 - Bouclement : deux modes — `compteDeResultat` (via 9000, **par défaut**) et `aLaReouverture` (résultat et privé intégrés au capital à la réouverture).
 - Versionnement : Git, dépôt GitHub, déploiement GitHub Pages par GitHub Actions (`.github/workflows/`).
 
@@ -84,7 +85,7 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - S'inspirer des logiciels comptables suisses professionnels (Banana, Abacus, bexio) : fond blanc, tableaux denses à lignes alternées, montants à droite en chiffres tabulaires, soldes négatifs en rouge, une seule couleur forte pour l'action principale.
 - Barre latérale fixe (rubriques activées seulement), en-tête avec dossier, exercice, niveau, mode toujours visibles, une seule tâche à la fois.
 - Saisie au clavier : Tab entre les champs, Entrée valide la ligne ; champ compte par numéro ou recherche dans l'intitulé, intitulé affiché immédiatement ; différence débit/crédit affichée en direct.
-- Champ compte = **liste déroulante** (exigence de l'enseignant : utilisation la plus simple possible) : clic ou flèche ↓ ouvre la liste complète des comptes de l'exercice groupés par classe ; la frappe d'un numéro ou d'un mot filtre ; choix souris, doigt ou clavier. Liste toujours complète et neutre.
+- Champ compte = **liste déroulante** (exigence de l'enseignant : utilisation la plus simple possible) : clic ou flèche ↓ ouvre la liste complète des comptes de l'exercice groupés par classe ; la frappe d'un numéro ou d'un mot filtre ; choix souris, doigt ou clavier. Liste toujours complète et neutre. **Tab ne choisit jamais à la place de l'élève** : seulement s'il ne reste qu'un compte correspondant ou si l'élève l'a désigné avec les flèches ; sinon message « Plusieurs comptes correspondent : choisissez dans la liste ».
 - Vocabulaire validé : **« Extourner » / « Extourne »** (jamais « contre-passer »).
-- Couleurs (`src/ui/theme.css`) : structure `#1F4E78`, sélection/lignes alternées `#D6E4F0`, action `#E8601C` (parcimonie ; texte blanc en gras ≥ 14 pt pour le contraste), texte d'alerte `#B34A12`.
+- Couleurs validées avec les maquettes (`src/ui/theme.css`) : structure `#1F4E78` ; sélection `#D6E4F0` ; lignes alternées `#F1F6FB` (plus pâle) ; bouton principal `#C4501A` (orange de la charte assombri, texte blanc conforme AA) ; `#E8601C` pour bordures d'alerte, rubrique active et focus clavier ; texte d'alerte `#B34A12` ; statut « Juste » en vert `#1D6B3A`. Grille de saisie en haut du journal.
 - Arial (Helvetica dans les PDF), aucun émoji, aucune illustration, aucune animation superflue. WCAG AA, lisible au projecteur, ordinateur et tablette en paysage.
