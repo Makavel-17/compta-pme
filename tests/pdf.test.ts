@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { writeFileSync } from 'node:fs';
 import { demoCfc2 } from '../src/data/demo-cfc2';
 import { creerDossier } from '../src/engine/exercice';
 import { ajouterEcriture } from '../src/engine/journal';
@@ -19,6 +18,5 @@ describe('export PDF de la copie', () => {
     const texte = await blob.text();
     expect(texte.startsWith('%PDF')).toBe(true);
     for (const t of ['Journal', 'Balance de v', 'Bilan', 'Compte de r', nom, 'Page 1 /']) expect(texte).toContain(t);
-    if (process.env.PDF_SORTIE) writeFileSync(process.env.PDF_SORTIE, Buffer.from(await blob.arrayBuffer()));
   });
 });
