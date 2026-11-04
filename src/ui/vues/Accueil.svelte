@@ -1,7 +1,27 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
   import { exercicesDemo } from '../../data/demo-cfc1';
-  import { LIBELLES_NIVEAU } from '../../engine/exercice';
+  import { LIBELLES_MODE, LIBELLES_NIVEAU, type Exercice } from '../../engine/exercice';
+  import { EXT_EXERCICE, ErreurFichier, importerExercice } from '../../io/fichiers';
+  import { choisirFichiers } from '../fichiers-navigateur';
+
+  let { onEnseignant }: { onEnseignant: () => void } = $props();
+  let importes = $state<Exercice[]>([]);
+  const tous = $derived([...importes, ...exercicesDemo]);
+  let erreurImport = $state('');
+
+  async function ouvrirFichier() {
+    erreurImport = '';
+    const [f] = await choisirFichiers(`${EXT_EXERCICE},.json`);
+    if (!f) return;
+    try {
+      const ex = importerExercice(f.texte);
+      importes = [ex, ...importes.filter((x) => x.id !== ex.id)];
+      choix = ex.id;
+    } catch (e) {
+      erreurImport = e instanceof ErreurFichier ? e.message : "Le fichier n'a pas pu être lu.";
+    }
+  }
 
   let prenom = $state('');
   let nom = $state('');
@@ -15,7 +35,7 @@
     if (!prenom.trim()) err.push('Indiquez votre prénom.');
     if (!nom.trim()) err.push('Indiquez votre nom.');
     if (!classe.trim()) err.push('Indiquez votre classe (par exemple 1CFC3).');
-    const ex = exercicesDemo.find((x) => x.id === choix);
+    const ex = tous.find((x) => x.id === choix);
     if (!ex) err.push('Choisissez un exercice.');
     erreurs = err;
     if (err.length || !ex) return;
@@ -51,17 +71,24 @@
 
       <h2 class="separe">Exercice</h2>
       <div class="corps-carte">
-        {#each exercicesDemo as ex}
+        {#each tous as ex}
           <label class="exercice" class:choisi={choix === ex.id}>
             <input type="radio" name="exercice" value={ex.id} bind:group={choix} />
             <span>
               <strong>{ex.titre}</strong>
               <span class="badge niveau">{LIBELLES_NIVEAU[ex.niveau]}</span><br />
-              <span class="discret">{ex.raisonSociale} · {ex.operations.length} opérations · exercice de démonstration</span>
+              <span class="discret">
+                {ex.raisonSociale} · {ex.operations.length} opérations ·
+                {exercicesDemo.includes(ex) ? 'exercice de démonstration' : `fourni par l'enseignant · ${LIBELLES_MODE[ex.mode]}`}
+              </span>
             </span>
           </label>
         {/each}
-        <p class="discret petit">L'importation des exercices fournis par l'enseignant sera disponible prochainement.</p>
+        <div class="ouvrir">
+          <button type="button" class="btn" onclick={ouvrirFichier}>Ouvrir un exercice reçu…</button>
+          <span class="discret petit">Fichier {EXT_EXERCICE} remis par votre enseignant.</span>
+        </div>
+        {#if erreurImport}<div class="alerte" role="alert" style="margin-top:10px">{erreurImport}</div>{/if}
       </div>
 
       {#if erreurs.length}
@@ -73,6 +100,7 @@
         <button type="submit" class="btn btn-principal">Commencer</button>
       </div>
     </form>
+    <p class="enseignant"><button class="btn-lien" onclick={onEnseignant}>Espace enseignant</button></p>
   </main>
 </div>
 
@@ -92,7 +120,10 @@
   .exercice.choisi { background: var(--c-selection); border-color: var(--c-structure); }
   .exercice input { margin-top: 3px; }
   .niveau { background: var(--c-structure); color: #fff; margin-left: 8px; }
-  .petit { font-size: 12px; margin: 10px 0 0; }
+  .petit { font-size: 12px; }
+  .exercice + .exercice { margin-top: 8px; }
+  .ouvrir { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .enseignant { text-align: right; margin-top: 16px; font-size: 13px; }
   .actions { padding: 0 14px 14px; text-align: right; }
   @media (max-width: 640px) { .grille { grid-template-columns: 1fr; } }
 </style>

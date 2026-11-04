@@ -2,7 +2,9 @@
   import { tick } from 'svelte';
   import { etat } from '../etat.svelte';
   import { comptesDisponibles } from '../../engine/dossier';
-  import { ajouterEcriture, estExtournee, extourner, nouvelId } from '../../engine/journal';
+  import { ajouterEcriture, estExtournee, extourner, modifierEcriture, nouvelId } from '../../engine/journal';
+  import { diagnostiquer, enregistrerTentative, solutionDisponible, INDICES, type Diagnostic } from '../../engine/correction';
+  import type { Dossier, Ecriture } from '../../engine/dossier';
   import { operationsSaisies } from '../../engine/exercice';
   import { annee, lireDate } from '../../engine/dates';
   import type { Centimes } from '../../engine/money';
@@ -21,6 +23,42 @@
   const intitules = $derived(new Map(d.plan.map((c) => [c.numero, c.intitule])));
   const saisies = $derived(operationsSaisies(d));
   const operations = $derived(d.debut === ex.debut ? ex.operations : []);
+
+  // ---- Retour gradué (entraînement) ----
+  const corrigeParPiece = $derived(new Map((ex.corrige ?? []).map((c) => [c.piece, c])));
+  const retour = $derived(
+    ex.mode === 'entrainement' && etat.session!.role === 'eleve' && corrigeParPiece.size > 0 && operations.length > 0,
+  );
+  const modifAutorisee = $derived(ex.mode === 'entrainement' && ex.parametres.modificationDirecte && etat.session!.role === 'eleve');
+  const suivi = $derived(etat.session!.suivi);
+
+  function evaluer(dossier: Dossier, p: string, compter: boolean) {
+    if (!retour) return;
+    const c = corrigeParPiece.get(p);
+    if (!c) return;
+    const diag = diagnostiquer(dossier.ecritures, c);
+    if (compter) etat.majSuivi(enregistrerTentative(suivi, p, diag));
+    else {
+      const ancien = suivi[p] ?? { essais: 0, solutionVue: false, dernier: diag };
+      etat.majSuivi({ ...suivi, [p]: { ...ancien, dernier: diag } });
+    }
+  }
+
+  function statut(p: string): Diagnostic | null {
+    return retour ? (suivi[p]?.dernier ?? null) : null;
+  }
+
+  const libelleStatut = (x: Diagnostic | null) =>
+    x === 'juste' ? 'Juste' : x === 'incomplete' ? 'Incomplète' : x && x !== 'manquante' ? 'À revoir' : '';
+  const classeStatut = (x: Diagnostic | null) =>
+    x === 'juste' ? 'juste' : x === 'incomplete' ? 'neutre' : x && x !== 'manquante' ? 'revoir' : '';
+
+  function voirSolution(p: string) {
+    const ancien = suivi[p];
+    if (ancien) etat.majSuivi({ ...suivi, [p]: { ...ancien, solutionVue: true } });
+  }
+
+  let editionId = $state<string | null>(null);
 
   function prochaineOperation() {
     return operations.find((o) => !saisies.has(o.numero));
@@ -52,6 +90,7 @@
   }
 
   function reinitialiser() {
+    editionId = null;
     const o = prochaineOperation();
     piece = o?.numero ?? '';
     date = o ? dt(o.date) : date;
@@ -66,18 +105,22 @@
       erreurs = ['Indiquez une date valide au format JJ.MM.AAAA.'];
       return;
     }
-    const r = ajouterEcriture(d, {
-      id: nouvelId(d),
+    const p = piece.trim();
+    const contenu = {
       date: iso,
-      piece: piece.trim(),
+      piece: p,
       libelle: libelle.trim(),
       lignes: utiles.map((l) => ({ debit: l.debit, credit: l.credit, montant: l.montant ?? 0 })),
-    });
+    };
+    const ancienne = editionId ? d.ecritures.find((e) => e.id === editionId) : undefined;
+    const r = editionId ? modifierEcriture(d, editionId, contenu) : ajouterEcriture(d, { id: nouvelId(d), ...contenu });
     if (!r.ok) {
       erreurs = r.erreurs;
       return;
     }
     etat.majDossier(r.valeur);
+    if (ancienne && ancienne.piece !== p) evaluer(r.valeur, ancienne.piece, false);
+    evaluer(r.valeur, p, true);
     reinitialiser();
     await tick();
     document.getElementById('saisie-libelle')?.focus();
@@ -123,9 +166,30 @@
     );
     if (!ok) return;
     const r = extourner(d, id, e.date);
-    if (r.ok) etat.majDossier(r.valeur);
-    else alert(r.erreurs.join('\n'));
+    if (!r.ok) return alert(r.erreurs.join('\n'));
+    etat.majDossier(r.valeur);
+    evaluer(r.valeur, e.piece, false);
   }
+
+  async function modifier(e: Ecriture) {
+    editionId = e.id;
+    date = dt(e.date);
+    piece = e.piece;
+    libelle = e.libelle;
+    lignes = e.lignes.map((l) => ({ cle: ++compteur, debit: l.debit, credit: l.credit, montant: l.montant }));
+    erreurs = [];
+    await tick();
+    document.querySelector('.saisie')?.scrollIntoView({ block: 'nearest' });
+    document.getElementById('saisie-libelle')?.focus();
+  }
+
+  const derniereParPiece = $derived.by(() => {
+    const r = new Map<string, string>();
+    for (const e of ecrituresTriees) if (!e.extourneDe && !estExtournee(d, e.id)) r.set(e.piece, e.id);
+    return r;
+  });
+
+  const nomCompte = (n: string | null) => (n ? `${n} ${intitules.get(n) ?? ''}` : '');
 
   const ecrituresTriees = $derived(
     d.ecritures.map((e, i) => ({ e, i })).sort((a, b) => (a.e.date < b.e.date ? -1 : a.e.date > b.e.date ? 1 : a.i - b.i)).map((x) => x.e),
@@ -147,7 +211,7 @@
 <div class="mise-en-page">
   <div class="colonne-principale">
     <section class="carte saisie" aria-label="Nouvelle écriture" data-visite="saisie">
-      <h2>Nouvelle écriture</h2>
+      <h2>{editionId ? `Modification de la pièce ${piece}` : 'Nouvelle écriture'}</h2>
       {#if operationCourante}
         <div class="operation-courante"><b>Opération {operationCourante.numero}.</b> {operationCourante.texte}</div>
       {/if}
@@ -202,7 +266,7 @@
         </div>
         <div class="boutons">
           <button class="btn" onclick={reinitialiser}>Annuler</button>
-          <button class="btn btn-principal" disabled={!equilibree} onclick={valider}>Valider l'écriture</button>
+          <button class="btn btn-principal" disabled={!equilibree} onclick={valider}>{editionId ? 'Enregistrer la modification' : "Valider l'écriture"}</button>
         </div>
       </div>
       {#if erreurs.length}
@@ -234,7 +298,8 @@
               <th style="width:130px">Débit</th>
               <th style="width:130px">Crédit</th>
               <th class="montant" style="width:96px">Montant</th>
-              <th style="width:84px"><span class="sr-only">Actions</span></th>
+              {#if retour}<th style="width:86px">Correction</th>{/if}
+              <th style={`width:${modifAutorisee ? 140 : 84}px`}><span class="sr-only">Actions</span></th>
             </tr>
           </thead>
           <tbody>
@@ -255,13 +320,59 @@
                   <td class="num">{#if l.debit}{l.debit}<span class="int">{intitules.get(l.debit)}</span>{/if}</td>
                   <td class="num">{#if l.credit}{l.credit}<span class="int">{intitules.get(l.credit)}</span>{/if}</td>
                   <td class="montant">{m(l.montant)}</td>
+                  {#if retour}
+                    <td>
+                      {#if j === 0 && !extournee && !e.extourneDe}
+                        <span class={`statut ${classeStatut(statut(e.piece))}`}>{libelleStatut(statut(e.piece))}</span>
+                      {/if}
+                    </td>
+                  {/if}
                   <td class="actions">
                     {#if j === 0 && !extournee && !e.extourneDe}
+                      {#if modifAutorisee}<button class="btn-lien" onclick={() => modifier(e)}>Modifier</button>{/if}
                       <button class="btn-lien" onclick={() => demanderExtourne(e.id)}>Extourner</button>
                     {/if}
                   </td>
                 </tr>
               {/each}
+              {@const st = statut(e.piece)}
+              {#if retour && derniereParPiece.get(e.piece) === e.id && st && st !== 'juste' && st !== 'manquante'}
+                {@const s = suivi[e.piece]}
+                <tr class="ligne-retour" class:zebre={k % 2 === 1}>
+                  <td></td><td></td>
+                  <td colspan="6">
+                    {#if st === 'incomplete'}
+                      <div class="retour neutre">{INDICES.incomplete}</div>
+                    {:else}
+                      <div class="retour">
+                        <b>Indice :</b> {INDICES[st]}
+                        {modifAutorisee
+                          ? "Corrigez par une extourne ou modifiez l'écriture."
+                          : "Corrigez par une extourne, puis saisissez à nouveau l'opération."}
+                        {#if solutionDisponible(s) && !s?.solutionVue}
+                          <button class="btn-lien solution" onclick={() => voirSolution(e.piece)}>Voir la solution</button>
+                        {/if}
+                      </div>
+                      {#if s?.solutionVue && corrigeParPiece.get(e.piece)}
+                        <div class="solution-detail">
+                          <b>Solution de l'opération {e.piece} :</b>
+                          <table>
+                            <tbody>
+                              {#each corrigeParPiece.get(e.piece)!.lignes as l}
+                                <tr>
+                                  <td>{l.debit ? 'Débit ' + nomCompte(l.debit) : ''}</td>
+                                  <td>{l.credit ? 'Crédit ' + nomCompte(l.credit) : ''}</td>
+                                  <td class="montant">{m(l.montant)}</td>
+                                </tr>
+                              {/each}
+                            </tbody>
+                          </table>
+                        </div>
+                      {/if}
+                    {/if}
+                  </td>
+                </tr>
+              {/if}
             {/each}
           </tbody>
         </table>
@@ -280,7 +391,9 @@
             <button onclick={() => choisirOperation(o.numero)}>
               <span class="no">{o.numero}</span>
               <span class="texte">{o.texte}</span>
-              {#if saisies.has(o.numero)}<span class="etat">Saisie</span>{/if}
+              {#if retour && statut(o.numero) && statut(o.numero) !== 'manquante'}
+                <span class={`etat statut ${classeStatut(statut(o.numero))}`}>{libelleStatut(statut(o.numero))}</span>
+              {:else if saisies.has(o.numero)}<span class="etat">Saisie</span>{/if}
             </button>
           </li>
         {/each}
@@ -318,6 +431,17 @@
   .actions { text-align: right; white-space: nowrap; }
   tr.annulee td { color: #7a8591; }
   .barre { text-decoration: line-through; }
+  .statut { font-size: 12px; font-weight: bold; white-space: nowrap; }
+  .statut.juste { color: var(--c-ok); }
+  .statut.revoir { color: var(--c-alerte-texte); }
+  .statut.neutre { color: var(--c-texte-2); }
+  tr.ligne-retour td { padding-top: 0; }
+  .retour { padding: 6px 10px; background: var(--c-alerte-fond); border-left: 4px solid var(--c-accent); font-size: 13px; }
+  .retour.neutre { background: var(--c-fond-2); border-left-color: var(--c-bordure); color: var(--c-texte-2); }
+  .solution { margin-left: 8px; font-weight: bold; }
+  .solution-detail { margin-top: 6px; padding: 6px 10px; border-left: 4px solid var(--c-structure); background: var(--c-selection); font-size: 13px; }
+  .solution-detail table { margin-top: 4px; width: auto; }
+  .solution-detail td { border: none; padding: 2px 14px 2px 0; background: none !important; }
   .mention { font-size: 12px; color: var(--c-texte-2); font-style: italic; margin-left: 4px; }
 
   .enonce ol { margin: 0; padding: 0; list-style: none; max-height: calc(100vh - 170px); overflow-y: auto; }

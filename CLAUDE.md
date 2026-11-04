@@ -15,8 +15,8 @@ Interlocuteur : l'enseignant de comptabilité. Toujours répondre en français, 
 
 0. Squelette, plan comptable, CLAUDE.md — *terminée*
 1. Moteur comptable et tests — *terminée* (montants, dates, journal, extourne, soldes, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement RI, réouverture). TVA, correction et répartition du bénéfice sont testées dans leurs phases respectives.
-2. 2a maquettes Journal + Bilan — *validées* (public/maquettes/) ; 2b interface CFC1 (journal, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement, visite guidée, hors ligne) — *terminée, en attente de validation*. Exercice de démo CFC1 : `src/data/demo-cfc1.ts` (Cycles du Léman, 15 opérations, bénéfice 3'530.00).
-3. Mode enseignant, création d'exercice, import/export, correction automatique, retour gradué
+2. 2a maquettes Journal + Bilan — *validées* (public/maquettes/) ; 2b interface CFC1 (journal, comptes en T, grand livre, balance, bilan, compte de résultat, bouclement, visite guidée, hors ligne) — *terminée et validée*. Exercice de démo CFC1 : `src/data/demo-cfc1.ts` (Cycles du Léman, 15 opérations, bénéfice 3'530.00).
+3. Mode enseignant, création d'exercice, import/export, correction automatique, retour gradué — *terminée, en attente de validation*. Moteur `src/engine/correction.ts` (diagnostics, suivi des tentatives) ; fichiers `src/io/fichiers.ts` ; espace enseignant `src/ui/vues/EspaceEnseignant.svelte` et éditeur `EditeurExercice.svelte` ; le corrigé se saisit dans le journal (session `role: 'corrige'`, travail de l'élève mis de côté puis restauré). Synthèse des copies : phase 5.
 4. CFC2 : TVA, amortissements, régularisations, ducroire, salaires
 5. Mode évaluation, barème, note, PDF, synthèse enseignant
 6. MP : Sàrl/SA, répartition du bénéfice, provisions, titres, ratios
@@ -73,6 +73,9 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - Évaluation : aucun retour pendant la saisie. Barème par écriture, **tout ou rien, sauf écritures multiples où des points partiels sont possibles**. Note = 1 + points/max × 5, arrondie au demi-point le plus proche (x.25 → x.5), bornée 1–6.
 - Fichier d'exercice : en évaluation **sans corrigé** (l'enseignant le conserve et corrige à l'import des copies) ; en entraînement corrigé inclus mais encodé.
 - Copie élève : prénom, nom, **classe**.
+- « Bonne classe mais mauvais compte » = même premier chiffre (classe du plan). Une opération incomplète (décomposition en cours) n'est pas comptée comme une erreur.
+- Formats : `.compta-exercice.json` (élèves ; corrigé absent en évaluation, encodé en entraînement), version enseignant (corrigé en clair), `.compta-copie.json`.
+- Mode enseignant : code simple stocké dans le navigateur (`compta-pme:enseignant:v1`), sans prétention de sécurité.
 
 ## Pédagogie
 

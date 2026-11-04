@@ -4,12 +4,14 @@
 import type { Centimes } from './money';
 import type { DateISO } from './dates';
 import type { Dossier, FormeJuridique, LigneEcriture } from './dossier';
-import { ouvertureDepuisBilan } from './dossier';
+import { comptesDisponibles, controlerOuverture, ouvertureDepuisBilan } from './dossier';
+import { estDateValide } from './dates';
 import type { ModeBouclement } from './closing';
 import type { Compte, Niveau } from './plan';
 import { NIVEAUX } from './plan';
 
 export type LibellesT = 'SI/SF' | 'San/Spb';
+export type Mode = 'entrainement' | 'evaluation';
 
 /** Rubriques de l'application ; une rubrique non activée n'apparaît pas. */
 export type Fonction = 'tva';
@@ -39,8 +41,11 @@ export interface Exercice {
   /** Bilan d'ouverture en montants positifs. */
   ouvertureActif: Record<string, Centimes>;
   ouverturePassif: Record<string, Centimes>;
+  mode: Mode;
   parametres: {
     libellesT: LibellesT;
+    /** Entraînement : l'enseignant autorise la modification directe des écritures validées. */
+    modificationDirecte: boolean;
     modeBouclement: ModeBouclement;
     comptesAjoutes: string[];
     comptesMasques: string[];
@@ -79,5 +84,86 @@ export function operationsSaisies(d: Dossier): Set<string> {
   const extournees = new Set(d.ecritures.filter((e) => e.extourneDe).map((e) => e.extourneDe!));
   return new Set(d.ecritures.filter((e) => !e.extourneDe && !extournees.has(e.id)).map((e) => e.piece));
 }
+
+/** Contrôle d'un exercice avant distribution : erreurs bloquantes et avertissements. */
+export function controlerExercice(ex: Exercice, plan: Compte[]): { erreurs: string[]; avertissements: string[] } {
+  const erreurs: string[] = [];
+  const avertissements: string[] = [];
+  if (!ex.titre.trim()) erreurs.push("Indiquez le titre de l'exercice.");
+  if (!ex.raisonSociale.trim()) erreurs.push("Indiquez la raison sociale de l'entreprise.");
+  const datesOk = estDateValide(ex.debut) && estDateValide(ex.fin);
+  if (!datesOk) erreurs.push("Indiquez des dates d'exercice valides (JJ.MM.AAAA).");
+  else if (ex.debut >= ex.fin) erreurs.push("La fin de l'exercice doit être postérieure à son début.");
+
+  const d = creerDossier(ex, plan);
+  erreurs.push(...controlerOuverture(d));
+  const dispo = new Set(comptesDisponibles(d).map((c) => c.numero));
+  for (const n of Object.keys(d.ouverture)) {
+    if (!dispo.has(n)) erreurs.push(`Bilan d'ouverture : le compte ${n} n'est pas disponible au niveau choisi.`);
+  }
+
+  if (ex.operations.length === 0) erreurs.push("Ajoutez au moins une opération à l'énoncé.");
+  const vus = new Set<string>();
+  ex.operations.forEach((o) => {
+    if (vus.has(o.numero)) erreurs.push(`Le numéro d'opération ${o.numero} figure deux fois.`);
+    vus.add(o.numero);
+    if (!o.texte.trim()) erreurs.push(`Opération ${o.numero} : le texte est vide.`);
+    if (!estDateValide(o.date)) erreurs.push(`Opération ${o.numero} : la date est invalide.`);
+    else if (datesOk && (o.date < ex.debut || o.date > ex.fin)) {
+      erreurs.push(`Opération ${o.numero} : la date est hors de l'exercice.`);
+    }
+  });
+
+  const corrige = new Map((ex.corrige ?? []).map((c) => [c.piece, c]));
+  const sansCorrige = ex.operations.filter((o) => !corrige.has(o.numero)).map((o) => o.numero);
+  if (sansCorrige.length) {
+    const msg = `Opérations sans corrigé : ${sansCorrige.join(', ')}.`;
+    if (ex.mode === 'entrainement') avertissements.push(`${msg} Aucun retour ne sera donné aux élèves pour ces opérations.`);
+    else avertissements.push(`${msg} Elles ne pourront pas être corrigées automatiquement.`);
+  }
+  for (const c of ex.corrige ?? []) {
+    if (!vus.has(c.piece)) avertissements.push(`Le corrigé contient une pièce ${c.piece} qui n'est pas une opération de l'énoncé.`);
+  }
+  return { erreurs, avertissements };
+}
+
+/** Exercice vierge pour l'éditeur de l'enseignant. */
+export function exerciceVierge(id: string, annee: number): Exercice {
+  return {
+    id,
+    titre: '',
+    niveau: 'CFC1',
+    raisonSociale: '',
+    formeJuridique: 'raison individuelle',
+    debut: `${annee}-01-01`,
+    fin: `${annee}-12-31`,
+    introduction: '',
+    operations: [],
+    ouvertureActif: {},
+    ouverturePassif: {},
+    mode: 'entrainement',
+    parametres: {
+      libellesT: 'SI/SF',
+      modificationDirecte: false,
+      modeBouclement: 'compteDeResultat',
+      comptesAjoutes: [],
+      comptesMasques: [],
+    },
+    corrige: [],
+  };
+}
+
+/** Transforme les écritures saisies par l'enseignant en corrigé (une entrée par pièce). */
+export function corrigeDepuisEcritures(d: Dossier): EcritureCorrigee[] {
+  const extournees = new Set(d.ecritures.filter((e) => e.extourneDe).map((e) => e.extourneDe!));
+  const parPiece = new Map<string, LigneEcriture[]>();
+  for (const e of d.ecritures) {
+    if (e.extourneDe || extournees.has(e.id)) continue;
+    parPiece.set(e.piece, [...(parPiece.get(e.piece) ?? []), ...e.lignes]);
+  }
+  return [...parPiece].map(([piece, lignes]) => ({ piece, lignes }));
+}
+
+export const LIBELLES_MODE: Record<Mode, string> = { entrainement: 'Entraînement', evaluation: 'Évaluation' };
 
 export const LIBELLES_NIVEAU: Record<Niveau, string> = { CFC1: 'CFC 1', CFC2: 'CFC 2', MP: 'MP' };

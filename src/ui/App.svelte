@@ -1,6 +1,10 @@
 <script lang="ts">
   import { etat, type Vue } from './etat.svelte';
-  import { LIBELLES_NIVEAU } from '../engine/exercice';
+  import { LIBELLES_MODE, LIBELLES_NIVEAU } from '../engine/exercice';
+  import { enseignant } from './enseignant.svelte';
+  import { EXT_COPIE, exporterCopie, nomFichier } from '../io/fichiers';
+  import { telecharger } from './fichiers-navigateur';
+  import EspaceEnseignant from './vues/EspaceEnseignant.svelte';
   import { periode } from './format';
   import Accueil from './vues/Accueil.svelte';
   import TableauDeBord from './vues/TableauDeBord.svelte';
@@ -12,6 +16,31 @@
   import CompteResultat from './vues/CompteResultat.svelte';
   import Bouclement from './vues/Bouclement.svelte';
   import Visite from './composants/Visite.svelte';
+
+  function exporterMaCopie() {
+    const s = etat.session!;
+    const texte = exporterCopie({
+      eleve: s.eleve,
+      exerciceId: s.exercice.id,
+      exerciceTitre: s.exercice.titre,
+      mode: s.exercice.mode,
+      dossier: s.dossier,
+      suivi: s.suivi,
+    });
+    telecharger(nomFichier([s.eleve.nom, s.eleve.prenom, s.eleve.classe, s.exercice.titre], EXT_COPIE), texte);
+  }
+
+  function terminerCorrige(garder: boolean) {
+    if (!garder && !confirm('Abandonner la saisie du corrigé ? Les modifications seront perdues.')) return;
+    const r = etat.fermerCorrige(garder);
+    if (r) {
+      const ex = enseignant.trouver(r.exerciceId);
+      if (ex) enseignant.enregistrer({ ...ex, corrige: r.corrige });
+      enseignant.edition = r.exerciceId;
+    }
+    enseignant.ouvert = true;
+  }
+
   type Entree = { vue: Vue; libelle: string };
   type Rubrique = { titre: string | null; entrees: Entree[] };
 
@@ -46,8 +75,10 @@
   });
 </script>
 
-{#if !etat.session}
-  <Accueil />
+{#if enseignant.ouvert}
+  <EspaceEnseignant />
+{:else if !etat.session}
+  <Accueil onEnseignant={() => (enseignant.ouvert = true)} />
 {:else}
   {@const s = etat.session}
   <div class="app">
@@ -58,9 +89,11 @@
         <span class="meta">{s.dossier.formeJuridique === 'raison individuelle' ? 'Raison individuelle' : s.dossier.formeJuridique}</span>
         <span class="meta">Exercice {periode(s.dossier.debut, s.dossier.fin)}</span>
         <span class="badge badge-niveau" title="Niveau">{LIBELLES_NIVEAU[s.exercice.niveau]}</span>
-        <span class="badge badge-mode" title="Mode">Entraînement</span>
+        <span class="badge badge-mode" class:corrige={s.role === 'corrige'} title="Mode">
+          {s.role === 'corrige' ? 'Saisie du corrigé' : LIBELLES_MODE[s.exercice.mode]}
+        </span>
       </div>
-      <div class="eleve">{s.eleve.prenom} {s.eleve.nom} · {s.eleve.classe}</div>
+      {#if s.role === 'eleve'}<div class="eleve">{s.eleve.prenom} {s.eleve.nom} · {s.eleve.classe}</div>{/if}
     </header>
 
     <nav class="lateral" aria-label="Navigation" data-visite="navigation">
@@ -78,6 +111,15 @@
           >
         {/each}
       {/each}
+      <div class="bas">
+        {#if s.role === 'corrige'}
+          <button class="action-lateral principale" onclick={() => terminerCorrige(true)}>Enregistrer le corrigé</button>
+          <button class="action-lateral" onclick={() => terminerCorrige(false)}>Abandonner</button>
+        {:else}
+          <button class="action-lateral principale" onclick={exporterMaCopie}>Exporter ma copie</button>
+          <button class="action-lateral discrete" onclick={() => (enseignant.ouvert = true)}>Espace enseignant</button>
+        {/if}
+      </div>
     </nav>
 
     <main class="principal">
@@ -120,6 +162,16 @@
   .lateral a { display: block; padding: 8px 20px; color: #fff; text-decoration: none; border-left: 4px solid transparent; }
   .lateral a:hover { background: var(--c-structure-2); }
   .lateral a.actif { background: var(--c-structure-2); border-left-color: var(--c-accent); font-weight: bold; }
+  .lateral { display: flex; flex-direction: column; }
+  .bas { margin-top: auto; padding: 16px 12px 4px; display: flex; flex-direction: column; gap: 6px; }
+  .action-lateral {
+    font: inherit; text-align: left; padding: 8px 10px; border-radius: 3px; cursor: pointer;
+    background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.35);
+  }
+  .action-lateral:hover { background: var(--c-structure-2); }
+  .action-lateral.principale { background: var(--c-action); border-color: var(--c-action); font-weight: bold; }
+  .action-lateral.discrete { border: none; color: #b9cde0; font-size: 12px; padding: 4px 10px; }
+  .badge-mode.corrige { background: var(--c-action); color: #fff; }
   .principal { overflow: auto; padding: 20px 24px 40px; min-width: 0; }
   @media (max-width: 1280px) { .eleve { display: none; } }
   @media (max-width: 1100px) {

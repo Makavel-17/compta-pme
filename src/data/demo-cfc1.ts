@@ -48,8 +48,10 @@ export const demoCfc1: Exercice = {
     '2400': f(30000),
     '2800': f(55400),
   },
+  mode: 'entrainement',
   parametres: {
     libellesT: 'SI/SF',
+    modificationDirecte: false,
     modeBouclement: 'compteDeResultat',
     comptesAjoutes: [],
     comptesMasques: [],
