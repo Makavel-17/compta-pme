@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="fr-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette — Journal</title>
+<link rel="stylesheet" href="maquette.css">
+<style>
+  .int { display: block; color: var(--c-texte-2); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .journal { table-layout: fixed; }
+  .journal td { overflow: hidden; }
+  tr.ligne-indice td { padding-top: 0; }
+  .operation-courante { padding: 8px 14px; background: var(--c-selection); border-bottom: 1px solid var(--c-bordure-2); }
+  .actions { white-space: nowrap; text-align: right; }
+  .pos { position: relative; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="entete">
+    <div class="logo">Compta PME</div>
+    <div class="dossier">
+      <strong>Papeterie du Rhône</strong>
+      <span class="meta">Raison individuelle</span>
+      <span class="meta periode">Exercice 01.01.–31.12.2026</span>
+      <span class="badge badge-niveau">CFC 1</span>
+      <span class="badge badge-mode">Entraînement</span>
+    </div>
+    <div class="eleve">Léa Martin · 1CFC3</div>
+  </header>
+
+  <nav class="lateral" aria-label="Navigation">
+    <a href="#">Tableau de bord</a>
+    <div class="rubrique">Saisie</div>
+    <a href="journal.html" class="actif">Journal</a>
+    <div class="rubrique">Consultation</div>
+    <a href="#">Comptes</a>
+    <a href="#">Grand livre</a>
+    <a href="#">Balance</a>
+    <div class="rubrique">États financiers</div>
+    <a href="bilan.html">Bilan</a>
+    <a href="#">Compte de résultat</a>
+    <div class="rubrique">Clôture</div>
+    <a href="#">Bouclement</a>
+  </nav>
+
+  <main class="principal">
+    <div class="titre">
+      <h1>Journal</h1>
+      <span class="sous">9 écritures validées · opérations 1 à 7 saisies</span>
+    </div>
+
+    <div class="mise-en-page">
+      <div>
+        <!-- Saisie -->
+        <section class="carte saisie" aria-label="Nouvelle écriture">
+          <h2>Nouvelle écriture</h2>
+          <div class="operation-courante"><b>Opération 8.</b> Un client règle sa facture de 4'000.00 : 1'000.00 en espèces et 3'000.00 par virement bancaire.</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:110px">Date</th>
+                <th style="width:70px">Pièce</th>
+                <th>Libellé</th>
+                <th style="width:120px">Compte au débit</th>
+                <th style="width:120px">Compte au crédit</th>
+                <th style="width:110px" class="montant">Montant CHF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input class="champ num" value="02.04.2026"></td>
+                <td><input class="champ num" value="8"></td>
+                <td><input class="champ" value="Règlement client, caisse et banque"></td>
+                <td><input class="champ num" value="1000"><div class="intitule-compte">Caisse</div></td>
+                <td><input class="champ vide"><div class="intitule-compte"></div></td>
+                <td><input class="champ montant num" value="1'000.00"></td>
+              </tr>
+              <tr>
+                <td></td><td></td><td></td>
+                <td><input class="champ num" value="1020"><div class="intitule-compte">Banque</div></td>
+                <td><input class="champ vide"><div class="intitule-compte"></div></td>
+                <td><input class="champ montant num" value="3'000.00"></td>
+              </tr>
+              <tr>
+                <td></td><td></td><td></td>
+                <td><input class="champ vide"><div class="intitule-compte"></div></td>
+                <td class="pos">
+                  <input class="champ num focus" value="11">
+                  <div class="liste-comptes" role="listbox">
+                    <div class="sel"><span class="n">1100</span>Créances envers des tiers suisses</div>
+                  </div>
+                  <div class="intitule-compte"></div>
+                </td>
+                <td><input class="champ montant num vide"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="equilibre">
+            <div class="totaux">
+              <span>Total débit <b class="num">4'000.00</b></span>
+              <span>Total crédit <b class="num">0.00</b></span>
+            </div>
+            <div class="ecart">Écriture non équilibrée : il manque 4'000.00 au crédit.</div>
+            <div>
+              <button class="btn">Annuler</button>
+              <button class="btn btn-principal" disabled>Valider l'écriture</button>
+            </div>
+          </div>
+          <div class="aide-clavier">
+            <kbd>Tab</kbd> champ suivant · <kbd>Entrée</kbd> valide la ligne et en ouvre une nouvelle tant que l'écriture n'est pas équilibrée, puis valide l'écriture · <kbd>Échap</kbd> annule la ligne · compte : tapez le numéro ou un mot de l'intitulé
+          </div>
+        </section>
+
+        <!-- Journal -->
+        <section class="carte" style="margin-top:20px" aria-label="Écritures validées">
+          <h2>Écritures validées</h2>
+          <table class="journal">
+            <thead>
+              <tr>
+                <th style="width:88px">Date</th>
+                <th style="width:48px">Pièce</th>
+                <th>Libellé</th>
+                <th style="width:118px">Débit</th>
+                <th style="width:118px">Crédit</th>
+                <th class="montant" style="width:88px">Montant</th>
+                <th style="width:66px">Correction</th>
+                <th style="width:92px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">10.01.2026</td><td class="num">1</td><td>Achat de marchandises à crédit</td>
+                <td class="num">4200<span class="int">Achats de marchandises</span></td>
+                <td class="num">2000<span class="int">Dettes c/achats…</span></td>
+                <td class="montant">3'000.00</td><td><span class="statut juste">Juste</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr class="zebre">
+                <td class="num">15.01.2026</td><td class="num">2</td><td>Ventes au comptant</td>
+                <td class="num">1000<span class="int">Caisse</span></td>
+                <td class="num">3210<span class="int">Ventes brutes au comptant</span></td>
+                <td class="montant">2'500.00</td><td><span class="statut juste">Juste</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr>
+                <td class="num">03.02.2026</td><td class="num">3</td><td>Vente à crédit</td>
+                <td class="num">1100<span class="int">Créances envers…</span></td>
+                <td class="num">3211<span class="int">Ventes de détail…</span></td>
+                <td class="montant">4'000.00</td><td><span class="statut juste">Juste</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr class="zebre annulee">
+                <td class="num">28.02.2026</td><td class="num">4</td><td><span class="barre">Loyer de février</span> <span class="mention">contre-passée</span></td>
+                <td class="num">1020<span class="int">Banque</span></td>
+                <td class="num">6000<span class="int">Loyer</span></td>
+                <td class="montant">1'200.00</td><td></td><td></td>
+              </tr>
+              <tr class="annulee">
+                <td class="num">28.02.2026</td><td class="num">4</td><td>Contre-passation : Loyer de février</td>
+                <td class="num">6000<span class="int">Loyer</span></td>
+                <td class="num">1020<span class="int">Banque</span></td>
+                <td class="montant">1'200.00</td><td></td><td></td>
+              </tr>
+              <tr class="zebre">
+                <td class="num">28.02.2026</td><td class="num">4</td><td>Loyer de février</td>
+                <td class="num">6000<span class="int">Loyer</span></td>
+                <td class="num">1020<span class="int">Banque</span></td>
+                <td class="montant">1'200.00</td><td><span class="statut juste">Juste</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr>
+                <td class="num">05.03.2026</td><td class="num">5</td><td>Prélèvement privé en espèces</td>
+                <td class="num">2850<span class="int">Prélèvements privés…</span></td>
+                <td class="num">1000<span class="int">Caisse</span></td>
+                <td class="montant">500.00</td><td><span class="statut juste">Juste</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr class="zebre">
+                <td class="num">20.03.2026</td><td class="num">6</td><td>Paiement fournisseur, banque et caisse</td>
+                <td class="num">2000<span class="int">Dettes c/achats…</span></td><td></td>
+                <td class="montant">2'000.00</td><td><span class="statut juste">Juste</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr class="zebre">
+                <td class="suite"></td><td class="suite"></td><td></td><td></td>
+                <td class="num">1020<span class="int">Banque</span></td>
+                <td class="montant">1'500.00</td><td></td><td></td>
+              </tr>
+              <tr class="zebre">
+                <td class="suite"></td><td class="suite"></td><td></td><td></td>
+                <td class="num">1000<span class="int">Caisse</span></td>
+                <td class="montant">500.00</td><td></td><td></td>
+              </tr>
+              <tr class="selection">
+                <td class="num">31.03.2026</td><td class="num">7</td>
+                <td>Salaire de mars</td>
+                <td class="num">5200<span class="int">Salaires</span></td>
+                <td class="num">1020<span class="int">Banque</span></td>
+                <td class="montant">1'080.00</td><td><span class="statut revoir">À revoir</span></td>
+                <td class="actions"><button class="btn-lien">Contre-passer</button></td>
+              </tr>
+              <tr class="selection ligne-indice">
+                <td></td><td></td>
+                <td colspan="6"><div class="indice"><b>Indice :</b> le montant ne correspond pas à l'opération. Relisez l'énoncé, puis corrigez par contre-passation.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- Énoncé -->
+      <aside class="carte enonce" aria-label="Énoncé">
+        <h2>Énoncé · opérations</h2>
+        <ol>
+          <li><span class="no">1</span><span>Achat de marchandises à crédit, 3'000.00.</span><span class="etat statut juste">Juste</span></li>
+          <li><span class="no">2</span><span>Ventes au comptant, 2'500.00.</span><span class="etat statut juste">Juste</span></li>
+          <li><span class="no">3</span><span>Vente de marchandises à crédit, 4'000.00.</span><span class="etat statut juste">Juste</span></li>
+          <li><span class="no">4</span><span>Paiement du loyer de février par la banque, 1'200.00.</span><span class="etat statut juste">Juste</span></li>
+          <li><span class="no">5</span><span>Le propriétaire prélève 500.00 dans la caisse pour ses besoins privés.</span><span class="etat statut juste">Juste</span></li>
+          <li><span class="no">6</span><span>Paiement d'un fournisseur, 2'000.00 : 1'500.00 par la banque, le solde en espèces.</span><span class="etat statut juste">Juste</span></li>
+          <li><span class="no">7</span><span>Salaire de mars payé par la banque, 1'800.00.</span><span class="etat statut revoir">À revoir</span></li>
+          <li class="courante"><span class="no">8</span><span>Un client règle sa facture de 4'000.00 : 1'000.00 en espèces et 3'000.00 par virement bancaire.</span><span class="etat">En cours de saisie</span></li>
+          <li><span class="no">9</span><span>Achat de matériel de bureau au comptant, 180.00.</span><span class="etat"></span></li>
+        </ol>
+      </aside>
+    </div>
+
+    <div class="note-maquette">
+      <h3>Note de maquette (n'apparaîtra pas dans l'application)</h3>
+      <ul>
+        <li>Opération 8 : l'élève saisit une écriture composée. Le champ compte au crédit est en cours de saisie (« 11 ») : la liste propose les comptes dont le numéro ou l'intitulé correspond, sans jamais suggérer de contrepartie.</li>
+        <li>Opération 4 : erreur corrigée par contre-passation. L'écriture fausse et sa contre-passation restent visibles, en gris.</li>
+        <li>Opération 7 : retour en mode entraînement, 1er niveau (indice). Le bouton « Voir la solution » n'apparaît qu'après une nouvelle tentative fausse.</li>
+        <li>En mode évaluation, la colonne « Correction », les indices et l'état des opérations dans l'énoncé disparaissent.</li>
+        <li>L'opération en cours est rappelée en haut de la grille de saisie. Sur tablette, la liste complète de l'énoncé passe sous le journal.</li>
+      </ul>
+    </div>
+  </main>
+</div>
+</body>
+</html>

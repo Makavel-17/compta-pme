@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette — Bilan</title>
+<link rel="stylesheet" href="maquette.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="entete">
+    <div class="logo">Compta PME</div>
+    <div class="dossier">
+      <strong>Papeterie du Rhône</strong>
+      <span class="meta">Raison individuelle</span>
+      <span class="meta periode">Exercice 01.01.–31.12.2026</span>
+      <span class="badge badge-niveau">CFC 1</span>
+      <span class="badge badge-mode">Entraînement</span>
+    </div>
+    <div class="eleve">Léa Martin · 1CFC3</div>
+  </header>
+
+  <nav class="lateral" aria-label="Navigation">
+    <a href="#">Tableau de bord</a>
+    <div class="rubrique">Saisie</div>
+    <a href="journal.html">Journal</a>
+    <div class="rubrique">Consultation</div>
+    <a href="#">Comptes</a>
+    <a href="#">Grand livre</a>
+    <a href="#">Balance</a>
+    <div class="rubrique">États financiers</div>
+    <a href="bilan.html" class="actif">Bilan</a>
+    <a href="#">Compte de résultat</a>
+    <div class="rubrique">Clôture</div>
+    <a href="#">Bouclement</a>
+  </nav>
+
+  <main class="principal">
+    <div class="titre">
+      <h1>Bilan au 31.03.2026</h1>
+      <div class="options">
+        <label><input type="checkbox" checked> Numéros de comptes</label>
+        <span>Montants en CHF</span>
+      </div>
+    </div>
+
+    <div class="bandeau">
+      <b>Bilan provisoire.</b> L'exercice n'est pas bouclé : le bénéfice de l'exercice figure dans les capitaux propres.
+    </div>
+
+    <section class="carte bilan" aria-label="Bilan">
+      <!-- Actif -->
+      <div class="colonne">
+        <div class="tete"><span>Actif</span></div>
+        <div class="corps">
+          <div class="groupe">Actifs circulants</div>
+          <div class="poste"><span class="n num">1000</span><span>Caisse</span><span class="montant">3'500.00</span><span></span></div>
+          <div class="poste zebre"><span class="n num">1020</span><span>Banque</span><span class="montant">10'500.00</span><span></span></div>
+          <div class="poste"><span class="n num">1100</span><span>Créances envers des tiers suisses</span><span class="montant">4'000.00</span><span></span></div>
+          <div class="poste zebre"><span class="n num">1200</span><span>Stocks de marchandises A</span><span class="montant">8'000.00</span><span></span></div>
+          <div class="poste"><span></span><span></span><span></span><span class="montant sous-total">26'000.00</span></div>
+
+          <div class="groupe">Actifs immobilisés</div>
+          <div class="poste"><span class="n num">1510</span><span>Mobilier d'exploitation</span><span class="montant">12'000.00</span><span></span></div>
+          <div class="poste"><span></span><span></span><span></span><span class="montant sous-total">12'000.00</span></div>
+        </div>
+        <div class="pied"><span>Total de l'actif</span><span class="montant">38'000.00</span></div>
+      </div>
+
+      <!-- Passif -->
+      <div class="colonne">
+        <div class="tete"><span>Passif</span></div>
+        <div class="corps">
+          <div class="groupe">Dettes à court terme</div>
+          <div class="poste"><span class="n num">2000</span><span>Dettes c/achats de matières et marchandises</span><span class="montant">6'000.00</span><span></span></div>
+          <div class="poste"><span></span><span></span><span></span><span class="montant sous-total">6'000.00</span></div>
+
+          <div class="groupe">Dettes à long terme</div>
+          <div class="poste"><span class="n num">2400</span><span>Dettes bancaires à long terme</span><span class="montant">10'000.00</span><span></span></div>
+          <div class="poste"><span></span><span></span><span></span><span class="montant sous-total">10'000.00</span></div>
+
+          <div class="groupe">Capitaux propres</div>
+          <div class="poste"><span class="n num">2800</span><span>Capital propre</span><span class="montant">22'000.00</span><span></span></div>
+          <div class="poste zebre"><span class="n num">2850</span><span>Prélèvements privés en espèces</span><span class="montant negatif">-500.00</span><span></span></div>
+          <div class="poste resultat"><span></span><span class="lib">Bénéfice de l'exercice</span><span class="montant">500.00</span><span></span></div>
+          <div class="poste"><span></span><span></span><span></span><span class="montant sous-total">22'000.00</span></div>
+        </div>
+        <div class="pied"><span>Total du passif</span><span class="montant">38'000.00</span></div>
+      </div>
+    </section>
+
+    <div class="controle">Total de l'actif = total du passif</div>
+
+    <div class="note-maquette">
+      <h3>Note de maquette (n'apparaîtra pas dans l'application)</h3>
+      <ul>
+        <li>Forme de compte, groupes repris du plan LPG, sous-totaux à droite, totaux soulignés deux fois. Les deux totaux sont alignés sur la même ligne.</li>
+        <li>En cas de perte, une ligne « Perte de l'exercice » s'ajoute en bas de la colonne Actif, en italique, et disparaît des capitaux propres.</li>
+        <li>Si les totaux ne concordent pas (impossible tant que toutes les écritures sont équilibrées), le contrôle s'affiche en orange avec l'écart.</li>
+        <li>Après bouclement : le bandeau « Bilan provisoire » disparaît, le titre devient « Bilan de clôture au 31.12.2026 », le compte privé et le résultat sont intégrés au capital.</li>
+        <li>Les montants sont les soldes du jeu d'essai, opérations 1 à 7.</li>
+      </ul>
+    </div>
+  </main>
+</div>
+</body>
+</html>
