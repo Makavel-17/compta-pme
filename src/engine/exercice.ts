@@ -14,7 +14,7 @@ export type LibellesT = 'SI/SF' | 'San/Spb';
 export type Mode = 'entrainement' | 'evaluation';
 
 /** Rubriques de l'application ; une rubrique non activée n'apparaît pas. */
-export type Fonction = 'tva';
+export type Fonction = 'tva' | 'salaire' | 'calculatriceTva';
 
 export interface Operation {
   numero: string;
@@ -49,6 +49,12 @@ export interface Exercice {
     modeBouclement: ModeBouclement;
     comptesAjoutes: string[];
     comptesMasques: string[];
+    /** CFC 2 et plus : méthode de comptabilisation de la TVA (au net par défaut). */
+    tvaMethode?: 'net' | 'brut';
+    /** Fiche « Décompte de salaire » pour calculer les retenues. */
+    ficheSalaire?: boolean;
+    /** Calculatrice de TVA (aide au calcul, désactivée par défaut). */
+    calculatriceTva?: boolean;
   };
   corrige?: EcritureCorrigee[];
 }
@@ -57,6 +63,15 @@ export interface Exercice {
 export function fonctionsDuNiveau(niveau: Niveau): Set<Fonction> {
   const f = new Set<Fonction>();
   if (NIVEAUX.indexOf(niveau) >= NIVEAUX.indexOf('CFC2')) f.add('tva');
+  return f;
+}
+
+/** Fonctions visibles pour un exercice : celles du niveau, plus les options choisies par l'enseignant. */
+export function fonctionsExercice(ex: Exercice): Set<Fonction> {
+  const f = fonctionsDuNiveau(ex.niveau);
+  const cfc2 = NIVEAUX.indexOf(ex.niveau) >= NIVEAUX.indexOf('CFC2');
+  if (cfc2 && ex.parametres.ficheSalaire) f.add('salaire');
+  if (cfc2 && ex.parametres.calculatriceTva) f.add('calculatriceTva');
   return f;
 }
 

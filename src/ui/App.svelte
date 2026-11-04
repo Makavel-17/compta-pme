@@ -15,6 +15,8 @@
   import Bilan from './vues/Bilan.svelte';
   import CompteResultat from './vues/CompteResultat.svelte';
   import Bouclement from './vues/Bouclement.svelte';
+  import Tva from './vues/Tva.svelte';
+  import Salaire from './vues/Salaire.svelte';
   import Visite from './composants/Visite.svelte';
 
   function exporterMaCopie() {
@@ -48,7 +50,13 @@
     const f = etat.session ? etat.fonctions : new Set();
     return [
       { titre: null, entrees: [{ vue: 'tableau', libelle: 'Tableau de bord' }] },
-      { titre: 'Saisie', entrees: [{ vue: 'journal', libelle: 'Journal' }] },
+      {
+        titre: 'Saisie',
+        entrees: [
+          { vue: 'journal', libelle: 'Journal' },
+          ...(f.has('salaire') ? [{ vue: 'salaire' as Vue, libelle: 'Décompte de salaire' }] : []),
+        ],
+      },
       {
         titre: 'Consultation',
         entrees: [
@@ -137,6 +145,8 @@
       {:else if etat.vue === 'bilan'}<Bilan />
       {:else if etat.vue === 'resultat'}<CompteResultat />
       {:else if etat.vue === 'bouclement'}<Bouclement />
+      {:else if etat.vue === 'tva' && etat.fonctions.has('tva')}<Tva />
+      {:else if etat.vue === 'salaire' && etat.fonctions.has('salaire')}<Salaire />
       {:else}<TableauDeBord />
       {/if}
     </main>

@@ -82,4 +82,3 @@ export const demoCfc1: Exercice = {
   ],
 };
 
-export const exercicesDemo: Exercice[] = [demoCfc1];

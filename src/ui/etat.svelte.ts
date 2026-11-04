@@ -2,7 +2,7 @@
 
 import type { Dossier } from '../engine/dossier';
 import type { Exercice } from '../engine/exercice';
-import { corrigeDepuisEcritures, creerDossier, fonctionsDuNiveau, type EcritureCorrigee } from '../engine/exercice';
+import { corrigeDepuisEcritures, creerDossier, fonctionsExercice, type EcritureCorrigee } from '../engine/exercice';
 import { ajouterEcriture } from '../engine/journal';
 import { plan as planParDefaut } from '../data/plan';
 import { ecrire, lire } from '../io/stockage';
@@ -17,6 +17,7 @@ export type Vue =
   | 'bilan'
   | 'resultat'
   | 'tva'
+  | 'salaire'
   | 'bouclement';
 
 export interface Eleve {
@@ -48,7 +49,7 @@ interface Sauvegarde {
   prefs: Preferences;
 }
 
-const VUES: Vue[] = ['tableau', 'journal', 'comptes', 'grandlivre', 'balance', 'bilan', 'resultat', 'tva', 'bouclement'];
+const VUES: Vue[] = ['tableau', 'journal', 'comptes', 'grandlivre', 'balance', 'bilan', 'resultat', 'tva', 'salaire', 'bouclement'];
 
 function vueDepuisAdresse(): Vue {
   const h = location.hash.replace('#', '') as Vue;
@@ -85,7 +86,7 @@ class Etat {
   }
 
   get fonctions() {
-    return fonctionsDuNiveau(this.session!.exercice.niveau);
+    return fonctionsExercice(this.session!.exercice);
   }
 
   aller(v: Vue) {

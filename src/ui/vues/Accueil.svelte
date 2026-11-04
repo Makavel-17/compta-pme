@@ -1,6 +1,6 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
-  import { exercicesDemo } from '../../data/demo-cfc1';
+  import { exercicesDemo } from '../../data/demos';
   import { LIBELLES_MODE, LIBELLES_NIVEAU, type Exercice } from '../../engine/exercice';
   import { EXT_EXERCICE, ErreurFichier, importerExercice } from '../../io/fichiers';
   import { choisirFichiers } from '../fichiers-navigateur';

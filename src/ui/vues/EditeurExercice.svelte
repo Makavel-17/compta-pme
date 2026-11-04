@@ -41,6 +41,9 @@
   let modificationDirecte = $state(source.parametres.modificationDirecte);
   let libellesT = $state<LibellesT>(source.parametres.libellesT);
   let modeBouclement = $state<ModeBouclement>(source.parametres.modeBouclement);
+  let tvaMethode = $state<'net' | 'brut'>(source.parametres.tvaMethode ?? 'net');
+  let ficheSalaire = $state(source.parametres.ficheSalaire ?? false);
+  let calculatriceTva = $state(source.parametres.calculatriceTva ?? false);
   let actif = $state<LigneBilan[]>(versLignes(source.ouvertureActif));
   let passif = $state<LigneBilan[]>(versLignes(source.ouverturePassif));
   let operations = $state<LigneOp[]>(source.operations.map((o) => ({ cle: ++n, numero: o.numero, date: dt(o.date), texte: o.texte })));
@@ -79,6 +82,9 @@
         modificationDirecte: mode === 'entrainement' && modificationDirecte,
         libellesT,
         modeBouclement,
+        tvaMethode,
+        ficheSalaire,
+        calculatriceTva,
       },
     };
   }
@@ -187,6 +193,17 @@
         <option value="aLaReouverture">Intégration à la réouverture</option>
       </select>
     </div>
+    {#if niveau !== 'CFC1'}
+      <div>
+        <label class="bloc" for="ex-tva">Comptabilisation de la TVA</label>
+        <select id="ex-tva" class="champ" bind:value={tvaMethode}>
+          <option value="net">Au net</option>
+          <option value="brut">Au brut</option>
+        </select>
+      </div>
+      <label class="case"><input type="checkbox" bind:checked={ficheSalaire} /> Fiche « Décompte de salaire »</label>
+      <label class="case large"><input type="checkbox" bind:checked={calculatriceTva} /> Calculatrice de TVA (aide au calcul)</label>
+    {/if}
     {#if mode === 'entrainement'}
       <label class="case large"><input type="checkbox" bind:checked={modificationDirecte} /> Autoriser la modification directe des écritures validées</label>
     {/if}

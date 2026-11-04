@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enseignant, nouvelIdentifiant } from '../enseignant.svelte';
-  import { demoCfc1 } from '../../data/demo-cfc1';
+  import { exercicesDemo } from '../../data/demos';
   import { plan } from '../../data/plan';
   import { controlerExercice, exerciceVierge, LIBELLES_MODE, LIBELLES_NIVEAU, type Exercice } from '../../engine/exercice';
   import {
@@ -46,8 +46,8 @@
     enseignant.edition = ex.id;
   }
 
-  function depuisExemple() {
-    const ex: Exercice = { ...structuredClone(demoCfc1), id: nouvelIdentifiant(), titre: `${demoCfc1.titre} (copie)` };
+  function depuisExemple(modele: Exercice) {
+    const ex: Exercice = { ...structuredClone(modele), id: nouvelIdentifiant(), titre: `${modele.titre} (copie)` };
     enseignant.enregistrer(ex);
     enseignant.edition = ex.id;
   }
@@ -139,7 +139,9 @@
       {#if onglet === 'exercices'}
         <div class="barre">
           <button class="btn btn-principal" onclick={nouveau}>Nouvel exercice</button>
-          <button class="btn" onclick={depuisExemple}>Partir de l'exemple Cycles du Léman</button>
+          {#each exercicesDemo as modele}
+            <button class="btn" onclick={() => depuisExemple(modele)}>Partir de l'exemple {LIBELLES_NIVEAU[modele.niveau]}</button>
+          {/each}
           <button class="btn" onclick={importer}>Importer un exercice…</button>
         </div>
         <section class="carte">
