@@ -59,6 +59,9 @@ const d6p9 = avisBancaire({ sens: 'debit', banque: BANQUE, titulaire: meubles, c
   operations: [{ designation: 'Paiements aux fournisseurs — factures de fin 2025', montant: f(12000) }] });
 const d6p10 = avisBancaire({ sens: 'credit', banque: BANQUE, titulaire: meubles, compte: compteMeubles, date: '2026-11-20',
   operations: [{ designation: 'Virement de l’Hôtel du Parc — facture 2026-140', montant: d6p5.ttc }] });
+const d6p10b = avisBancaire({ sens: 'credit', banque: BANQUE, titulaire: meubles, compte: compteMeubles, date: '2026-11-27',
+  operations: [{ designation: 'Versement de M. Luc Vernier — acte de défaut de biens de 2024 (créance amortie en 2024)', montant: f(750) }],
+  mentions: ["Cette créance avait été entièrement comptabilisée en perte lors de l'exercice 2024."] });
 const creancesFin6 = f(46000) + d6p1.ttc + f(103) - f(5703) + d6p5.ttc - d6p6.total - f(2100) - d6p10.total; // 38'300.00
 const ducroire6 = Math.round(creancesFin6 * 5 / 100); // 1'915.00
 const d6p11 = noteInterne({
@@ -76,14 +79,15 @@ export const dossierMeubles = construireDossier(
     niveau: 'CFC2',
     filiere: 'CFC',
     difficulte: 3,
-    sujets: ['Créances douteuses', 'Pertes sur créances (poursuite, faillite)', 'Ajustement du ducroire'],
+    sujets: ['Créances douteuses', 'Pertes sur créances (poursuite, faillite)', 'Récupération d’une créance amortie', 'Ajustement du ducroire'],
     raisonSociale: 'Meubles Confort',
     formeJuridique: 'raison individuelle',
     debut: '2026-01-01',
     fin: '2026-12-31',
     introduction:
       'Pour ce dossier, la TVA est laissée de côté : les montants des pièces sont sans TVA. Le ducroire est ajusté par la ' +
-      'différence entre le montant nécessaire et le montant existant.',
+      'différence entre le montant nécessaire et le montant existant. Une créance amortie lors d’un exercice précédent ' +
+      'et récupérée est un produit exceptionnel.',
     situation:
       "Meubles Confort est un magasin d'ameublement de Meyrin tenu par Hugo Bersier. Il vend aux particuliers et équipe " +
       "aussi quelques hôtels et restaurants de la région, toujours sur facture à 30 jours.\n\n" +
@@ -105,6 +109,7 @@ export const dossierMeubles = construireDossier(
     { date: '2026-10-05', piece: d6p8.piece, lignes: S('4200', '2000', d6p8.ttc) },
     { date: '2026-10-30', piece: d6p9.piece, lignes: S('2000', '1020', d6p9.total) },
     { date: '2026-11-20', piece: d6p10.piece, lignes: S('1020', '1100', d6p10.total) },
+    { date: '2026-11-27', piece: d6p10b.piece, lignes: S('1020', '8510', d6p10b.total) },
     { date: '2026-12-31', piece: d6p11.piece, lignes: S('1109', '3805', f(2300) - ducroire6) },
   ],
 );
