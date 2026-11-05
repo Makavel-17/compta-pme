@@ -85,3 +85,17 @@ describe("choix des comptes de l'exercice", () => {
     expect(a).toEqual({ comptesAjoutes: [], comptesMasques: ['1010'] });
   });
 });
+
+describe('situation de départ', () => {
+  it('chaque exercice de démonstration place l’élève dans l’entreprise', async () => {
+    const { exercicesDemo } = await import('../src/data/demos');
+    for (const ex of exercicesDemo) {
+      expect(ex.situation?.trim().length ?? 0).toBeGreaterThan(200);
+      expect(ex.situation).toContain(ex.raisonSociale);
+    }
+  });
+
+  it('un exercice vierge a une situation vide', () => {
+    expect(exerciceVierge('x', 2026).situation).toBe('');
+  });
+});

@@ -38,6 +38,11 @@ export interface Exercice {
   fin: DateISO;
   /** Texte d'introduction de l'énoncé. */
   introduction: string;
+  /**
+   * Situation de départ : récit qui place l'élève dans l'entreprise (rôle, produits, collègues, attentes).
+   * Facultatif pour les fichiers créés avant son introduction.
+   */
+  situation?: string;
   operations: Operation[];
   /** Bilan d'ouverture en montants positifs. */
   ouvertureActif: Record<string, Centimes>;
@@ -211,6 +216,7 @@ export function exerciceVierge(id: string, annee: number): Exercice {
     debut: `${annee}-01-01`,
     fin: `${annee}-12-31`,
     introduction: '',
+    situation: '',
     operations: [],
     ouvertureActif: {},
     ouverturePassif: {},

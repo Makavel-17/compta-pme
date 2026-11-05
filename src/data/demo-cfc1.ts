@@ -17,6 +17,10 @@ export const demoCfc1: Exercice = {
     "Le bilan d'ouverture au 01.01.2026 est déjà saisi. Passez au journal les écritures des opérations ci-dessous, " +
     "en indiquant le numéro de l'opération comme numéro de pièce. Il n'y a pas d'autre opération jusqu'au 31.12.2026 : " +
     "bouclez ensuite l'exercice.",
+  situation:
+    "Vous commencez votre première année d'apprentissage d'employé·e de commerce chez Cycles du Léman, un magasin de vélos situé à Carouge. La boutique vend des vélos de ville, des vélos électriques et des accessoires, et répare les vélos de ses clients dans un petit atelier à l'arrière du magasin.\n\n" +
+    "La propriétaire, Sandra Rochat, dirige l'entreprise, qu'elle exploite en raison individuelle. Elle est secondée par Luca, mécanicien, qui s'occupe de l'atelier et conseille les clients au magasin. Jusqu'ici, Sandra tenait elle-même la comptabilité le soir, après la fermeture.\n\n" +
+    "Elle vous confie désormais cette tâche. Les pièces justificatives du premier trimestre sont classées dans un classeur : factures de fournisseurs, quittances, relevés de la banque et de la poste. Votre mission : passer chaque opération au journal, contrôler les comptes, puis préparer le bilan et le compte de résultat que Sandra présentera à sa banque.",
   operations: [
     { numero: '1', date: '2026-01-05', texte: "Achat de marchandises à crédit chez un fournisseur, 4'800.00." },
     { numero: '2', date: '2026-01-08', texte: "Ventes au comptant de la période, 12'350.00." },

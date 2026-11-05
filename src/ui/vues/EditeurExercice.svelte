@@ -40,6 +40,7 @@
   let debut = $state(dt(source.debut));
   let fin = $state(dt(source.fin));
   let introduction = $state(source.introduction);
+  let situation = $state(source.situation ?? '');
   let mode = $state<Mode>(source.mode);
   let modificationDirecte = $state(source.parametres.modificationDirecte);
   let libellesT = $state<LibellesT>(source.parametres.libellesT);
@@ -121,6 +122,7 @@
       debut: iso(debut),
       fin: iso(fin),
       introduction: introduction.trim(),
+      situation: situation.trim(),
       mode,
       operations: operations.map((o) => ({ numero: o.numero.trim(), date: lireDate(o.date, Number(fin.slice(-4))) ?? '', texte: o.texte.trim() })),
       bareme: {
@@ -251,6 +253,17 @@
     <div class="tout">
       <label class="bloc" for="ex-intro">Introduction de l'énoncé</label>
       <textarea id="ex-intro" class="champ" rows="3" bind:value={introduction}></textarea>
+    </div>
+    <div class="tout">
+      <label class="bloc" for="ex-situation">Situation de départ (affichée à l'élève dans « Votre situation »)</label>
+      <textarea
+        id="ex-situation"
+        class="champ"
+        rows="5"
+        bind:value={situation}
+        placeholder="Qui est l'élève dans l'entreprise, que vend-elle, avec qui travaille-t-il, qu'attend-on de lui ?"
+      ></textarea>
+      <span class="discret petit">Une ligne vide sépare deux paragraphes.</span>
     </div>
     <div>
       <label class="bloc" for="ex-t">Comptes en T</label>

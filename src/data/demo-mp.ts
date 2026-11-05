@@ -20,6 +20,10 @@ export const demoMp: Exercice = {
     "amortit ses machines selon la méthode indirecte. Le bénéfice de l'exercice 2025 (60'000.00) et le bénéfice reporté " +
     "antérieur (5'000.00) figurent dans le compte 2970. Passez au journal les écritures des opérations ci-dessous, en " +
     "indiquant le numéro de l'opération comme numéro de pièce, puis calculez les ratios dans la rubrique Analyse.",
+  situation:
+    "Vous effectuez un stage au service financier de Lémantec SA, une société anonyme genevoise qui importe et revend des composants électroniques (capteurs, circuits, connecteurs) à des fabricants d'appareils en Suisse romande. La société emploie une vingtaine de personnes.\n\n" +
+    "Vous travaillez aux côtés de Nadia Berset, directrice financière, qui prépare les comptes annuels présentés au conseil d'administration puis à l'assemblée générale. Elle vous confie la tenue du journal pour l'exercice en cours.\n\n" +
+    "Votre mission couvre toute l'année : comptabiliser la répartition du bénéfice décidée par l'assemblée générale, les opérations sur titres, les escomptes et les intérêts, les écritures de fin d'exercice, puis analyser la situation financière de la société à l'aide des ratios. Nadia relira votre travail avant de le transmettre à l'organe de révision.",
   operations: [
     {
       numero: '1',

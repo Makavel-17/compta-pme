@@ -19,6 +19,10 @@ export const demoCfc2: Exercice = {
     '(méthode effective, comptabilisation au net, taux normal 8,1 %). Les amortissements sont comptabilisés selon la méthode ' +
     "indirecte. Passez au journal les écritures des opérations ci-dessous, en indiquant le numéro de l'opération comme " +
     'numéro de pièce. Arrondissez les montants de TVA et de salaire aux 5 centimes.',
+  situation:
+    "Vous êtes en deuxième année d'apprentissage d'employé·e de commerce à la Papeterie de l'Arve, à Carouge. Le magasin vend des fournitures scolaires et de bureau, du papier, des articles de dessin et quelques petits meubles de bureau, aussi bien à des particuliers qu'à des écoles et à des entreprises de la région.\n\n" +
+    "Marc Favre, le propriétaire, exploite le commerce en raison individuelle. Il travaille avec une vendeuse, Inès, qui tient la caisse et passe les commandes auprès des fournisseurs. L'entreprise est assujettie à la TVA et possède du mobilier de magasin ainsi qu'une camionnette de livraison.\n\n" +
+    "Marc vous a confié la comptabilité de l'année. Il attend de vous que vous comptabilisiez les achats, les ventes et les salaires avec la TVA, que vous établissiez le décompte de TVA et que vous passiez les écritures de fin d'année (amortissements, régularisations, ducroire) avant le bouclement.",
   operations: [
     { numero: '1', date: '2026-01-05', texte: "Achat de marchandises à crédit : 10'000.00 + TVA 8,1 %." },
     { numero: '2', date: '2026-01-12', texte: "Vente de marchandises à crédit : 36'000.00 + TVA 8,1 %." },

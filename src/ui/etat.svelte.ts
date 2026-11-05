@@ -117,8 +117,14 @@ class Etat {
 
   commencer(eleve: Eleve, exercice: Exercice, role: Session['role'] = 'eleve') {
     this.session = { eleve, exercice, dossier: creerDossier(exercice, planParDefaut), archives: [], suivi: {}, role, fiches: {} };
+    // L'élève découvre d'abord sa situation sur le tableau de bord ; l'enseignant va directement au journal.
+    this.aller(role === 'eleve' ? 'tableau' : 'journal');
+  }
+
+  /** Bouton « Commencer la saisie » : ouvre le journal, avec la visite guidée la première fois. */
+  commencerSaisie() {
     this.aller('journal');
-    if (!this.prefs.visiteVue && role === 'eleve') this.visiteOuverte = true;
+    if (!this.prefs.visiteVue && this.session?.role === 'eleve') this.visiteOuverte = true;
   }
 
   majSuivi(s: Suivi) {
