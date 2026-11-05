@@ -102,12 +102,13 @@ function dessinerPiece(doc: JsPDF, autoTable: AutoTable, p: PieceComptable, y: n
     y = yd + 2;
   }
   for (const t of p.texte ?? []) y = paragraphe(doc, t, y + 3, 10, LARGEUR - 8, MARGE + 4);
+  const monnaie = p.monnaie ?? 'CHF';
   if (p.lignes.length) {
     const avecQ = p.lignes.some((l) => l.quantite !== undefined);
     autoTable(doc, {
       startY: y + 2,
       margin: { left: MARGE + 4, right: MARGE + 4 },
-      head: [avecQ ? ['Désignation', 'Quantité', 'Prix unitaire', 'Montant CHF'] : ['Désignation', 'Montant CHF']],
+      head: [avecQ ? ['Désignation', 'Quantité', 'Prix unitaire', `Montant ${monnaie}`] : ['Désignation', `Montant ${monnaie}`]],
       body: p.lignes.map((l) =>
         avecQ
           ? [l.designation, l.quantite ?? '', l.prixUnitaire !== undefined ? m(l.prixUnitaire) : '', m(l.montant)]
@@ -124,7 +125,7 @@ function dessinerPiece(doc: JsPDF, autoTable: AutoTable, p: PieceComptable, y: n
   for (const t of p.totaux) {
     doc.setFont('helvetica', t.fort ? 'bold' : 'normal').setFontSize(10).setTextColor(20);
     doc.text(t.libelle, droite - 62, y + 4);
-    doc.text(`CHF ${m(t.montant)}`, droite, y + 4, { align: 'right' });
+    doc.text(`${monnaie} ${m(t.montant)}`, droite, y + 4, { align: 'right' });
     if (t.fort) doc.setDrawColor(40).line(droite - 62, y, droite, y);
     y += 5.5;
   }

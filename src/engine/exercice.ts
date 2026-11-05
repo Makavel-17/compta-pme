@@ -277,9 +277,12 @@ export const TITRES_DIFFICULTE: Record<Filiere, Record<number, string>> = {
     4: 'Synthèse de plusieurs chapitres',
   },
   MP: {
-    1: 'Sociétés : clôture et répartition du bénéfice',
-    2: 'Titres, provisions et opérations financières',
-    3: 'Synthèse de plusieurs chapitres',
+    1: 'Opérations financières et commerciales : intérêts, impôt anticipé, escomptes, monnaies étrangères',
+    2: "Clôture de l'entreprise individuelle : salaire du propriétaire, intérêt du capital",
+    3: 'Société anonyme : capital, répartition du bénéfice, réserves',
+    4: 'Titres et immeubles',
+    5: 'Analyse financière',
+    6: 'Synthèse de plusieurs chapitres',
   },
 };
 

@@ -51,6 +51,8 @@ export interface PieceComptable {
   totaux: TotalPiece[];
   /** Mentions en pied de pièce : conditions de paiement, compte, TVA comprise… */
   mentions?: string[];
+  /** Monnaie des montants de la pièce (CHF par défaut ; EUR, USD… pour une pièce étrangère). */
+  monnaie?: string;
 }
 
 const pc = (tauxDixiemes: number) => `${(tauxDixiemes / 10).toFixed(1).replace('.', ',')} %`;
@@ -80,6 +82,8 @@ export function facture(o: {
   tauxTva?: number | null;
   mentions?: string[];
   titre?: string;
+  /** Monnaie de la facture (CHF par défaut). */
+  monnaie?: string;
 }): Facture {
   const lignes = o.articles.map((a) => {
     const q = a.quantite ?? 1;
@@ -111,6 +115,7 @@ export function facture(o: {
       lignes,
       totaux,
       mentions: o.mentions,
+      ...(o.monnaie && o.monnaie !== 'CHF' ? { monnaie: o.monnaie } : {}),
     },
     ht,
     tva,

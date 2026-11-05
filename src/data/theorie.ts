@@ -874,6 +874,138 @@ export const CHAPITRES: Chapitre[] = [
 
   // ───────────────────────────── MP ─────────────────────────────
   {
+    id: 'monnaies',
+    titre: 'Monnaies étrangères',
+    niveau: 'MP',
+    resume: "Factures en euros ou en dollars : quel cours utiliser, et où passer la différence de change.",
+    sections: [
+      {
+        titre: 'Cours achat et cours vente',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "La banque publie pour chaque monnaie deux cours : le cours achat, auquel elle achète la monnaie étrangère, " +
+              "et le cours vente, auquel elle la vend. Les cours « devises » s'appliquent aux virements, les cours " +
+              "« billets » aux espèces. Le cours est indiqué pour 1 unité (EUR, USD) ou pour 100 unités (JPY, SEK…).",
+          },
+          {
+            type: 'liste',
+            items: [
+              "L'entreprise paie un fournisseur étranger : elle doit acheter la monnaie à la banque, donc au cours vente.",
+              "Un client étranger paie l'entreprise : la banque lui achète la monnaie reçue, donc au cours achat.",
+            ],
+          },
+          {
+            type: 'retenir',
+            texte: 'Montant en CHF = montant en monnaie étrangère × cours (÷ 100 si le cours est donné pour 100 unités).',
+          },
+        ],
+      },
+      {
+        titre: 'Achat de marchandises à l’étranger',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "La facture est comptabilisée en CHF au cours du jour de la facture. Au paiement, le cours a souvent changé. " +
+              "La différence entre le montant comptabilisé et le montant payé est passée dans le compte Achats de " +
+              "marchandises : un gain de change diminue les achats, une perte de change les augmente.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Facture d'un fournisseur allemand, EUR 5'000.00 au cours vente de 0.96", lignes: s('4200', '2000', 4800) },
+              {
+                cas: 'Paiement par la banque au cours vente de 0.95 : gain de change de 50.00',
+                lignes: [D('2000', 4800), C('1020', 4750), C('4200', 50)],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        titre: 'Vente de marchandises à l’étranger',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "La vente est comptabilisée au cours achat du jour de la facture. Si le cours baisse avant le paiement, " +
+              "l'entreprise encaisse moins de francs : la perte de change diminue les ventes. Si le cours monte, le gain " +
+              'de change augmente les ventes.',
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Facture à un client américain, USD 3'000.00 au cours achat de 0.88", lignes: s('1100', '3200', 2640) },
+              {
+                cas: 'Encaissement par la banque au cours achat de 0.86 : perte de change de 60.00',
+                lignes: [D('1020', 2580), D('3200', 60), C('1100', 2640)],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'proprietaire',
+    titre: 'Rémunération du propriétaire',
+    niveau: 'MP',
+    resume: "Dans une raison individuelle : salaire du propriétaire, intérêt sur son capital et revenu de l'entrepreneur.",
+    sections: [
+      {
+        titre: 'Pourquoi des écritures internes ?',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le propriétaire d'une raison individuelle n'est pas un employé : sans écriture particulière, son travail et " +
+              "le capital qu'il a investi ne coûtent rien à l'entreprise, et le bénéfice paraît plus élevé qu'il ne l'est. " +
+              "Pour juger le résultat réel, on peut comptabiliser un salaire du propriétaire et un intérêt sur son capital. " +
+              "Ces écritures sont internes et facultatives : aucun argent ne sort de l'entreprise, la contrepartie est le " +
+              'compte Privé.',
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Salaire du propriétaire pour l'année, 60'000.00", lignes: s('5200', '2850', 60000) },
+              { cas: "Intérêt de 5 % sur un capital de 80'000.00", lignes: s('6900', '2850', 4000) },
+            ],
+          },
+        ],
+      },
+      {
+        titre: "Le revenu de l'entrepreneur",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le propriétaire est rémunéré de trois façons : par son salaire (son travail), par l'intérêt (son capital) et " +
+              "par le résultat (le risque qu'il prend). Leur somme est le revenu de l'entrepreneur ; elle ne dépend pas des " +
+              "écritures internes, qui ne font que déplacer une partie du bénéfice vers le salaire et l'intérêt.",
+          },
+          {
+            type: 'tableau',
+            entetes: ['Élément', 'Montant CHF'],
+            lignes: [
+              ['Salaire du propriétaire', "60'000.00"],
+              ['Intérêt sur le capital', "4'000.00"],
+              ["Bénéfice de l'exercice", "15'000.00"],
+              ["Revenu de l'entrepreneur", "79'000.00"],
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Les retraits du propriétaire se comptabilisent au débit du compte Privé ; le salaire et l'intérêt au crédit. " +
+              'Au bouclement, le solde du compte Privé est viré au capital, comme le résultat.',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'societes',
     titre: 'Sociétés (SA, Sàrl) et répartition du bénéfice',
     niveau: 'MP',
@@ -998,12 +1130,13 @@ export const CHAPITRES: Chapitre[] = [
           {
             type: 'p',
             texte:
-              "Les titres achetés comme placement à court terme vont au compte 1060 Titres de placement, au cours " +
-              "d'achat. Les frais (courtage, commissions) sont une charge financière (6900).",
+              "Les titres achetés comme placement à court terme vont au compte 1060 Titres de placement, au prix payé : " +
+              "cours × nombre de titres, frais d'achat (courtage, timbre, taxe de bourse) compris. Les charges liées aux " +
+              'titres vont à 6940 Charges des titres, les produits à 6952 Produits des titres.',
           },
           {
             type: 'ecritures',
-            exemples: [{ cas: "Achat de 100 actions à 80.00, courtage 120.00, par la banque", lignes: [D('1060', 8000), D('6900', 120), C('1020', 8120)] }],
+            exemples: [{ cas: "Achat de 100 actions à 80.00, frais 120.00, par la banque", lignes: s('1060', '1020', 8120) }],
           },
         ],
       },
@@ -1013,29 +1146,46 @@ export const CHAPITRES: Chapitre[] = [
           {
             type: 'p',
             texte:
-              "Le dividende brut est un produit financier (6950). La banque ne crédite que 65 % ; les 35 % d'impôt " +
+              "Le dividende brut est un produit des titres (6952). La banque ne crédite que 65 % ; les 35 % d'impôt " +
               "anticipé retenus sont récupérables auprès de l'AFC (1176 Créances AFC).",
           },
           {
             type: 'ecritures',
-            exemples: [{ cas: 'Dividende brut de 200.00 crédité sous déduction de 35 %', lignes: [D('1020', 130), D('1176', 70), C('6950', 200)] }],
+            exemples: [{ cas: 'Dividende brut de 200.00 crédité sous déduction de 35 %', lignes: [D('1020', 130), D('1176', 70), C('6952', 200)] }],
           },
         ],
       },
       {
-        titre: 'Évaluation au 31.12',
+        titre: 'Vente de titres',
         blocs: [
           {
             type: 'p',
             texte:
-              "Les titres cotés sont évalués au cours du jour du bilan. Une baisse de cours est une charge financière, " +
-              'une hausse un produit financier.',
+              "À la vente, la banque crédite le produit net : cours × nombre de titres, moins les frais de vente. On " +
+              "crédite 1060 de ce montant net. Le bénéfice ou la perte de cours n'est pas calculé à ce moment : il " +
+              'apparaît à la clôture, avec l’évaluation du portefeuille.',
+          },
+          {
+            type: 'ecritures',
+            exemples: [{ cas: 'Vente de 40 actions à 95.00, frais 60.00 : la banque crédite 3’740.00', lignes: s('1020', '1060', 3740) }],
+          },
+        ],
+      },
+      {
+        titre: 'Clôture du compte Titres',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Au 31.12, les titres restants sont inventoriés au cours du jour du bilan. La différence entre ce montant " +
+              "et le solde du compte 1060 est une moins-value (6940 Charges des titres) ou une plus-value (6952 Produits " +
+              "des titres). La moins-value doit toujours être comptabilisée ; la plus-value peut ne pas l'être (réserve latente).",
           },
           {
             type: 'ecritures',
             exemples: [
-              { cas: 'Baisse de valeur des titres, 500.00', lignes: s('6900', '1060', 500) },
-              { cas: 'Hausse de valeur des titres, 300.00', lignes: s('1060', '6950', 300) },
+              { cas: 'Solde de 1060 : 8’500.00, inventaire au cours de clôture : 8’000.00', lignes: s('6940', '1060', 500) },
+              { cas: 'Solde de 1060 : 8’500.00, inventaire au cours de clôture : 8’800.00', lignes: s('1060', '6952', 300) },
             ],
           },
         ],

@@ -4,10 +4,11 @@ import { dossierPolyglotte, dossierSaveurs } from './cfc-bases';
 import { dossierBabel, dossierMenuiserie, dossierOutils } from './cfc-tva-cloture';
 import { dossierBoulangerie, dossierFleurs, dossierMeubles } from './cfc-creances-salaires';
 import { dossierOptique, dossierPrecimeca } from './mp';
+import { dossierTerroirs, dossierZufferey } from './mp-operations';
 
 export const DOSSIERS: Exercice[] = [
   dossierSaveurs, dossierPolyglotte, dossierOutils, dossierMenuiserie, dossierBabel,
-  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierOptique, dossierPrecimeca,
+  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierOptique, dossierPrecimeca,
 ];
 
 /** Version d'évaluation d'un dossier : même contenu, aucun retour pendant la saisie, corrigé absent du fichier élève. */

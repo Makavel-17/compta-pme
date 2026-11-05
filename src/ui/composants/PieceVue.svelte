@@ -4,6 +4,7 @@
   import { dt, m } from '../format';
 
   let { piece }: { piece: PieceComptable } = $props();
+  const monnaie = $derived(piece.monnaie ?? 'CHF');
   const avecQuantites = $derived(piece.lignes.some((l) => l.quantite !== undefined));
 </script>
 
@@ -35,7 +36,7 @@
         <tr>
           <th>Désignation</th>
           {#if avecQuantites}<th class="montant">Quantité</th><th class="montant">Prix unitaire</th>{/if}
-          <th class="montant">Montant CHF</th>
+          <th class="montant">Montant {monnaie}</th>
         </tr>
       </thead>
       <tbody>
@@ -56,7 +57,7 @@
   {#if piece.totaux.length}
     <div class="totaux">
       {#each piece.totaux as t}
-        <div class:fort={t.fort}><span>{t.libelle}</span><span class="montant">CHF {m(t.montant)}</span></div>
+        <div class:fort={t.fort}><span>{t.libelle}</span><span class="montant">{monnaie} {m(t.montant)}</span></div>
       {/each}
     </div>
   {/if}

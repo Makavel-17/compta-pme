@@ -69,11 +69,11 @@ const d9p10 = ticket({
 
 export const dossierOptique = construireDossier(
   {
-    id: 'dossier-mp1-optique-rhone-sa',
+    id: 'dossier-mp3-optique-rhone-sa',
     titre: 'Optique Rhône SA — dossier de pièces, société anonyme',
     niveau: 'MP',
     filiere: 'MP',
-    difficulte: 1,
+    difficulte: 3,
     sujets: ['Répartition du bénéfice décidée par l’assemblée générale', 'Dividende et impôt anticipé', 'Escomptes accordés et obtenus', 'Frais et intérêts bancaires', 'Bouclement d’une SA'],
     raisonSociale: 'Optique Rhône SA',
     formeJuridique: 'SA',
@@ -146,24 +146,25 @@ const d10p11 = noteInterne({
   emetteur: precimeca, date: '2026-12-31', titre: 'PROVISION — IMPÔTS', numero: 'NI-12b',
   texte: ["Les impôts sur le bénéfice et le capital de l'exercice 2026, qui seront facturés en 2027, sont estimés à 9'000.00. Constituer une provision."],
 });
-const valeurTitres = f(25500) - f(8500); // 200 actions à 85.00
+const valeurTitres = d10p1.total - d10p4.total; // solde du compte 1060 avant clôture
 const moinsValue = valeurTitres - f(16300);
 
 export const dossierPrecimeca = construireDossier(
   {
-    id: 'dossier-mp2-precimeca-sa-titres-provisions',
+    id: 'dossier-mp4-precimeca-sa-titres-provisions',
     titre: 'Précimeca SA — dossier de pièces, titres, provisions et opérations financières',
     niveau: 'MP',
     filiere: 'MP',
-    difficulte: 2,
-    sujets: ['Achat, vente et évaluation de titres', 'Dividendes reçus et impôt anticipé récupérable', 'Intérêts d’un emprunt', 'Provisions'],
+    difficulte: 4,
+    sujets: ['Achat, vente et clôture du compte Titres', 'Dividendes reçus et impôt anticipé récupérable', 'Intérêts d’un emprunt', 'Provisions'],
     raisonSociale: 'Précimeca SA',
     formeJuridique: 'SA',
     debut: '2026-01-01',
     fin: '2026-12-31',
     introduction:
-      "Pour ce dossier, la TVA est laissée de côté. Les frais d'achat et de vente de titres sont des charges financières ; " +
-      "les gains sur titres et les dividendes sont des produits financiers. L'impôt anticipé retenu sur les dividendes est une créance envers l'AFC.",
+      "Pour ce dossier, la TVA est laissée de côté. Les titres sont comptabilisés au prix payé, frais d'achat compris, et la " +
+      "vente au produit net crédité par la banque. Les charges et les produits des titres ont leurs propres comptes ; " +
+      "l'écart de cours se constate à la clôture. L'impôt anticipé retenu sur les dividendes est une créance envers l'AFC.",
     situation:
       "Précimeca SA usine des pièces de précision pour l'horlogerie et le médical à Plan-les-Ouates. Elle a financé ses " +
       "machines en partie par un emprunt bancaire de 100'000 francs.\n\n" +
@@ -176,15 +177,15 @@ export const dossierPrecimeca = construireDossier(
     parametres: { corrigerBouclement: true },
   },
   [
-    { date: '2026-02-12', piece: d10p1.piece, lignes: [D('1060', f(25500)), D('6900', f(280)), C('1020', d10p1.total)] },
+    { date: '2026-02-12', piece: d10p1.piece, lignes: S('1060', '1020', d10p1.total) },
     { date: '2026-03-31', piece: d10p2.piece, lignes: S('6900', '1020', d10p2.total) },
-    { date: '2026-05-08', piece: d10p3.piece, lignes: [D('1020', d10p3.net), D('1176', d10p3.impotAnticipe), C('6950', d10p3.brut)] },
-    { date: '2026-06-15', piece: d10p4.piece, lignes: [D('1020', d10p4.total), D('6900', f(95)), C('1060', f(8500)), C('6950', f(700))] },
+    { date: '2026-05-08', piece: d10p3.piece, lignes: [D('1020', d10p3.net), D('1176', d10p3.impotAnticipe), C('6952', d10p3.brut)] },
+    { date: '2026-06-15', piece: d10p4.piece, lignes: S('1020', '1060', d10p4.total) },
     { date: '2026-06-30', piece: d10p5.piece, lignes: S('6900', '1020', d10p5.total) },
     { date: '2026-06-30', piece: d10p6.piece, lignes: S('2400', '1020', d10p6.total) },
     { date: '2026-09-30', piece: d10p7.piece, lignes: S('6900', '1020', d10p7.total) },
     { date: '2026-12-31', piece: d10p8.piece, lignes: S('6900', '1020', d10p8.total) },
-    { date: '2026-12-31', piece: d10p9.piece, lignes: S('6900', '1060', moinsValue) },
+    { date: '2026-12-31', piece: d10p9.piece, lignes: S('6940', '1060', moinsValue) },
     { date: '2026-12-31', piece: d10p10.piece, lignes: S('6100', '2600', f(12000)) },
     { date: '2026-12-31', piece: d10p11.piece, lignes: S('8900', '2640', f(9000)) },
   ],
