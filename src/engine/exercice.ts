@@ -10,6 +10,7 @@ import type { ModeBouclement } from './closing';
 import type { Compte, Niveau } from './plan';
 import { comptesDuNiveau, NIVEAUX } from './plan';
 import type { DonneesRepartition } from './repartition';
+import type { PieceComptable } from './pieces';
 
 export type LibellesT = 'SI/SF' | 'San/Spb';
 export type Mode = 'entrainement' | 'evaluation';
@@ -21,6 +22,8 @@ export interface Operation {
   numero: string;
   date: DateISO;
   texte: string;
+  /** Pièce comptable à lire (dossiers « pièces seules ») ; l'élève en déduit l'écriture. */
+  piece?: PieceComptable;
 }
 
 export interface EcritureCorrigee {

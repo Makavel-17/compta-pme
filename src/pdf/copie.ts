@@ -21,7 +21,7 @@ const BLEU: [number, number, number] = [31, 78, 120];
 const ZEBRE: [number, number, number] = [241, 246, 251];
 
 /** Lignes d'un état en forme de compte : [intitulé, montant, sous-total]. */
-function lignesEtat(groupes: Groupe[], numeros: Map<string, string>): string[][] {
+export function lignesEtat(groupes: Groupe[], numeros: Map<string, string>): string[][] {
   const r: string[][] = [];
   for (const g of groupes) {
     if (g.titre) r.push([g.titre, '', '']);
@@ -34,7 +34,7 @@ function lignesEtat(groupes: Groupe[], numeros: Map<string, string>): string[][]
   return r;
 }
 
-function cote(a: string[][], b: string[][]): string[][] {
+export function cote(a: string[][], b: string[][]): string[][] {
   const n = Math.max(a.length, b.length);
   return Array.from({ length: n }, (_, i) => [...(a[i] ?? ['', '', '']), ...(b[i] ?? ['', '', ''])]);
 }

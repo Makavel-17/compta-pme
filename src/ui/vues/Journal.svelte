@@ -12,6 +12,7 @@
   import { m, dt } from '../format';
   import ChampCompte from '../composants/ChampCompte.svelte';
   import ChampMontant from '../composants/ChampMontant.svelte';
+  import PieceVue from '../composants/PieceVue.svelte';
 
   type LigneSaisie = { cle: number; debit: string | null; credit: string | null; montant: Centimes | null };
 
@@ -76,6 +77,7 @@
   }
 
   let editionId = $state<string | null>(null);
+  let voirPiece = $state(true);
 
   function prochaineOperation() {
     return operations.find((o) => !saisies.has(o.numero));
@@ -232,7 +234,17 @@
     <section class="carte saisie" aria-label="Nouvelle écriture" data-visite="saisie">
       <h2>{editionId ? `Modification de la pièce ${piece}` : 'Nouvelle écriture'}</h2>
       {#if operationCourante}
-        <div class="operation-courante"><b>Opération {operationCourante.numero}.</b> {operationCourante.texte}</div>
+        <div class="operation-courante">
+          <b>{operationCourante.piece ? 'Pièce' : 'Opération'} {operationCourante.numero}.</b> {operationCourante.texte}
+          {#if operationCourante.piece}
+            <button class="btn-lien bascule-piece" onclick={() => (voirPiece = !voirPiece)}>
+              {voirPiece ? 'Masquer la pièce' : 'Afficher la pièce'}
+            </button>
+          {/if}
+        </div>
+        {#if operationCourante.piece && voirPiece}
+          <div class="zone-piece"><PieceVue piece={operationCourante.piece} /></div>
+        {/if}
       {/if}
       <table>
         <thead>
@@ -439,6 +451,8 @@
   .saisie table th { background: var(--c-fond-2); color: var(--c-structure); border-bottom: 2px solid var(--c-structure); }
   .saisie td { padding: 4px 6px; border-bottom: none; }
   .operation-courante { padding: 8px 14px; background: var(--c-selection); border-bottom: 1px solid var(--c-bordure-2); }
+  .bascule-piece { margin-left: 10px; font-size: 13px; }
+  .zone-piece { padding: 12px 14px; background: var(--c-fond-2); border-bottom: 1px solid var(--c-bordure-2); max-height: 420px; overflow-y: auto; }
   .retirer {
     border: none; background: none; color: var(--c-texte-2); font-size: 18px; line-height: 1; cursor: pointer; padding: 6px 4px;
   }
