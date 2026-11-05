@@ -4,4 +4,4 @@ dist/
 .DS_Store
 
 # Fichiers générés par npm run dossiers
-dossiers/
+/dossiers/
