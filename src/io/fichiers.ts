@@ -90,6 +90,53 @@ export function exporterExerciceEnseignant(ex: Exercice): string {
   return JSON.stringify({ format: 'compta-pme/exercice-enseignant', version: VERSION, exercice: ex }, null, 2);
 }
 
+// ---------- Sauvegarde de l'espace enseignant ----------
+
+export const EXT_SAUVEGARDE = '.compta-sauvegarde.json';
+
+/** Tous les exercices de l'espace enseignant (corrigés en clair) dans un seul fichier. Le code d'accès n'y figure pas. */
+export function exporterSauvegarde(exercices: Exercice[], maintenant = new Date()): string {
+  return JSON.stringify(
+    { format: 'compta-pme/sauvegarde-enseignant', version: VERSION, creeLe: maintenant.toISOString(), exercices },
+    null,
+    2,
+  );
+}
+
+/** Lit une sauvegarde ; accepte aussi un fichier d'exercice isolé (version élève ou enseignant). */
+export function importerSauvegarde(texte: string): Exercice[] {
+  const f = lireJson(texte);
+  if (f.format === 'compta-pme/exercice' || f.format === 'compta-pme/exercice-enseignant') return [importerExercice(texte)];
+  if (f.format !== 'compta-pme/sauvegarde-enseignant') {
+    throw new ErreurFichier(
+      f.format === 'compta-pme/copie'
+        ? "Ce fichier est une copie d'élève, pas une sauvegarde."
+        : "Ce fichier n'est pas une sauvegarde Compta PME.",
+    );
+  }
+  if (f.version !== VERSION) throw new ErreurFichier('Cette sauvegarde a été créée avec une autre version de Compta PME.');
+  if (!Array.isArray(f.exercices)) throw new ErreurFichier('La sauvegarde est endommagée : liste des exercices absente.');
+  return f.exercices.map((e) => verifierExercice(e));
+}
+
+/** Fusionne une sauvegarde dans la liste existante : un exercice de même identifiant est remplacé, les autres ajoutés. */
+export function fusionnerExercices(existants: Exercice[], restaures: Exercice[]): { exercices: Exercice[]; ajoutes: number; remplaces: number } {
+  const exercices = [...existants];
+  let ajoutes = 0;
+  let remplaces = 0;
+  for (const ex of restaures) {
+    const i = exercices.findIndex((x) => x.id === ex.id);
+    if (i >= 0) {
+      exercices[i] = ex;
+      remplaces++;
+    } else {
+      exercices.push(ex);
+      ajoutes++;
+    }
+  }
+  return { exercices, ajoutes, remplaces };
+}
+
 function lireJson(texte: string): Record<string, unknown> {
   try {
     const v = JSON.parse(texte.replace(/^﻿/, ''));

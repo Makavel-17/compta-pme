@@ -6,11 +6,14 @@ import { CLE_ENSEIGNANT, ecrire, lire } from '../io/stockage';
 interface DonneesEnseignant {
   code: string | null;
   exercices: Exercice[];
+  /** Date ISO de la dernière sauvegarde exportée. */
+  derniereSauvegarde?: string | null;
 }
 
 class Enseignant {
   code = $state<string | null>(null);
   exercices = $state<Exercice[]>([]);
+  derniereSauvegarde = $state<string | null>(null);
   /** Espace affiché à la place de l'accueil élève. */
   ouvert = $state(false);
   deverrouille = $state(false);
@@ -22,11 +25,12 @@ class Enseignant {
     if (d) {
       this.code = d.code;
       this.exercices = d.exercices ?? [];
+      this.derniereSauvegarde = d.derniereSauvegarde ?? null;
     }
   }
 
   sauver() {
-    ecrire($state.snapshot({ code: this.code, exercices: this.exercices }), CLE_ENSEIGNANT);
+    ecrire($state.snapshot({ code: this.code, exercices: this.exercices, derniereSauvegarde: this.derniereSauvegarde }), CLE_ENSEIGNANT);
   }
 
   enregistrer(ex: Exercice) {

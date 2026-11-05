@@ -234,7 +234,7 @@ export const GUIDE: PartieGuide[] = [
             type: 'retenir',
             texte:
               'Le code et vos exercices sont enregistrés dans le navigateur de cet ordinateur seulement. Sur un autre ' +
-              'ordinateur, vous créez un nouveau code et vous importez vos exercices (« Version enseignant »).',
+              'ordinateur, vous créez un nouveau code et vous restaurez votre sauvegarde (voir « Sauvegarder et restaurer »).',
           },
         ],
       },
@@ -339,6 +339,34 @@ export const GUIDE: PartieGuide[] = [
             texte:
               "Ne remettez jamais la version enseignant d'une évaluation aux élèves : elle contient le corrigé en clair. " +
               'Un fichier élève peut aussi être importé, mais une évaluation arrive alors sans corrigé.',
+          },
+        ],
+      },
+      {
+        id: 'sauvegarde',
+        titre: 'Sauvegarder et restaurer ses exercices',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Vos exercices ne sont enregistrés que dans le navigateur de cet ordinateur. Ils disparaissent si l'on vide les " +
+              "données du navigateur, si l'on change d'ordinateur ou si l'adresse du site change. Sauvegardez-les régulièrement.",
+          },
+          {
+            type: 'etapes',
+            items: [
+              'Onglet « Exercices » : « Sauvegarder tous mes exercices » enregistre un seul fichier .compta-sauvegarde.json ' +
+                'dans vos téléchargements, avec tous les exercices et leurs corrigés.',
+              'Rangez ce fichier en lieu sûr (dossier personnel de l’école, clé USB). La date de la dernière sauvegarde est ' +
+                'affichée sous les boutons.',
+              'Sur un autre ordinateur, ou après une perte : « Restaurer une sauvegarde… » et choisissez le fichier. Les ' +
+                'exercices sont ajoutés ; un exercice déjà présent est remplacé par sa version sauvegardée.',
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              'La sauvegarde contient les corrigés en clair : ne la donnez pas aux élèves. Le code d’accès n’y figure pas.',
           },
         ],
       },

@@ -9,7 +9,11 @@
     ErreurFichier,
     exporterExercice,
     exporterExerciceEnseignant,
+    exporterSauvegarde,
+    EXT_SAUVEGARDE,
+    fusionnerExercices,
     importerExercice,
+    importerSauvegarde,
     nomFichier,
   } from '../../io/fichiers';
   import { choisirFichiers, telecharger } from '../fichiers-navigateur';
@@ -68,6 +72,35 @@
       message = e instanceof ErreurFichier ? e.message : "Le fichier n'a pas pu être lu.";
     }
   }
+
+  function sauvegarder() {
+    const maintenant = new Date();
+    const jour = maintenant.toISOString().slice(0, 10);
+    telecharger(nomFichier(['compta-pme', 'sauvegarde', jour], EXT_SAUVEGARDE), exporterSauvegarde($state.snapshot(enseignant.exercices) as Exercice[], maintenant));
+    enseignant.derniereSauvegarde = maintenant.toISOString();
+    message = `Sauvegarde de ${enseignant.exercices.length} exercice(s) enregistrée dans vos téléchargements. Conservez ce fichier en lieu sûr.`;
+  }
+
+  async function restaurer() {
+    message = '';
+    const [f] = await choisirFichiers(`${EXT_SAUVEGARDE},${EXT_EXERCICE},.json`);
+    if (!f) return;
+    try {
+      const r = fusionnerExercices($state.snapshot(enseignant.exercices) as Exercice[], importerSauvegarde(f.texte));
+      enseignant.exercices = r.exercices;
+      message =
+        `Restauration terminée : ${r.ajoutes} exercice(s) ajouté(s)` +
+        (r.remplaces ? `, ${r.remplaces} remplacé(s) par la version de la sauvegarde.` : '.');
+    } catch (e) {
+      message = e instanceof ErreurFichier ? e.message : "Le fichier n'a pas pu être lu.";
+    }
+  }
+
+  const texteSauvegarde = $derived(
+    enseignant.derniereSauvegarde
+      ? `Dernière sauvegarde : ${new Date(enseignant.derniereSauvegarde).toLocaleString('fr-CH', { dateStyle: 'short', timeStyle: 'short' })}`
+      : 'Aucune sauvegarde',
+  );
 
   function exporter(ex: Exercice, version: 'eleves' | 'enseignant') {
     message = '';
@@ -162,6 +195,13 @@
           >
           <button class="btn" onclick={importer}>Importer un exercice…</button>
         </div>
+        <div class="barre sauvegarde" role="group" aria-label="Sauvegarde">
+          <button class="btn" onclick={sauvegarder} disabled={enseignant.exercices.length === 0}>Sauvegarder tous mes exercices</button>
+          <button class="btn" onclick={restaurer}>Restaurer une sauvegarde…</button>
+          <span class="discret petit" class:alerte-texte={enseignant.exercices.length > 0 && !enseignant.derniereSauvegarde}>
+            {texteSauvegarde}. Vos exercices ne sont enregistrés que dans ce navigateur : sauvegardez-les régulièrement.
+          </span>
+        </div>
         <section class="carte">
           {#if enseignant.exercices.length === 0}
             <p class="vide">Aucun exercice pour l'instant. Créez-en un ou partez de l'exemple.</p>
@@ -225,6 +265,8 @@
 </div>
 
 <style>
+  .sauvegarde { align-items: center; flex-wrap: wrap; }
+  .alerte-texte { color: var(--c-alerte-texte, #B34A12); font-weight: bold; }
   .page { min-height: 100%; }
   .bandeau-haut { background: var(--c-structure); padding: 14px 24px; display: flex; align-items: baseline; gap: 18px; }
   .logo { color: #fff; font-weight: bold; font-size: 16px; }
