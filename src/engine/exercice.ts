@@ -8,7 +8,7 @@ import { comptesDisponibles, controlerOuverture, ouvertureDepuisBilan } from './
 import { estDateValide } from './dates';
 import type { ModeBouclement } from './closing';
 import type { Compte, Niveau } from './plan';
-import { NIVEAUX } from './plan';
+import { comptesDuNiveau, NIVEAUX } from './plan';
 import type { DonneesRepartition } from './repartition';
 
 export type LibellesT = 'SI/SF' | 'San/Spb';
@@ -116,6 +116,40 @@ export function creerDossier(ex: Exercice, plan: Compte[]): Dossier {
     ouverture: ouvertureDepuisBilan(ex.ouvertureActif, ex.ouverturePassif),
     ecritures: [],
   };
+}
+
+/** Comptes du plan choisis pour l'exercice : ceux du niveau, plus les ajoutés, moins les masqués. */
+export function comptesChoisis(
+  plan: readonly Compte[],
+  niveau: Niveau,
+  choix: { comptesAjoutes: readonly string[]; comptesMasques: readonly string[] },
+): Set<string> {
+  const s = new Set(comptesDuNiveau(plan, niveau).map((c) => c.numero));
+  for (const n of choix.comptesAjoutes) s.add(n);
+  for (const n of choix.comptesMasques) s.delete(n);
+  return s;
+}
+
+/**
+ * Coche ou décoche un compte dans l'éditeur : un compte hors niveau coché va dans `comptesAjoutes`,
+ * un compte du niveau décoché va dans `comptesMasques`. Les listes restent minimales et triées.
+ */
+export function basculerCompte(
+  plan: readonly Compte[],
+  niveau: Niveau,
+  choix: { comptesAjoutes: readonly string[]; comptesMasques: readonly string[] },
+  numero: string,
+  coche: boolean,
+): { comptesAjoutes: string[]; comptesMasques: string[] } {
+  const duNiveau = new Set(comptesDuNiveau(plan, niveau).map((c) => c.numero));
+  const ajoutes = new Set(choix.comptesAjoutes.filter((n) => !duNiveau.has(n)));
+  const masques = new Set(choix.comptesMasques.filter((n) => duNiveau.has(n)));
+  if (duNiveau.has(numero)) {
+    if (coche) masques.delete(numero);
+    else masques.add(numero);
+  } else if (coche) ajoutes.add(numero);
+  else ajoutes.delete(numero);
+  return { comptesAjoutes: [...ajoutes].sort(), comptesMasques: [...masques].sort() };
 }
 
 /** Numéros d'opérations ayant au moins une écriture non extournée dans le journal. */

@@ -22,3 +22,15 @@ export function libellesSoldes(l: LibellesT) {
 export function normaliser(t: string): string {
   return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
+
+/** Titres des classes du plan du cours (listes de comptes groupées par classe). */
+export const TITRES_CLASSES: Record<number, string> = {
+  1: 'Classe 1 : Actifs',
+  2: 'Classe 2 : Passifs',
+  3: "Classe 3 : Chiffre d'affaires (ventes et prestations de service)",
+  4: 'Classe 4 : Charges de marchandises et de services',
+  5: 'Classe 5 : Charges de personnel',
+  6: "Classe 6 : Autres charges d'exploitation, amortissements, résultat financier",
+  8: 'Classe 8 : Résultats hors exploitation et exceptionnels',
+  9: 'Classe 9 : Clôture',
+};

@@ -3,6 +3,8 @@
   import { etat } from '../etat.svelte';
   import { plan } from '../../data/plan';
   import {
+    basculerCompte,
+    comptesChoisis,
     controlerExercice,
     LIBELLES_NIVEAU,
     type Exercice,
@@ -14,7 +16,7 @@
   import { comptesDuNiveau, NIVEAUX, type Niveau } from '../../engine/plan';
   import { lireDate } from '../../engine/dates';
   import type { Centimes } from '../../engine/money';
-  import { dt, m } from '../format';
+  import { dt, m, normaliser, TITRES_CLASSES } from '../format';
   import ChampCompte from '../composants/ChampCompte.svelte';
   import ChampMontant from '../composants/ChampMontant.svelte';
   import { PIECE_BOUCLEMENT, POINTS_BOUCLEMENT_PAR_DEFAUT } from '../../engine/correction-bouclement';
@@ -67,8 +69,36 @@
   const totalPoints = $derived(operations.reduce((s, o) => s + (Number(o.points) || 0), 0));
   let message = $state('');
 
+  let comptesAjoutes = $state<string[]>([...source.parametres.comptesAjoutes]);
+  let comptesMasques = $state<string[]>([...source.parametres.comptesMasques]);
+  let filtreComptes = $state('');
+  const choisis = $derived(comptesChoisis(plan, niveau, { comptesAjoutes, comptesMasques }));
+  const duNiveau = $derived(new Set(comptesDuNiveau(plan, niveau).map((c) => c.numero)));
+  const groupesComptes = $derived.by(() => {
+    const t = normaliser(filtreComptes.trim());
+    const liste = t ? plan.filter((c) => normaliser(c.intitule).includes(t) || c.numero.startsWith(t)) : plan;
+    const g: { classe: number; comptes: typeof plan }[] = [];
+    for (const c of liste) {
+      const dernier = g.at(-1);
+      if (dernier && dernier.classe === c.classe) dernier.comptes.push(c);
+      else g.push({ classe: c.classe, comptes: [c] });
+    }
+    return g;
+  });
+
+  function basculer(numero: string, coche: boolean) {
+    const r = basculerCompte(plan, niveau, { comptesAjoutes, comptesMasques }, numero, coche);
+    comptesAjoutes = r.comptesAjoutes;
+    comptesMasques = r.comptesMasques;
+  }
+
+  function retablirNiveau() {
+    comptesAjoutes = [];
+    comptesMasques = [];
+  }
+
   const comptesBilan = $derived(
-    comptesDuNiveau(plan, niveau).filter((c) => c.type === 'actif' || c.type === 'passif'),
+    plan.filter((c) => choisis.has(c.numero) && (c.type === 'actif' || c.type === 'passif')),
   );
   const totalActif = $derived(actif.reduce((s, l) => s + (l.montant ?? 0), 0));
   const totalPassif = $derived(passif.reduce((s, l) => s + (l.montant ?? 0), 0));
@@ -102,6 +132,7 @@
       ouverturePassif: versRecord(passif),
       parametres: {
         ...actuel.parametres,
+        ...basculerCompte(plan, niveau, { comptesAjoutes, comptesMasques }, '', false),
         modificationDirecte: mode === 'entrainement' && modificationDirecte,
         libellesT,
         modeBouclement,
@@ -285,6 +316,38 @@
 {/if}
 
 <section class="carte">
+  <h2>Comptes de l'exercice</h2>
+  <div class="corps-carte">
+    <p class="petit discret">
+      Cochés par défaut : les comptes du niveau {LIBELLES_NIVEAU[niveau]}. Cochez un compte pour l'ajouter, décochez-le
+      pour le retirer de la liste proposée aux élèves. {choisis.size} comptes choisis.
+    </p>
+    <div class="outils-comptes">
+      <label class="sr-only" for="ex-filtre-comptes">Rechercher un compte</label>
+      <input id="ex-filtre-comptes" class="champ" type="search" placeholder="Rechercher par nom ou numéro" bind:value={filtreComptes} />
+      {#if comptesAjoutes.length || comptesMasques.length}
+        <button class="btn-lien" onclick={retablirNiveau}>Revenir aux comptes du niveau</button>
+      {/if}
+    </div>
+    {#if groupesComptes.length === 0}<p class="vide">Aucun compte ne correspond à « {filtreComptes} ».</p>{/if}
+    <div class="classes">
+      {#each groupesComptes as g (g.classe)}
+        <fieldset>
+          <legend>{TITRES_CLASSES[g.classe] ?? `Classe ${g.classe}`}</legend>
+          {#each g.comptes as c (c.numero)}
+            <label class="compte" class:hors={!duNiveau.has(c.numero)}>
+              <input type="checkbox" checked={choisis.has(c.numero)} onchange={(e) => basculer(c.numero, e.currentTarget.checked)} />
+              <span>{c.intitule}</span> <span class="numero">{c.numero}</span>
+            </label>
+          {/each}
+        </fieldset>
+      {/each}
+    </div>
+    <p class="petit discret">En italique : comptes hors du niveau (ajout facultatif).</p>
+  </div>
+</section>
+
+<section class="carte">
   <h2>Bilan d'ouverture</h2>
   <div class="corps-carte deux">
     {#each [{ titre: 'Actif', lignes: actif, total: totalActif, cote: 'actif' }, { titre: 'Passif', lignes: passif, total: totalPassif, cote: 'passif' }] as col}
@@ -402,5 +465,13 @@
   .ecart-bilan { margin: 0 14px 14px; }
   .info { margin: 0 0 14px; }
   .info ul, .alerte ul { margin: 4px 0 0; padding-left: 18px; }
+  .outils-comptes { display: flex; gap: 14px; align-items: center; margin: 8px 0 10px; }
+  .outils-comptes input { max-width: 320px; }
+  .classes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 420px; overflow-y: auto; }
+  fieldset { border: 1px solid var(--c-bordure-2); padding: 6px 10px 8px; margin: 0; }
+  legend { font-size: 12px; font-weight: bold; color: var(--c-structure); padding: 0 4px; }
+  .compte { display: flex; gap: 6px; align-items: baseline; padding: 2px 0; cursor: pointer; }
+  .compte.hors span:first-of-type { font-style: italic; color: var(--c-texte-2); }
+  .numero { font-size: 11px; color: var(--c-texte-2); font-variant-numeric: tabular-nums; }
   @media (max-width: 1100px) { .grille { grid-template-columns: 1fr 1fr; } .deux { grid-template-columns: 1fr; } }
 </style>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { demoCfc1 } from '../src/data/demo-cfc1';
-import { controlerExercice, corrigeDepuisEcritures, creerDossier, exerciceVierge } from '../src/engine/exercice';
+import { basculerCompte, comptesChoisis, controlerExercice, corrigeDepuisEcritures, creerDossier, exerciceVierge } from '../src/engine/exercice';
 import { ajouterEcriture, extourner } from '../src/engine/journal';
 import { chf, plan } from './fixtures';
 
@@ -59,5 +59,29 @@ describe('corrigé saisi dans le journal', () => {
       },
       { piece: '5', lignes: [{ debit: '6000', credit: '1020', montant: chf(1850) }] },
     ]);
+  });
+});
+
+describe("choix des comptes de l'exercice", () => {
+  const vide = { comptesAjoutes: [] as string[], comptesMasques: [] as string[] };
+
+  it("cocher un compte hors niveau l'ajoute, le décocher le retire", () => {
+    const a = basculerCompte(plan, 'CFC1', vide, '3400', true);
+    expect(a).toEqual({ comptesAjoutes: ['3400'], comptesMasques: [] });
+    expect(comptesChoisis(plan, 'CFC1', a).has('3400')).toBe(true);
+    expect(basculerCompte(plan, 'CFC1', a, '3400', false)).toEqual(vide);
+  });
+
+  it('décocher un compte du niveau le masque, le recocher le rétablit', () => {
+    const a = basculerCompte(plan, 'CFC1', vide, '1010', false);
+    expect(a).toEqual({ comptesAjoutes: [], comptesMasques: ['1010'] });
+    expect(comptesChoisis(plan, 'CFC1', a).has('1010')).toBe(false);
+    expect(basculerCompte(plan, 'CFC1', a, '1010', true)).toEqual(vide);
+  });
+
+  it('nettoie les listes après un changement de niveau', () => {
+    // 1170 est un compte CFC 2 : ajouté en CFC 1, il devient inutile dans la liste une fois l'exercice en CFC 2.
+    const a = basculerCompte(plan, 'CFC2', { comptesAjoutes: ['1170'], comptesMasques: [] }, '1010', false);
+    expect(a).toEqual({ comptesAjoutes: [], comptesMasques: ['1010'] });
   });
 });
