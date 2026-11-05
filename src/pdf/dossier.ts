@@ -3,7 +3,7 @@
 // Fonctionne dans le navigateur (export à la demande) et dans Node (script de génération des fichiers).
 
 import type { Exercice } from '../engine/exercice';
-import { creerDossier, difficulteDe, etiquetteNiveau } from '../engine/exercice';
+import { creerDossier, difficulteDe, etiquetteNiveau, planSelonForme } from '../engine/exercice';
 import type { Compte } from '../engine/plan';
 import type { PieceComptable } from '../engine/pieces';
 import type { Dossier, LigneEcriture } from '../engine/dossier';
@@ -152,7 +152,8 @@ function texteBilanOuverture(ex: Exercice, plan: Compte[]): { actif: string[][];
 }
 
 /** Dossier de l'élève : à imprimer ou à déposer sur la plateforme de l'école. */
-export async function genererPdfDossier(ex: Exercice, plan: Compte[], nomDocument: string): Promise<Blob> {
+export async function genererPdfDossier(ex: Exercice, planCours: Compte[], nomDocument: string): Promise<Blob> {
+  const plan = planSelonForme(planCours, ex.formeJuridique);
   const { doc, autoTable } = await outils();
   let y = MARGE + 4;
   doc.setFont('helvetica', 'bold').setFontSize(16).setTextColor(...BLEU).text(ex.raisonSociale, MARGE, y + 4);
@@ -225,7 +226,8 @@ export function dossierCorrige(ex: Exercice, plan: Compte[]): Dossier {
 }
 
 /** Corrigé de l'enseignant. */
-export async function genererPdfCorrige(ex: Exercice, plan: Compte[], nomDocument: string): Promise<Blob> {
+export async function genererPdfCorrige(ex: Exercice, planCours: Compte[], nomDocument: string): Promise<Blob> {
+  const plan = planSelonForme(planCours, ex.formeJuridique);
   const { doc, autoTable } = await outils();
   const nom = new Map(plan.map((c) => [c.numero, c.intitule]));
   const compte = (n: string | null) => (n ? `${nom.get(n) ?? ''} (${n})` : '');

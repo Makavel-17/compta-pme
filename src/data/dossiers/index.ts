@@ -6,10 +6,11 @@ import { dossierBoulangerie, dossierFleurs, dossierMeubles } from './cfc-creance
 import { dossierOptique, dossierPrecimeca } from './mp';
 import { dossierTerroirs, dossierZufferey } from './mp-operations';
 import { dossierCarrosserie, dossierSports } from './mp-immeubles-analyse';
+import { dossierBrasserie, dossierLemanbio } from './mp-capital';
 
 export const DOSSIERS: Exercice[] = [
   dossierSaveurs, dossierPolyglotte, dossierOutils, dossierMenuiserie, dossierBabel,
-  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierOptique, dossierPrecimeca, dossierCarrosserie, dossierSports,
+  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierBrasserie, dossierLemanbio, dossierOptique, dossierPrecimeca, dossierCarrosserie, dossierSports,
 ];
 
 /** Version d'évaluation d'un dossier : même contenu, aucun retour pendant la saisie, corrigé absent du fichier élève. */

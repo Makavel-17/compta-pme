@@ -1042,6 +1042,74 @@ export const CHAPITRES: Chapitre[] = [
         ],
       },
       {
+        titre: "Fondation d'une SA",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le capital-actions d'une SA est d'au moins 100'000 francs. À la fondation, les actionnaires souscrivent les " +
+              "actions, c'est-à-dire qu'ils s'engagent à les payer : la société a alors une créance envers eux (1850 " +
+              "Actionnaires). Ils libèrent ensuite leurs actions, en espèces sur un compte bancaire ou en nature (machines, " +
+              "véhicules, créances, marchandises). Chaque action doit être libérée à 20 % au moins, et 50'000 francs au " +
+              "moins doivent être couverts par les apports. La part non libérée reste dans le compte Actionnaires.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Souscription de 200 actions de 1'000.00", lignes: s('1850', '2800', 200000) },
+              { cas: "Libération en espèces versée à la banque, 120'000.00", lignes: s('1020', '1850', 120000) },
+              { cas: "Apport d'une machine estimée à 40'000.00", lignes: s('1500', '1850', 40000) },
+              {
+                cas: "Apport de créances clients de 10'000.00, dont 5 % sont jugées douteuses",
+                lignes: [D('1100', 10000), C('1109', 500), C('1850', 9500)],
+              },
+            ],
+          },
+          {
+            type: 'p',
+            texte:
+              "Les frais de fondation (acte notarié, inscription au registre du commerce, honoraires pour les statuts et " +
+              "le rapport de fondation, commission bancaire) sont une charge de l'exercice : compte 6550 FAO (frais de " +
+              "fondation, d'augmentation de capital et d'organisation). Ils ne sont pas portés à l'actif.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [{ cas: "Facture du notaire pour l'acte constitutif, 2'800.00", lignes: s('6550', '2000', 2800) }],
+          },
+        ],
+      },
+      {
+        titre: 'Augmentation du capital',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Quand la société se porte bien, l'assemblée générale peut émettre de nouvelles actions au-dessus de leur " +
+              "valeur nominale. La différence entre le prix d'émission et le nominal est la prime d'émission (agio) : elle " +
+              "va aux réserves légales issues du capital (2900) et doit toujours être versée entièrement, même si le " +
+              "nominal n'est libéré qu'en partie.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              {
+                cas: "Souscription de 100 actions de 1'000.00 émises à 1'150.00",
+                lignes: [D('1850', 115000), C('2800', 100000), C('2900', 15000)],
+              },
+              { cas: 'Libération de 60 % du nominal et de la totalité de l’agio à la banque', lignes: s('1020', '1850', 75000) },
+              { cas: "Frais de l'augmentation de capital payés par la banque, 3'200.00", lignes: s('6550', '1020', 3200) },
+            ],
+          },
+          {
+            type: 'p',
+            texte:
+              "La société peut aussi émettre des bons de participation (2810 Capital-participations, souscription à 1860 " +
+              "Participants) : ils donnent droit au dividende, mais pas au vote. Le capital-participations ne peut pas " +
+              'dépasser le double du capital-actions.',
+          },
+        ],
+      },
+      {
         titre: 'Répartition selon le droit révisé (art. 672 CO)',
         blocs: [
           {
