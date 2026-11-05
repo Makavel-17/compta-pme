@@ -1,6 +1,6 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
-  import { exercicesDemo } from '../../data/demos';
+  import { estDossier, exercicesDemo } from '../../data/demos';
   import { classerExercices, etiquetteNiveau, LIBELLES_FILIERE, LIBELLES_MODE, type Exercice } from '../../engine/exercice';
   import { EXT_EXERCICE, ErreurFichier, importerExercice } from '../../io/fichiers';
   import { choisirFichiers } from '../fichiers-navigateur';
@@ -78,8 +78,8 @@
               <strong>{ex.titre}</strong>
               <span class="badge niveau">{etiquetteNiveau(ex)}</span><br />
               <span class="discret">
-                {ex.raisonSociale} · {ex.operations.length} opérations ·
-                {exercicesDemo.includes(ex) ? 'exercice de démonstration' : `fourni par l'enseignant · ${LIBELLES_MODE[ex.mode]}`}
+                {ex.raisonSociale} · {ex.operations.length} {estDossier(ex) ? 'pièces comptables' : 'opérations'} ·
+                {exercicesDemo.includes(ex) ? (estDossier(ex) ? 'dossier de pièces' : 'exercice de démonstration') : `fourni par l'enseignant · ${LIBELLES_MODE[ex.mode]}`}
               </span>
               {#if ex.sujets?.length}
                 <br /><span class="discret petit">Sujets traités : {ex.sujets.join(' · ')}</span>

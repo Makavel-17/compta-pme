@@ -11,7 +11,7 @@ export const demoMp: Exercice = {
   titre: 'Lémantec SA — exercice 2026',
   niveau: 'MP',
   filiere: 'MP',
-  difficulte: 2,
+  difficulte: 3,
   sujets: ["Répartition du bénéfice", "Impôt anticipé", "Titres", "TVA et escompte", "Intérêts et frais bancaires", "Provisions", "Amortissements"],
   raisonSociale: 'Lémantec SA',
   formeJuridique: 'SA',
