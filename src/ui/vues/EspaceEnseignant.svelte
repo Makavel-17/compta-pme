@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enseignant, nouvelIdentifiant } from '../enseignant.svelte';
+  import { etat } from '../etat.svelte';
   import { exercicesDemo } from '../../data/demos';
   import { plan } from '../../data/plan';
   import { controlerExercice, etiquetteNiveau, exerciceVierge, LIBELLES_MODE, type Exercice } from '../../engine/exercice';
@@ -98,6 +99,7 @@
   <header class="bandeau-haut">
     <span class="logo">Compta PME</span>
     <span class="titre-espace">Espace enseignant</span>
+    <button class="btn-lien fermer" onclick={() => (etat.guide = 'enseignant')}>Guide</button>
     <button class="btn-lien fermer" onclick={fermer}>Fermer l'espace enseignant</button>
   </header>
 

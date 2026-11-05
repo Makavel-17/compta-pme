@@ -79,6 +79,8 @@ class Etat {
   prefs = $state<Preferences>({ visiteVue: false, numerosComptes: true });
   vue = $state<Vue>(vueDepuisAdresse());
   visiteOuverte = $state(false);
+  /** Guide d'utilisation ouvert (partie affichée), ou null. */
+  guide = $state<null | 'eleve' | 'enseignant'>(null);
   stockageIndisponible = $state(false);
 
   constructor() {

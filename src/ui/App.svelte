@@ -21,6 +21,7 @@
   import Theorie from './vues/Theorie.svelte';
   import Analyse from './vues/Analyse.svelte';
   import Visite from './composants/Visite.svelte';
+  import Guide from './vues/Guide.svelte';
 
   function exporterMaCopie() {
     const s = etat.session!;
@@ -105,7 +106,9 @@
   });
 </script>
 
-{#if enseignant.ouvert}
+{#if etat.guide}
+  <Guide partie={etat.guide} onFermer={() => (etat.guide = null)} />
+{:else if enseignant.ouvert}
   <EspaceEnseignant />
 {:else if !etat.session}
   <Accueil onEnseignant={() => (enseignant.ouvert = true)} />
@@ -148,6 +151,7 @@
         {:else}
           <button class="action-lateral principale" onclick={exporterMaCopie}>Exporter ma copie</button>
           <button class="action-lateral" onclick={exporterPdf} disabled={pdfEnCours}>{pdfEnCours ? 'Création du PDF…' : 'Exporter en PDF'}</button>
+          <button class="action-lateral discrete" onclick={() => (etat.guide = 'eleve')}>Guide d'utilisation</button>
           <button class="action-lateral discrete" onclick={() => (enseignant.ouvert = true)}>Espace enseignant</button>
         {/if}
       </div>

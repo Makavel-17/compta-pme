@@ -115,7 +115,11 @@
         <button type="submit" class="btn btn-principal">Commencer</button>
       </div>
     </form>
-    <p class="enseignant"><button class="btn-lien" onclick={onEnseignant}>Espace enseignant</button></p>
+    <p class="enseignant">
+      <button class="btn-lien" onclick={() => (etat.guide = 'eleve')}>Guide d'utilisation</button>
+      <span class="sep">·</span>
+      <button class="btn-lien" onclick={onEnseignant}>Espace enseignant</button>
+    </p>
   </main>
 </div>
 
@@ -142,6 +146,7 @@
   .niveau-titre { font-size: 13px; color: var(--c-texte-2); margin: 12px 0 6px; }
   .ouvrir { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
   .enseignant { text-align: right; margin-top: 16px; font-size: 13px; }
+  .sep { margin: 0 8px; color: var(--c-texte-2); }
   .actions { padding: 0 14px 14px; text-align: right; }
   @media (max-width: 640px) { .grille { grid-template-columns: 1fr; } }
 </style>
