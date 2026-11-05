@@ -6,6 +6,7 @@
 <script lang="ts">
   import { enseignant } from '../enseignant.svelte';
   import { exercicesDemo } from '../../data/demos';
+  import { DOSSIERS_EVALUATION } from '../../data/dossiers';
   import type { Exercice } from '../../engine/exercice';
   import { corrigerCopie, statistiquesOperations, type CorrectionCopie } from '../../engine/notation';
   import { LIBELLES_DIAGNOSTIC } from '../../engine/correction';
@@ -14,7 +15,7 @@
   import { choisirFichiers, telecharger } from '../fichiers-navigateur';
 
   const disponibles = $derived<Exercice[]>(
-    [...enseignant.exercices, ...exercicesDemo].filter((e) => (e.corrige?.length ?? 0) > 0),
+    [...enseignant.exercices, ...exercicesDemo, ...DOSSIERS_EVALUATION].filter((e) => (e.corrige?.length ?? 0) > 0),
   );
   let exerciceId = $state('');
   const exercice = $derived(disponibles.find((e) => e.id === exerciceId));

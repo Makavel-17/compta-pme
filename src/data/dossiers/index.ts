@@ -9,3 +9,11 @@ export const DOSSIERS: Exercice[] = [
   dossierSaveurs, dossierPolyglotte, dossierOutils, dossierMenuiserie, dossierBabel,
   dossierMeubles, dossierBoulangerie, dossierFleurs, dossierOptique, dossierPrecimeca,
 ];
+
+/** Version d'évaluation d'un dossier : même contenu, aucun retour pendant la saisie, corrigé absent du fichier élève. */
+export function versionEvaluation(ex: Exercice): Exercice {
+  return { ...ex, id: `${ex.id}-evaluation`, titre: `${ex.titre} (évaluation)`, mode: 'evaluation' };
+}
+
+/** Versions d'évaluation, connues de l'espace enseignant pour corriger les copies. */
+export const DOSSIERS_EVALUATION: Exercice[] = DOSSIERS.map(versionEvaluation);

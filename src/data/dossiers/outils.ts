@@ -20,7 +20,7 @@ export interface ElementDossier {
 }
 
 function majusculeInitiale(t: string): string {
-  const bas = t.toLocaleLowerCase('fr-CH');
+  const bas = t.toLocaleLowerCase('fr-CH').replace(/\b(tva|avs|ai|apg|ac|lpp|alfa|laa|afc|sa)\b/g, (s) => s.toUpperCase());
   return bas.charAt(0).toLocaleUpperCase('fr-CH') + bas.slice(1);
 }
 

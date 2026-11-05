@@ -187,7 +187,7 @@ export const dossierBoulangerie = construireDossier(
       "banque. Les cotisations AVS/AI/APG et AC sont payées à la même caisse de compensation. Les charges de l'employeur " +
       'sont comptabilisées en charges sociales.',
     situation:
-      "La Boulangerie Au Bon Grain, à Carouge, appartient à Marc Jaquet. Il fabrique le pain la nuit ; deux employés " +
+      "La Boulangerie Au Bon Grain, à la rue de Carouge, appartient à Marc Jaquet. Il fabrique le pain la nuit ; deux employés " +
       "l'aident au laboratoire et à la vente : Sofia Lopes, vendeuse, et Thomas Girod, boulanger.\n\n" +
       "Jusqu'ici, une fiduciaire s'occupait des salaires. M. Jaquet veut désormais les comptabiliser lui-même et comprendre " +
       "ce que coûte réellement un employé, au-delà du salaire versé.\n\n" +

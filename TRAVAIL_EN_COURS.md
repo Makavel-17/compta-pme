@@ -61,17 +61,17 @@ types : factures, tickets et quittances, documents bancaires, fiches de salaire 
 opérations de clôture) ; corrigé PDF pour l'enseignant ; chaque dossier en version entraînement ET évaluation.
 Aucune référence aux manuels. Textes et entreprises entièrement originaux.
 
-- [ ] E1. Modèle `PieceComptable` (`src/engine/pieces.ts`) : constructeurs facture / ticket / quittance / avis bancaire /
+- [x] E1. Modèle `PieceComptable` (`src/engine/pieces.ts`) : constructeurs facture / ticket / quittance / avis bancaire /
   fiche de salaire / note interne / avis de dividende, montants calculés (TVA arrondie 5 cts) ; champ `piece` facultatif
   dans `Operation` ; tests.
-- [ ] E2. Composant `PieceVue.svelte` (aspect d'un document) ; dans le journal, la pièce de l'opération choisie
+- [x] E2. Composant `PieceVue.svelte` (aspect d'un document) ; dans le journal, la pièce de l'opération choisie
   s'affiche au-dessus de la grille (bouton afficher / masquer) ; dans l'énoncé « Pièce n — titre ».
-- [ ] E3. PDF : `src/pdf/dossier.ts` — dossier élève (page de garde, situation, consignes, bilan d'ouverture, pièces)
+- [x] E3. PDF : `src/pdf/dossier.ts` — dossier élève (page de garde, situation, consignes, bilan d'ouverture, pièces)
   et corrigé enseignant (journal corrigé par pièce, bilan et compte de résultat finaux, bouclement si demandé).
-- [ ] E4. Dix dossiers (`src/data/dossiers/`) : CFC 1 bases commerce (non assujetti, bouclement) ; CFC 1 services
+- [x] E4. Dix dossiers (`src/data/dossiers/`) : CFC 1 bases commerce (non assujetti, bouclement) ; CFC 1 services
   (honoraires, bouclement) ; CFC 2 TVA ; CFC 3 amortissements ; CFC 3 transitoires ; CFC 3 créances, pertes,
   ducroire ; CFC 3 salaires ; CFC 4 synthèse CFC ; MP 1 sociétés et répartition ; MP 2 titres, provisions et
   opérations financières (Lémantec passe en MP 3 Synthèse). Tests : corrigé complet et équilibré, contrôle sans erreur.
-- [ ] E5. Espace enseignant, onglet « Dossiers » : pour chaque dossier, PDF élève, corrigé PDF, exercice entraînement,
+- [x] E5. Espace enseignant, onglet « Dossiers » : pour chaque dossier, PDF élève, corrigé PDF, exercice entraînement,
   exercice évaluation. Script `scripts/generer-dossiers.ts` (vite-node) qui écrit ces fichiers dans `dossiers/`.
-- [ ] E6. Tests, contrôle, vérification dans le navigateur, publication.
+- [x] E6. Tests, contrôle, vérification dans le navigateur, publication.
