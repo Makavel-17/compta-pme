@@ -46,3 +46,24 @@ describe('réserves latentes : le corrigé complémentaire concorde avec les com
     expect(tableau.lignes[0]![1]).toBe(formatMontant(benefice));
   });
 });
+
+describe('corrigés complémentaires : concordance avec les comptes', () => {
+  it("Zufferey : le bénéfice du revenu de l'entrepreneur est celui du dossier corrigé", async () => {
+    const { COMPLEMENTS_CORRIGE } = await import('../src/data/dossiers');
+    const { dossierCorrige } = await import('../src/pdf/dossier');
+    const { resultatExercice } = await import('../src/engine/statements');
+    const { formatMontant } = await import('../src/engine/money');
+    const ex = DOSSIERS.find((d) => d.id === 'dossier-mp2-atelier-zufferey')!;
+    expect(COMPLEMENTS_CORRIGE[ex.id]![0]!.lignes[2]![1]).toBe(formatMontant(resultatExercice(dossierCorrige(ex, plan))));
+  });
+  it("Carrosserie : le résultat de l'immeuble est le solde de 7500 moins 7510", async () => {
+    const { COMPLEMENTS_CORRIGE } = await import('../src/data/dossiers');
+    const { dossierCorrige } = await import('../src/pdf/dossier');
+    const { soldes } = await import('../src/engine/ledger');
+    const { formatMontant } = await import('../src/engine/money');
+    const ex = DOSSIERS.find((d) => d.id === 'dossier-mp4-carrosserie-du-saleve-immeuble')!;
+    const s = soldes(dossierCorrige(ex, plan));
+    const resultat = -(s.get('7500')?.solde ?? 0) - (s.get('7510')?.solde ?? 0);
+    expect(COMPLEMENTS_CORRIGE[ex.id]![0]!.lignes[2]![1]).toBe(formatMontant(resultat));
+  });
+});

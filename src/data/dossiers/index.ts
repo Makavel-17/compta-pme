@@ -5,8 +5,8 @@ import { dossierPolyglotte, dossierSaveurs } from './cfc-bases';
 import { dossierBabel, dossierMenuiserie, dossierOutils } from './cfc-tva-cloture';
 import { dossierBoulangerie, dossierFleurs, dossierMeubles } from './cfc-creances-salaires';
 import { dossierOptique, dossierPrecimeca } from './mp';
-import { dossierTerroirs, dossierZufferey } from './mp-operations';
-import { dossierCarrosserie, dossierSports } from './mp-immeubles-analyse';
+import { complementZufferey, dossierTerroirs, dossierZufferey } from './mp-operations';
+import { complementCarrosserie, dossierCarrosserie, dossierSports } from './mp-immeubles-analyse';
 import { dossierBrasserie, dossierLemanbio } from './mp-capital';
 import { complementAteliers, dossierAteliers } from './mp-reserves-latentes';
 
@@ -26,4 +26,6 @@ export const DOSSIERS_EVALUATION: Exercice[] = DOSSIERS.map(versionEvaluation);
 /** Tableaux complémentaires du corrigé PDF, par identifiant de dossier. */
 export const COMPLEMENTS_CORRIGE: Record<string, TableauComplement[]> = {
   [dossierAteliers.id]: complementAteliers,
+  [dossierZufferey.id]: complementZufferey,
+  [dossierCarrosserie.id]: complementCarrosserie,
 };

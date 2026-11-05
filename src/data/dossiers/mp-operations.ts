@@ -1,7 +1,7 @@
 // Dossiers MP : opérations financières et commerciales (niveau 1), clôture de l'entreprise individuelle (niveau 2).
 // Entreprises fictives. Règles : monnaies étrangères et rémunération du propriétaire selon le cours (voir CLAUDE.md).
 import { avisBancaire, facture, noteInterne } from '../../engine/pieces';
-import { BANQUE, construireDossier, C, D, f, S } from './outils';
+import { BANQUE, construireDossier, C, D, f, S, type TableauComplement } from './outils';
 
 const cours = (x: number) => x.toFixed(4).replace(/0+$/, '').replace(/\.$/, '.00');
 /** Conversion en CHF, arrondie au centime : montant (centimes) × cours. */
@@ -220,3 +220,21 @@ export const dossierZufferey = construireDossier(
     { date: '2026-12-31', piece: m2p12.piece, lignes: S('6900', '2850', interetCapital) },
   ],
 );
+
+// Corrigé complémentaire : revenu de l'entrepreneur (Zufferey).
+const honorairesZ = f(142000) + m2p2.ttc + f(5000);
+const chargesZ = m2p4.total + m2p8.total + amortMachines + salaireProprietaire + interetCapital;
+const beneficeZ = honorairesZ - chargesZ;
+const mZ = (c: number) => (c / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+export const complementZufferey: TableauComplement[] = [
+  {
+    titre: "Revenu de l'entrepreneur",
+    entetes: ['Élément', 'Montant CHF'],
+    lignes: [
+      ['Salaire du propriétaire', mZ(salaireProprietaire)],
+      ['+ Intérêt sur le capital', mZ(interetCapital)],
+      ["+ Bénéfice de l'exercice", mZ(beneficeZ)],
+      ["= Revenu de l'entrepreneur", mZ(salaireProprietaire + interetCapital + beneficeZ)],
+    ],
+  },
+];

@@ -2,7 +2,7 @@
 // Règles immeubles (F&C ch. 55, validées le 05.11.2026) : 7500 Produits d'immeubles / 7510 Charges d'immeubles,
 // loyers internes 6000/7500 et 2850/7500, plus-value d'investissement portée à 1600.
 import { avisBancaire, facture, noteInterne } from '../../engine/pieces';
-import { BANQUE, construireDossier, C, D, f, S } from './outils';
+import { BANQUE, construireDossier, C, D, f, S, type TableauComplement } from './outils';
 
 // ─────────────────────────── Dossier MP 4 : Carrosserie du Salève (immeuble à usage mixte) ───────────────────────────
 const carrosserie = { nom: 'Carrosserie du Salève', adresse: ['Route de Troinex 41', '1256 Troinex'] };
@@ -175,3 +175,20 @@ export const dossierSports = construireDossier(
     { date: '2026-12-31', piece: a11.piece, lignes: S('8900', '2640', f(14000)) },
   ],
 );
+
+// Corrigé complémentaire : résultat de l'immeuble (Carrosserie du Salève).
+const produitsImmeuble = i7.total + f(30000) + f(21600);
+const chargesImmeuble =
+  -interetsCourusOuverture + i5.total + i3.ttc + interetAnnuite + i4.ttc + Math.round(valeurAcquisition / 100) + interetsCourusCloture;
+const mI = (c: number) => (c / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+export const complementCarrosserie: TableauComplement[] = [
+  {
+    titre: "Résultat de l'immeuble",
+    entetes: ['Élément', 'Montant CHF'],
+    lignes: [
+      ["Produits d'immeubles (7500) : loyers du studio, loyer interne de l'atelier, valeur locative du logement", mI(produitsImmeuble)],
+      ["./. Charges d'immeubles (7510), extourne du 01.01 déduite", mI(chargesImmeuble)],
+      ["= Résultat de l'immeuble", mI(produitsImmeuble - chargesImmeuble)],
+    ],
+  },
+];
