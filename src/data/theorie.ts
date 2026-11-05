@@ -50,6 +50,80 @@ const C = (compte: string, montant: number): LigneExemple => ({ debit: null, cre
 export const CHAPITRES: Chapitre[] = [
   // ───────────────────────────── CFC 1 ─────────────────────────────
   {
+    id: 'cadre-legal',
+    titre: 'Le cadre légal de la comptabilité',
+    niveau: 'CFC1',
+    resume: 'Qui doit tenir une comptabilité, selon quels principes, et combien de temps conserver les pièces.',
+    bases: ['CO art. 957 à 958f (comptabilité commerciale et présentation des comptes)'],
+    sections: [
+      {
+        titre: 'Qui doit tenir une comptabilité ?',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Depuis 2015, c'est la taille de l'entreprise qui compte, plus sa forme juridique. Une raison individuelle " +
+              "ou une société de personnes dont le chiffre d'affaires du dernier exercice dépasse 500'000 francs doit tenir " +
+              "une comptabilité complète. Les personnes morales (SA, Sàrl, etc.) y sont toujours soumises, quelle que soit " +
+              "leur taille (CO art. 957 al. 1).",
+          },
+          {
+            type: 'p',
+            texte:
+              "En dessous de 500'000 francs, une raison individuelle peut se contenter d'une comptabilité des recettes, " +
+              "des dépenses et du patrimoine (CO art. 957 al. 2). Elle doit tout de même être tenue avec soin.",
+          },
+        ],
+      },
+      {
+        titre: 'Les principes de régularité',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              'La comptabilité enregistre toutes les opérations qui permettent de connaître la situation économique de ' +
+              "l'entreprise : son patrimoine, sa situation financière et ses résultats (CO art. 957a). Elle doit être :",
+          },
+          {
+            type: 'liste',
+            items: [
+              'complète, fidèle et systématique : aucune opération n’est oubliée ni inventée ;',
+              'justifiée : chaque écriture repose sur une pièce (facture, quittance, relevé bancaire…) ;',
+              'claire et adaptée à la taille de l’entreprise ;',
+              'traçable : on doit pouvoir remonter de l’écriture à la pièce, et inversement.',
+            ],
+          },
+          {
+            type: 'p',
+            texte:
+              "Pour établir les comptes annuels, le Code des obligations ajoute plusieurs principes (CO art. 958c), dont : " +
+              "la clarté, l'intégralité, la fiabilité, l'importance relative, la prudence, la permanence des méthodes " +
+              "d'une année à l'autre et l'interdiction de compenser des actifs avec des passifs ou des charges avec des produits.",
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Pas d'écriture sans pièce justificative. Les pièces et les comptes annuels se conservent 10 ans " +
+              '(CO art. 958f).',
+          },
+        ],
+      },
+      {
+        titre: "Continuité de l'exploitation et exercice comptable",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Les comptes partent de l'idée que l'entreprise va poursuivre son activité (CO art. 958a). Ils sont " +
+              "établis pour une période déterminée, en principe une année : l'exercice comptable (CO art. 958b). " +
+              "Les charges et les produits sont rattachés à l'exercice qu'ils concernent, ce qui explique les écritures " +
+              'de régularisation (transitoires) au bouclement.',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'bilan',
     titre: 'Le bilan',
     niveau: 'CFC1',
@@ -360,6 +434,30 @@ export const CHAPITRES: Chapitre[] = [
           },
         ],
       },
+      {
+        titre: 'Inventaire intermittent ou permanent',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Avec l'inventaire intermittent, utilisé dans le cours, les achats sont enregistrés directement en charge " +
+              "(4200) et le stock n'est corrigé qu'une fois par an, après l'inventaire physique : on enregistre alors la " +
+              'variation de stock.',
+          },
+          {
+            type: 'p',
+            texte:
+              "Avec l'inventaire permanent, chaque entrée et chaque sortie de marchandises est enregistrée dans le compte de " +
+              "stock au moment où elle a lieu. Le stock est donc connu à tout moment, mais la tenue demande un suivi " +
+              "précis des quantités (en pratique, un logiciel de gestion des stocks).",
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Inventaire intermittent : le stock du bilan n'est juste qu'après l'écriture de variation de stock au bouclement.",
+          },
+        ],
+      },
     ],
   },
 
@@ -395,6 +493,26 @@ export const CHAPITRES: Chapitre[] = [
             texte:
               "Calcul : TVA = montant hors taxe × taux. À partir d'un montant TTC : TVA = TTC × taux / (100 % + taux). " +
               'Les montants de TVA sont arrondis aux 5 centimes.',
+          },
+        ],
+      },
+      {
+        titre: 'Qui paie la TVA ?',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Une entreprise devient assujettie dès que son chiffre d'affaires soumis à la TVA atteint 100'000 francs " +
+              "par an (LTVA art. 10). Certaines prestations sont exclues du champ de l'impôt (par exemple la plupart des " +
+              "soins médicaux, de l'enseignement ou des locations d'immeubles) : elles ne portent pas de TVA et ne donnent " +
+              "pas droit à la déduction de l'impôt préalable.",
+          },
+          {
+            type: 'p',
+            texte:
+              "Les petites entreprises peuvent, à certaines conditions, choisir la méthode des taux de la dette fiscale " +
+              "nette : elles appliquent un taux forfaitaire à leur chiffre d'affaires et ne déduisent pas l'impôt " +
+              "préalable. Le cours travaille avec la méthode effective, présentée ci-dessous.",
           },
         ],
       },
@@ -538,6 +656,25 @@ export const CHAPITRES: Chapitre[] = [
               { cas: "Méthode indirecte : amortissement du mobilier, 2'500.00", lignes: s('6800', '1519', 2500) },
               { cas: "Méthode indirecte : amortissement du véhicule, 7'000.00", lignes: s('6800', '1539', 7000) },
             ],
+          },
+        ],
+      },
+      {
+        titre: "Vente d'une immobilisation",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Quand une immobilisation est vendue, on compare le prix de vente à sa valeur comptable (valeur " +
+              "d'acquisition moins les amortissements cumulés). Si le prix est plus élevé, la vente dégage un bénéfice ; " +
+              "s'il est plus bas, une perte. Avec la méthode indirecte, le compte FAC de l'objet vendu doit aussi être " +
+              'soldé, puisque l’objet quitte le bilan.',
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Valeur comptable = valeur d'acquisition − amortissements cumulés. Le compte à utiliser pour le bénéfice ou la " +
+              'perte sur la vente est celui indiqué par votre enseignant.',
           },
         ],
       },
@@ -952,6 +1089,69 @@ export const CHAPITRES: Chapitre[] = [
     ],
   },
   {
+    id: 'evaluation',
+    titre: "Principes d'évaluation et réserves latentes",
+    niveau: 'MP',
+    resume: 'Comment les actifs et les dettes sont évalués, et pourquoi le bilan publié peut sous-estimer la valeur réelle.',
+    bases: ['CO art. 960 à 960e (évaluation)'],
+    sections: [
+      {
+        titre: "Les règles d'évaluation",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Un actif est inscrit au bilan au plus à son coût d'acquisition ou de fabrication (CO art. 960a). Par " +
+              "prudence, il ne doit pas être surévalué : s'il perd de la valeur, on l'amortit ou on corrige sa valeur. " +
+              'Les dettes sont inscrites à leur valeur nominale. Les risques futurs probables sont couverts par des provisions.',
+          },
+          {
+            type: 'p',
+            texte:
+              "Les titres cotés en bourse font exception : ils peuvent être évalués au cours du jour du bilan (CO art. 960b).",
+          },
+        ],
+      },
+      {
+        titre: 'Les réserves latentes',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Une réserve latente (ou cachée) est la différence entre la valeur réelle d'un poste et sa valeur au bilan, " +
+              "quand le bilan est volontairement prudent : un actif sous-évalué (stock, machine amortie plus que nécessaire) " +
+              "ou une dette surévaluée (provision trop élevée). Elle n'apparaît pas dans les comptes publiés, d'où son nom.",
+          },
+          {
+            type: 'liste',
+            items: [
+              'Constituer une réserve latente diminue le bénéfice publié (amortissement ou provision plus élevés).',
+              'Dissoudre une réserve latente augmente le bénéfice publié, sans que l’entreprise ait réellement gagné plus.',
+              "Le droit suisse les admet, mais une dissolution importante doit être signalée dans l'annexe aux comptes.",
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              'Bénéfice réel = bénéfice publié + constitution de réserves latentes − dissolution de réserves latentes.',
+          },
+        ],
+      },
+      {
+        titre: "L'apurement",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Pour analyser une entreprise, on « apure » ses comptes : on remplace les valeurs comptables prudentes par des " +
+              "valeurs proches de la réalité (bilan interne). Les ratios calculés sur le bilan interne donnent une image " +
+              'plus fidèle que ceux calculés sur le bilan publié (bilan externe).',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'analyse',
     titre: 'Analyse du bilan et du compte de résultat',
     niveau: 'MP',
@@ -972,6 +1172,85 @@ export const CHAPITRES: Chapitre[] = [
             texte:
               "Degré d'autofinancement : dans une société, le bénéfice de l'exercice est compris dans le numérateur " +
               "(il rejoint le bénéfice reporté) ; dans une raison individuelle, il ne l'est pas (il est viré au capital).",
+          },
+        ],
+      },
+      {
+        titre: 'Le compte de résultat à plusieurs degrés',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Pour l'analyse, on présente le compte de résultat en cascade : chaque degré retire une catégorie de charges.",
+          },
+          {
+            type: 'tableau',
+            entetes: ['Degré', 'Calcul'],
+            lignes: [
+              ["Chiffre d'affaires net", "Ventes − déductions accordées − pertes sur créances"],
+              ['Marge brute', "Chiffre d'affaires net − charges de marchandises"],
+              ['EBITDA', 'Marge brute − charges de personnel − autres charges d’exploitation'],
+              ['EBIT (résultat d’exploitation)', 'EBITDA − amortissements'],
+              ['Bénéfice net', 'EBIT ± résultat financier ± résultats hors exploitation et exceptionnels − impôts'],
+            ],
+          },
+        ],
+      },
+      {
+        titre: 'Fonds de roulement',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le fonds de roulement est la part des actifs circulants financée par des capitaux à long terme : actifs " +
+              "circulants − capitaux étrangers à court terme (ou, ce qui revient au même, capitaux permanents − actifs " +
+              'immobilisés). Positif, il signifie que les dettes à court terme sont couvertes par des actifs qui se ' +
+              'transformeront rapidement en argent.',
+          },
+        ],
+      },
+      {
+        titre: "L'effet de levier",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "S'endetter peut augmenter la rentabilité des fonds propres : tant que l'argent emprunté rapporte plus " +
+              "(rentabilité des capitaux investis) qu'il ne coûte (taux d'intérêt), le surplus revient aux propriétaires. " +
+              "Mais l'effet joue aussi à l'envers : si la rentabilité tombe sous le taux d'intérêt, l'endettement fait " +
+              'baisser la rentabilité des fonds propres. Plus le degré d’endettement est élevé, plus le risque est grand.',
+          },
+        ],
+      },
+      {
+        titre: 'Le modèle DuPont',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le modèle DuPont décompose la rentabilité des capitaux investis (ROI) en deux facteurs : la marge " +
+              "(EBIT / chiffre d'affaires) et la rotation des capitaux (chiffre d'affaires / actif). Une entreprise peut " +
+              "être rentable avec une petite marge si elle vend beaucoup par rapport à ses capitaux, ou avec une rotation " +
+              'lente si sa marge est élevée.',
+          },
+          { type: 'retenir', texte: "ROI = marge × rotation = (EBIT / chiffre d'affaires) × (chiffre d'affaires / actif)." },
+        ],
+      },
+      {
+        titre: 'Le cash-flow',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le cash-flow mesure l'argent dégagé par l'exploitation. Certaines charges ne provoquent aucune sortie " +
+              "d'argent (amortissements, constitution de provisions) : on les ajoute donc au bénéfice. En version " +
+              'simplifiée : cash-flow = bénéfice net + amortissements + constitution de provisions − dissolution de provisions.',
+          },
+          {
+            type: 'p',
+            texte:
+              "Le cash-flow sert à financer les investissements, à rembourser les dettes et à verser les dividendes sans " +
+              "recourir à de nouveaux capitaux (autofinancement).",
           },
         ],
       },

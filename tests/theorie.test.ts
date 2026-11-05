@@ -10,7 +10,8 @@ describe('théorie', () => {
     const c1 = chapitresDuNiveau('CFC1').map((c) => c.id);
     const c2 = chapitresDuNiveau('CFC2').map((c) => c.id);
     const mp = chapitresDuNiveau('MP').map((c) => c.id);
-    expect(c1).toEqual(['bilan', 'comptes', 'journal', 'resultat', 'marchandises']);
+    expect(c1).toEqual(['cadre-legal', 'bilan', 'comptes', 'journal', 'resultat', 'marchandises']);
+    expect(mp).toContain('evaluation');
     expect(c2.slice(0, c1.length)).toEqual(c1);
     expect(c2).toContain('tva');
     expect(c2).not.toContain('societes');

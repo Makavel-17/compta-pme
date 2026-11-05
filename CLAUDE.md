@@ -43,6 +43,13 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - **Protégés : s'en inspirer uniquement, ne jamais reproduire de texte, d'exemple ni d'exercice.** Certains PDF F&C sont verrouillés : ne pas contourner.
 - Usages relevés (04.11.2026) : TVA au net (B : calcul ; E/M : comptabilisation), 1170 IP s/marchandises et services + 1171 IP s/investissements et autres charges d'exploitation, décompte 2200/1170, 2200/1171, solde 2200/2205 puis paiement 2205/1020 ; amortissement direct (B) et indirect (E) avec « Fonds d'amortissements cumulés » en xxx9, linéaire/dégressif, prorata temporis ; transitoires 1300/2300 avec extourne au 01.01 par l'élève ; ducroire 3805↔1109 (ajustement de la différence), 1108 Créances douteuses, pas de correction TVA sur pertes ; salaires : retenues 5200/dettes par assurance, net 5200/1020, charges patronales 5270/dettes ; comptes en T avec San/Spb. Le plan comptable du manuel suit la numérotation PME (≠ plan LPG).
 
+- Documents fournis par l'enseignant le 05.11.2026, utilisables pour enrichir le contenu (reformuler, ne pas recopier de longs passages) : `D:\Manuel_analyse_Etats_financiers.pdf`, `D:\comptabilité_générale.pdf` (F. Spada).
+
+## Classement des exercices (proposition à valider)
+
+- Chaque exercice porte `filiere` (CFC ou MP), `difficulte` (niveau 1, 2, 3…) et `chapitres` (chapitres du manuel E&S). L'accueil les regroupe par formation puis par niveau ; l'en-tête affiche « CFC · niveau 3 ». `niveau` (CFC1/CFC2/MP) ne règle plus que les comptes et fonctions disponibles (libellé « Comptes et fonctions » dans l'éditeur).
+- CFC : 1 Bases (ch. 1, 12, 35), 2 TVA (ch. 14), 3 Opérations de clôture (ch. 22–25), 4 Synthèse. MP : 1 Sociétés et répartition (ch. 24, 36, 54), 2 Synthèse.
+
 ## Plan comptable
 
 - **Plan du cours (numérotation PME du manuel E&S)**, choisi par l'enseignant le 04.11.2026 à la place du plan LPG : `src/data/plan-pme.csv`. Numéros et intitulés alignés sur le cours (ex. 1020 Banque (n/avoir), 2170 Dette AVS, 3200 Ventes de marchandises, 3805 Pertes s/créances, 6800 Amortissements, 6900 Charges financières, 9000 Compte de résultat), sans recopier l'annexe du manuel.
