@@ -23,6 +23,8 @@ Interlocuteur : l'enseignant de comptabilité. Toujours répondre en français, 
 
 Dossiers de pièces comptables (05.11.2026, à faire relire par l'enseignant) : `src/data/dossiers/` — dix dossiers, une entreprise fictive chacun, 10 à 12 pièces (factures, tickets, quittances, avis bancaires, fiches de salaire, notes internes), « pièces seules » (l'énoncé décrit le document, jamais l'écriture). Modèle `src/engine/pieces.ts`, affichage `PieceVue.svelte` dans le journal, PDF élève et corrigé `src/pdf/dossier.ts`, onglet « Dossiers » de l'espace enseignant, fichiers générés par `npm run dossiers` dans `dossiers/` (non versionné). Niveaux MP : 1 Sociétés, 2 Titres/provisions/opérations financières, 3 Synthèse (Lémantec).
 
+Guide d'utilisation : contenu unique `src/data/guide.ts` (vue `Guide.svelte`) ; page autonome à partager `public/guide.html`, régénérée par `npm run guide` après toute modification du guide.
+
 Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fictive) créés dans la phase qui introduit le niveau.
 
 ## Contraintes techniques

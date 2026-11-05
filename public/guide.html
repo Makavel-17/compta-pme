@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guide Compta PME</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Mise en page : colonne de lecture unique, sommaire en tête, charte de l'application (bleu structure, orange d'action). */
+:root {
+  --fond: #ffffff; --texte: #1d2733; --discret: #5a6675; --structure: #1F4E78; --accent: #C4501A;
+  --pale: #F1F6FB; --selection: #D6E4F0; --bordure: #d5dde6;
+  --police: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --fond: #121a22; --texte: #e3e9ef; --discret: #9fb0c1; --structure: #8fbbe3; --accent: #f08a55;
+  --pale: #1a2632; --selection: #22384d; --bordure: #2c3b4a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --fond: #121a22; --texte: #e3e9ef; --discret: #9fb0c1; --structure: #8fbbe3; --accent: #f08a55;
+  --pale: #1a2632; --selection: #22384d; --bordure: #2c3b4a; color-scheme: dark }
+html, body { margin: 0; }
+body { background: var(--fond); color: var(--texte); font-family: var(--police); font-size: 16px; line-height: 1.55; }
+.page { max-width: 760px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { border-bottom: 3px solid var(--structure); padding-bottom: 18px; margin-bottom: 24px; }
+.sur-titre { text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; color: var(--discret); margin: 0 0 6px; }
+h1 { font-size: 30px; margin: 0 0 8px; color: var(--structure); text-wrap: balance; }
+.chapeau { margin: 0; max-width: 62ch; }
+.acces { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 14px; }
+.lien-site { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; font-weight: bold;
+  padding: 8px 14px; border-radius: 3px; }
+.lien-site:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.acces code { font-size: 14px; color: var(--discret); word-break: break-all; }
+.demarrage { background: var(--pale); border: 1px solid var(--bordure); border-radius: 4px; padding: 16px 20px; margin-bottom: 28px; }
+.demarrage h2 { font-size: 18px; margin: 0 0 8px; color: var(--structure); }
+.demarrage ol { margin: 0; padding-left: 22px; }
+nav.sommaire { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 32px; margin-bottom: 36px; }
+.som-titre { font-size: 15px; margin: 0 0 6px; }
+.som ol { margin: 0; padding-left: 20px; font-size: 14px; }
+a { color: var(--structure); }
+.partie { margin-top: 40px; }
+.partie > h2 { font-size: 24px; color: var(--structure); border-bottom: 1px solid var(--bordure); padding-bottom: 6px; margin: 0 0 8px; }
+.intro { color: var(--discret); max-width: 65ch; }
+.section { margin-top: 26px; scroll-margin-top: 16px; }
+.section h3 { font-size: 18px; margin: 0 0 8px; text-wrap: balance; }
+.section p, .section li { max-width: 68ch; }
+ul, ol { padding-left: 22px; }
+li { margin: 4px 0; }
+ol.etapes { counter-reset: e; list-style: none; padding-left: 0; }
+ol.etapes li { counter-increment: e; position: relative; padding-left: 34px; margin: 8px 0; }
+ol.etapes li::before { content: counter(e); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--selection); color: var(--structure); font-weight: bold; font-size: 13px; text-align: center; line-height: 22px;
+  font-variant-numeric: tabular-nums; }
+.retenir { border-left: 4px solid var(--accent); background: var(--pale); padding: 10px 14px; margin: 12px 0; }
+.retenir p { margin: 2px 0 0; }
+.etiquette { text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; font-weight: bold; color: var(--accent); }
+footer { margin-top: 48px; border-top: 1px solid var(--bordure); padding-top: 12px; font-size: 13px; color: var(--discret); }
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <p class="sur-titre">École de commerce Aimée-Stitelmann · Comptabilité</p>
+  <h1>Guide d'utilisation de Compta PME</h1>
+  <p class="chapeau">Logiciel de comptabilité en partie double pour les classes CFC et de maturité professionnelle. Il
+  fonctionne dans le navigateur, sans compte ni installation ; aucune donnée d'élève n'est envoyée en ligne.</p>
+  <div class="acces"><a class="lien-site" href="https://makavel-17.github.io/compta-pme/">Ouvrir Compta PME</a><code>https://makavel-17.github.io/compta-pme/</code></div>
+</header>
+
+<section class="demarrage" aria-labelledby="demarrer">
+  <h2 id="demarrer">Démarrer en cinq minutes</h2>
+  <ol>
+    <li>Ouvrez le site, puis cliquez sur « Espace enseignant » et choisissez votre propre code d'accès.</li>
+    <li>Onglet « Exercices » : « Partir d'un exemple… », puis « Copier cet exemple » pour obtenir un exercice à adapter.</li>
+    <li>Modifiez l'entreprise, le bilan d'ouverture et les opérations, puis saisissez le corrigé dans le journal.</li>
+    <li>« Exporter pour les élèves » : déposez le fichier obtenu sur la plateforme de la classe.</li>
+    <li>Récupérez les copies des élèves et importez-les dans l'onglet « Copies » pour obtenir les notes.</li>
+  </ol>
+</section>
+
+<nav class="sommaire" aria-label="Sommaire"><div class="som"><h2 class="som-titre"><a href="#enseignant">Pour l'enseignant</a></h2><ol><li><a href="#enseignant-acces">Accéder à l'espace enseignant</a></li><li><a href="#enseignant-onglets">Les quatre onglets</a></li><li><a href="#enseignant-creer">Créer son propre exercice</a></li><li><a href="#enseignant-distribuer">Distribuer un exercice aux élèves</a></li><li><a href="#enseignant-partager">Partager ses exercices entre collègues</a></li><li><a href="#enseignant-dossiers">Les dossiers de pièces comptables</a></li><li><a href="#enseignant-corriger-copies">Corriger les copies</a></li><li><a href="#enseignant-donnees">Données et confidentialité</a></li></ol></div><div class="som"><h2 class="som-titre"><a href="#eleve">Pour les élèves</a></h2><ol><li><a href="#eleve-demarrer">Démarrer un exercice</a></li><li><a href="#eleve-ecran">Se repérer à l'écran</a></li><li><a href="#eleve-saisir">Saisir une écriture</a></li><li><a href="#eleve-comptes">Choisir un compte</a></li><li><a href="#eleve-composee">Écriture composée</a></li><li><a href="#eleve-corriger">Corriger une erreur : l’extourne</a></li><li><a href="#eleve-retour">Le retour en mode entraînement</a></li><li><a href="#eleve-consulter">Consulter les comptes et les états</a></li><li><a href="#eleve-fiches">Les fiches de calcul et la clôture</a></li><li><a href="#eleve-rendre">Rendre son travail</a></li></ol></div></nav>
+
+<section class="partie" id="enseignant">
+  <h2>Pour l'enseignant</h2>
+  <p class="intro">L'espace enseignant permet de créer des exercices, d'importer ceux de collègues, de distribuer des dossiers de pièces comptables et de corriger les copies. Il est protégé par un code simple, sans prétention de sécurité. Tout reste dans le navigateur de l'ordinateur utilisé : aucun compte, aucune inscription.</p>
+  <article class="section" id="enseignant-acces"><h3>Accéder à l'espace enseignant</h3><ol class="etapes"><li>Cliquez sur « Espace enseignant » (page d'accueil ou bas de la barre latérale).</li><li>À la première visite dans un navigateur, choisissez vous-même un code d’au moins 4 caractères et confirmez-le. Il n’existe pas de code par défaut.</li><li>Le code est ensuite demandé à chaque ouverture. Il se modifie dans l’onglet « Paramètres ».</li></ol>
+<div class="retenir"><span class="etiquette">À retenir</span><p>Le code et vos exercices sont enregistrés dans le navigateur de cet ordinateur seulement. Sur un autre ordinateur, vous créez un nouveau code et vous importez vos exercices (« Version enseignant »).</p></div></article>
+<article class="section" id="enseignant-onglets"><h3>Les quatre onglets</h3><ul><li>Exercices : vos exercices (création, modification, import, export).</li><li>Dossiers : les dossiers de pièces comptables prêts à distribuer (PDF élève, corrigé PDF, fichiers d’exercice).</li><li>Copies : correction automatique des copies rendues par les élèves, notes et statistiques de la classe.</li><li>Paramètres : changement du code d’accès.</li></ul></article>
+<article class="section" id="enseignant-creer"><h3>Créer son propre exercice</h3><p>Le plus rapide est de partir d'un exemple proche de ce que vous voulez : choisissez-le dans « Partir d'un exemple… », cliquez sur « Copier cet exemple », puis adaptez l'entreprise, le bilan et les opérations. Pour partir de zéro, cliquez sur « Nouvel exercice ».</p>
+<ol class="etapes"><li>Informations générales : titre, raison sociale, forme juridique, dates de l’exercice, formation (CFC ou maturité), niveau de difficulté, mode (entraînement ou évaluation), sujets traités (un par ligne), introduction et situation de départ présentée à l’élève.</li><li>« Comptes et fonctions » (CFC 1re, CFC 2e, MP) fixe les comptes et les fonctions disponibles (TVA, fiches…). Dans « Comptes de l’exercice », cochez ou décochez ensuite les comptes proposés aux élèves.</li><li>Bilan d'ouverture : choisissez les comptes et tapez les montants ; l'équilibre actif = passif est contrôlé.</li><li>Opérations de l'énoncé : pour chacune, un numéro, une date, le texte et les points en évaluation. Le numéro de l'opération est le numéro de pièce que l'élève inscrit dans le journal.</li><li>Options : SI/SF ou San/Spb dans les comptes en T, bouclement par le compte 9000 ou intégration à la réouverture, correction des écritures de bouclement, TVA au net ou au brut, fiche « Décompte de salaire », calculatrice de TVA, modification directe des écritures validées, répartition du bénéfice (sociétés).</li><li>« Saisir le corrigé dans le journal » : passez les écritures exactement comme un élève, puis enregistrez le corrigé. Votre éventuel travail d’élève est mis de côté puis restauré.</li><li>Vérifiez le cadre « Contrôle de l’exercice » en bas de page : il liste ce qui manque. Quand il indique « L’exercice est complet et peut être distribué », l’exercice est prêt.</li></ol>
+<ul><li>Écritures composées : le corrigé peut contenir plusieurs lignes ; l’élève peut aussi décomposer l’opération en plusieurs écritures simples avec le même numéro de pièce, c’est accepté.</li><li>La date n’est pas contrôlée ; les montants le sont à 5 centimes près.</li><li>Points partiels : cochez l’option pour accorder une partie des points sur les écritures touchant au moins trois comptes.</li><li>Exercices tirés d'un manuel : reformulez l'énoncé et changez les données (entreprise, montants). Les manuels protégés ne doivent pas être recopiés dans un fichier distribué.</li></ul></article>
+<article class="section" id="enseignant-distribuer"><h3>Distribuer un exercice aux élèves</h3><ol class="etapes"><li>« Exporter pour les élèves » enregistre un fichier .compta-exercice.json dans vos téléchargements.</li><li>Déposez ce fichier sur la plateforme de la classe (ou envoyez-le par courriel, sur une clé USB…).</li><li>L'élève ouvre le site, clique sur « Ouvrir un exercice reçu… » et choisit le fichier.</li></ol>
+<ul><li>En entraînement, le fichier contient le corrigé sous forme encodée : l’élève reçoit un retour immédiat.</li><li>En évaluation, le fichier ne contient pas le corrigé et l’élève ne reçoit aucun retour pendant le travail.</li><li>« Version enseignant » : fichier complet, corrigé en clair. Conservez-le : il sert à corriger les copies, à retrouver l’exercice sur un autre ordinateur et à le partager avec un collègue.</li></ul></article>
+<article class="section" id="enseignant-partager"><h3>Partager ses exercices entre collègues</h3><ol class="etapes"><li>L'auteur exporte la « Version enseignant » de l'exercice et la transmet à son collègue.</li><li>Le collègue ouvre l’espace enseignant, onglet « Exercices », clique sur « Importer un exercice… » et choisit le fichier.</li><li>L'exercice apparaît dans sa liste : il peut le modifier, l'exporter pour ses élèves et corriger les copies.</li></ol>
+<div class="retenir"><span class="etiquette">À retenir</span><p>Ne remettez jamais la version enseignant d'une évaluation aux élèves : elle contient le corrigé en clair. Un fichier élève peut aussi être importé, mais une évaluation arrive alors sans corrigé.</p></div></article>
+<article class="section" id="enseignant-dossiers"><h3>Les dossiers de pièces comptables</h3><p>Dix dossiers prêts à l'emploi, un par grand thème (CFC niveaux 1 à 4, maturité niveaux 1 et 2). Chacun présente une entreprise fictive et 10 à 12 pièces : factures, tickets de caisse, quittances, avis bancaires, fiches de salaire, notes internes. L'élève doit trouver lui-même l'écriture à partir du document.</p>
+<ul><li>Dossier PDF : à imprimer ou à déposer pour les élèves (situation, consignes, bilan d’ouverture, une pièce par page).</li><li>Corrigé PDF : écritures de chaque pièce, bouclement et états financiers, pour l’enseignant.</li><li>Fichier entraînement et fichier évaluation : à distribuer comme un exercice ordinaire. Dans le journal, la pièce s’affiche au-dessus de la grille de saisie.</li><li>Les dossiers figurent aussi dans la liste de la page d’accueil, en entraînement.</li></ul></article>
+<article class="section" id="enseignant-corriger-copies"><h3>Corriger les copies</h3><ol class="etapes"><li>Les élèves cliquent sur « Exporter ma copie » et vous remettent leur fichier .compta-copie.json.</li><li>Onglet « Copies » : choisissez l’exercice. Il doit se trouver dans vos exercices avec son corrigé ; pour une évaluation préparée par un collègue, importez d’abord sa version enseignant.</li><li>« Importer des copies… » : sélectionnez tous les fichiers reçus en une fois.</li><li>Le tableau donne les points et la note de chaque élève, le détail par opération et les erreurs les plus fréquentes de la classe.</li><li>« Exporter les résultats (CSV) » produit un fichier qui s’ouvre dans Excel.</li></ol>
+<div class="retenir"><span class="etiquette">À retenir</span><p>Note = 1 + points obtenus / points maximum × 5, arrondie au demi-point.</p></div></article>
+<article class="section" id="enseignant-donnees"><h3>Données et confidentialité</h3><p>Le logiciel fonctionne entièrement dans le navigateur. Aucune donnée d'élève n'est envoyée sur internet : les échanges se font uniquement par fichiers. Les copies importées dans l’onglet « Copies » ne sont pas enregistrées : conservez les fichiers reçus. Vider les données du navigateur efface vos exercices : gardez toujours la version enseignant de chacun.</p></article>
+</section>
+<section class="partie" id="eleve">
+  <h2>Pour les élèves</h2>
+  <p class="intro">Compta PME est un logiciel de comptabilité en partie double. Vous y tenez la comptabilité d'une entreprise fictive : vous passez les écritures au journal, puis vous consultez les comptes et les états financiers.</p>
+  <article class="section" id="eleve-demarrer"><h3>Démarrer un exercice</h3><ol class="etapes"><li>Sur la page d’accueil, indiquez votre prénom, votre nom et votre classe.</li><li>Choisissez l'exercice : soit un exercice de la liste, classé par formation (CFC ou maturité) et par niveau, soit le fichier reçu de votre enseignant avec le bouton « Ouvrir un exercice reçu… ».</li><li>Cliquez sur « Commencer ». Le tableau de bord présente votre situation dans l’entreprise : lisez-la avant de commencer.</li><li>Cliquez sur « Commencer la saisie » pour ouvrir le journal.</li></ol>
+<div class="retenir"><span class="etiquette">À retenir</span><p>Votre travail est enregistré automatiquement dans ce navigateur, sur cet ordinateur. Rien n’est envoyé sur internet.</p></div></article>
+<article class="section" id="eleve-ecran"><h3>Se repérer à l'écran</h3><ul><li>En haut : l'entreprise, l'exercice, la formation et le niveau, le mode (entraînement ou évaluation).</li><li>À gauche : les rubriques. Saisie (journal, fiches), Consultation (comptes en T, grand livre, balance), États financiers (bilan, compte de résultat), Clôture (TVA, bouclement), Cours (théorie, ce guide).</li><li>Au centre : une seule tâche à la fois.</li><li>Dans le journal, l’énoncé et ses opérations sont affichés à droite ou en dessous, selon la taille de l’écran.</li></ul></article>
+<article class="section" id="eleve-saisir"><h3>Saisir une écriture</h3><ol class="etapes"><li>Cliquez sur une opération de l'énoncé : la date et le numéro de pièce se remplissent. Le numéro de pièce est toujours le numéro de l'opération.</li><li>Écrivez un libellé court (par exemple « Achat de marchandises à crédit »).</li><li>Choisissez le compte au débit, puis le compte au crédit, puis tapez le montant.</li><li>Appuyez sur Entrée : si l'écriture est équilibrée, elle est validée.</li></ol>
+<p>Touches utiles : Tab pour passer au champ suivant, Entrée pour passer à la ligne suivante ou valider, Échap pour retirer une ligne. Les montants s’écrivent librement : 1250, 1250.50 ou 1’250,50.</p></article>
+<article class="section" id="eleve-comptes"><h3>Choisir un compte</h3><p>Cliquez dans un champ compte : la liste de tous les comptes de l’exercice s’ouvre, classée par classe. Vous pouvez aussi taper une partie du nom (« banque », « dettes four ») : la liste se réduit. Choisissez avec la souris, au doigt ou avec les flèches puis Entrée.</p>
+<div class="retenir"><span class="etiquette">À retenir</span><p>Le logiciel ne propose jamais la contrepartie : c’est à vous de décider quels comptes l’opération modifie.</p></div></article>
+<article class="section" id="eleve-composee"><h3>Écriture composée</h3><p>Quand une opération touche plus de deux comptes, saisissez plusieurs lignes : sur chaque ligne, un compte au débit ou au crédit avec son montant. Après chaque ligne, Entrée ouvre une nouvelle ligne. Sous la grille, l'écart entre débit et crédit s'affiche tant que l'écriture n'est pas équilibrée ; elle se valide dès que l'écart est nul.</p>
+<p>Vous pouvez aussi décomposer l’opération en plusieurs écritures simples avec le même numéro de pièce.</p></article>
+<article class="section" id="eleve-corriger"><h3>Corriger une erreur : l’extourne</h3><p>Une écriture validée ne s'efface pas. Pour la corriger, cliquez sur « Extourner » : le logiciel passe l'écriture inverse, avec le même numéro de pièce. L'écriture fausse et son extourne restent visibles dans le journal. Saisissez ensuite l'écriture juste.</p></article>
+<article class="section" id="eleve-retour"><h3>Le retour en mode entraînement</h3><ul><li>« Juste » : l’opération est correctement comptabilisée.</li><li>« Incomplète » : une partie de l’opération manque encore (par exemple une ligne d’une écriture composée).</li><li>« À revoir » avec un indice : l'indice dit quel type d'erreur vous avez fait (débit et crédit inversés, mauvais compte, montant erroné, TVA oubliée…), sans donner la réponse.</li><li>Après une deuxième tentative fausse, le bouton « Voir la solution » apparaît.</li></ul>
+<p>En mode évaluation, aucun retour n’est affiché pendant le travail : votre enseignant corrige votre copie.</p></article>
+<article class="section" id="eleve-consulter"><h3>Consulter les comptes et les états</h3><ul><li>Comptes : chaque compte en T, avec le solde initial (SI) et le solde final (SF), un compte à la fois ou tous ensemble.</li><li>Grand livre : le détail de chaque compte avec le solde après chaque écriture.</li><li>Balance : contrôle que le total des débits égale le total des crédits.</li><li>Bilan et compte de résultat : présentés en forme de compte ; le bilan d'ouverture est aussi consultable.</li></ul></article>
+<article class="section" id="eleve-fiches"><h3>Les fiches de calcul et la clôture</h3><ul><li>Décompte de salaire : calculez les retenues et le salaire net avant de passer l’écriture.</li><li>TVA : le décompte TVA due moins impôt préalable, d’après vos comptes.</li><li>Répartition du bénéfice et Analyse (maturité) : calculez les montants et les ratios demandés.</li><li>Bouclement : passez vous-même les écritures de bouclement au journal (pièces B1, B2…). Selon l'exercice, elles sont corrigées comme les opérations.</li></ul>
+<p>Ce que vous écrivez dans les fiches est enregistré avec votre travail.</p></article>
+<article class="section" id="eleve-rendre"><h3>Rendre son travail</h3><ol class="etapes"><li>Cliquez sur « Exporter ma copie » (en bas à gauche) : un fichier .compta-copie.json est enregistré dans vos téléchargements.</li><li>Remettez ce fichier à votre enseignant (par la plateforme de l’école, par courriel ou sur une clé USB).</li><li>Pour garder une trace imprimable, « Exporter en PDF » produit un document avec le journal, la balance et les états.</li></ol>
+<div class="retenir"><span class="etiquette">À retenir</span><p>Votre travail n'existe que dans le navigateur de cet ordinateur. Exportez votre copie avant de changer d'ordinateur ou de vider l'historique du navigateur.</p></div></article>
+</section>
+
+<footer>Ce guide reprend celui qui est intégré au logiciel (bouton « Guide » de la page d'accueil et de la barre latérale).</footer>
+</div>
+</body>
+</html>

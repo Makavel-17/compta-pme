@@ -213,51 +213,154 @@ export const GUIDE: PartieGuide[] = [
     id: 'enseignant',
     titre: "Pour l'enseignant",
     intro:
-      "L'espace enseignant permet de créer des exercices, de les distribuer, puis de corriger les copies. Il est protégé " +
-      "par un code simple, sans prétention de sécurité. Tout reste dans le navigateur de l'ordinateur utilisé.",
+      "L'espace enseignant permet de créer des exercices, d'importer ceux de collègues, de distribuer des dossiers de " +
+      "pièces comptables et de corriger les copies. Il est protégé par un code simple, sans prétention de sécurité. Tout " +
+      "reste dans le navigateur de l'ordinateur utilisé : aucun compte, aucune inscription.",
     sections: [
       {
         id: 'acces',
         titre: "Accéder à l'espace enseignant",
         blocs: [
           {
-            type: 'p',
+            type: 'etapes',
+            items: [
+              "Cliquez sur « Espace enseignant » (page d'accueil ou bas de la barre latérale).",
+              'À la première visite dans un navigateur, choisissez vous-même un code d’au moins 4 caractères et confirmez-le. ' +
+                'Il n’existe pas de code par défaut.',
+              'Le code est ensuite demandé à chaque ouverture. Il se modifie dans l’onglet « Paramètres ».',
+            ],
+          },
+          {
+            type: 'retenir',
             texte:
-              "Cliquez sur « Espace enseignant » (page d'accueil ou bas de la barre latérale). À la première visite, " +
-              'choisissez un code d’au moins 4 caractères ; il est demandé ensuite à chaque ouverture.',
+              'Le code et vos exercices sont enregistrés dans le navigateur de cet ordinateur seulement. Sur un autre ' +
+              'ordinateur, vous créez un nouveau code et vous importez vos exercices (« Version enseignant »).',
+          },
+        ],
+      },
+      {
+        id: 'onglets',
+        titre: 'Les quatre onglets',
+        blocs: [
+          {
+            type: 'liste',
+            items: [
+              'Exercices : vos exercices (création, modification, import, export).',
+              'Dossiers : les dossiers de pièces comptables prêts à distribuer (PDF élève, corrigé PDF, fichiers d’exercice).',
+              'Copies : correction automatique des copies rendues par les élèves, notes et statistiques de la classe.',
+              'Paramètres : changement du code d’accès.',
+            ],
           },
         ],
       },
       {
         id: 'creer',
-        titre: 'Créer un exercice',
+        titre: 'Créer son propre exercice',
         blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le plus rapide est de partir d'un exemple proche de ce que vous voulez : choisissez-le dans « Partir d'un " +
+              "exemple… », cliquez sur « Copier cet exemple », puis adaptez l'entreprise, le bilan et les opérations. Pour " +
+              'partir de zéro, cliquez sur « Nouvel exercice ».',
+          },
           {
             type: 'etapes',
             items: [
-              "« Nouvel exercice », ou « Partir d'un exemple » puis « Copier cet exemple » pour reprendre un exercice existant.",
-              'Informations générales : titre, comptes et fonctions disponibles, formation, niveau, mode, entreprise, dates, ' +
-                'sujets traités, introduction et situation de départ.',
-              'Comptes de l’exercice : cochez ou décochez les comptes proposés aux élèves.',
-              "Bilan d'ouverture : comptes et montants ; l'équilibre est contrôlé.",
-              'Opérations : numéro, date, texte et points de chaque opération.',
-              '« Saisir le corrigé dans le journal » : passez les écritures comme un élève, puis « Enregistrer le corrigé ».',
-              'Vérifiez le cadre « Contrôle de l’exercice » en bas de page : il signale ce qui manque.',
+              'Informations générales : titre, raison sociale, forme juridique, dates de l’exercice, formation (CFC ou ' +
+                'maturité), niveau de difficulté, mode (entraînement ou évaluation), sujets traités (un par ligne), ' +
+                'introduction et situation de départ présentée à l’élève.',
+              '« Comptes et fonctions » (CFC 1re, CFC 2e, MP) fixe les comptes et les fonctions disponibles (TVA, fiches…). ' +
+                'Dans « Comptes de l’exercice », cochez ou décochez ensuite les comptes proposés aux élèves.',
+              "Bilan d'ouverture : choisissez les comptes et tapez les montants ; l'équilibre actif = passif est contrôlé.",
+              "Opérations de l'énoncé : pour chacune, un numéro, une date, le texte et les points en évaluation. Le numéro " +
+                "de l'opération est le numéro de pièce que l'élève inscrit dans le journal.",
+              'Options : SI/SF ou San/Spb dans les comptes en T, bouclement par le compte 9000 ou intégration à la ' +
+                'réouverture, correction des écritures de bouclement, TVA au net ou au brut, fiche « Décompte de salaire », ' +
+                'calculatrice de TVA, modification directe des écritures validées, répartition du bénéfice (sociétés).',
+              '« Saisir le corrigé dans le journal » : passez les écritures exactement comme un élève, puis enregistrez le ' +
+                'corrigé. Votre éventuel travail d’élève est mis de côté puis restauré.',
+              'Vérifiez le cadre « Contrôle de l’exercice » en bas de page : il liste ce qui manque. Quand il indique ' +
+                '« L’exercice est complet et peut être distribué », l’exercice est prêt.',
+            ],
+          },
+          {
+            type: 'liste',
+            items: [
+              'Écritures composées : le corrigé peut contenir plusieurs lignes ; l’élève peut aussi décomposer l’opération en ' +
+                'plusieurs écritures simples avec le même numéro de pièce, c’est accepté.',
+              'La date n’est pas contrôlée ; les montants le sont à 5 centimes près.',
+              'Points partiels : cochez l’option pour accorder une partie des points sur les écritures touchant au moins trois ' +
+                'comptes.',
+              "Exercices tirés d'un manuel : reformulez l'énoncé et changez les données (entreprise, montants). Les manuels " +
+                'protégés ne doivent pas être recopiés dans un fichier distribué.',
             ],
           },
         ],
       },
       {
         id: 'distribuer',
-        titre: 'Distribuer un exercice',
+        titre: 'Distribuer un exercice aux élèves',
         blocs: [
+          {
+            type: 'etapes',
+            items: [
+              '« Exporter pour les élèves » enregistre un fichier .compta-exercice.json dans vos téléchargements.',
+              'Déposez ce fichier sur la plateforme de la classe (ou envoyez-le par courriel, sur une clé USB…).',
+              "L'élève ouvre le site, clique sur « Ouvrir un exercice reçu… » et choisit le fichier.",
+            ],
+          },
           {
             type: 'liste',
             items: [
-              '« Exporter pour les élèves » : le fichier à distribuer. En évaluation, il ne contient pas le corrigé ; en ' +
-                'entraînement, le corrigé y est encodé pour permettre le retour immédiat.',
-              '« Version enseignant » : fichier complet avec le corrigé, à conserver. Il permet aussi de rouvrir et modifier ' +
-                "l'exercice sur un autre ordinateur (« Importer un exercice… »).",
+              'En entraînement, le fichier contient le corrigé sous forme encodée : l’élève reçoit un retour immédiat.',
+              'En évaluation, le fichier ne contient pas le corrigé et l’élève ne reçoit aucun retour pendant le travail.',
+              '« Version enseignant » : fichier complet, corrigé en clair. Conservez-le : il sert à corriger les copies, à ' +
+                'retrouver l’exercice sur un autre ordinateur et à le partager avec un collègue.',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'partager',
+        titre: 'Partager ses exercices entre collègues',
+        blocs: [
+          {
+            type: 'etapes',
+            items: [
+              "L'auteur exporte la « Version enseignant » de l'exercice et la transmet à son collègue.",
+              'Le collègue ouvre l’espace enseignant, onglet « Exercices », clique sur « Importer un exercice… » et choisit ' +
+                'le fichier.',
+              "L'exercice apparaît dans sa liste : il peut le modifier, l'exporter pour ses élèves et corriger les copies.",
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Ne remettez jamais la version enseignant d'une évaluation aux élèves : elle contient le corrigé en clair. " +
+              'Un fichier élève peut aussi être importé, mais une évaluation arrive alors sans corrigé.',
+          },
+        ],
+      },
+      {
+        id: 'dossiers',
+        titre: 'Les dossiers de pièces comptables',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Dix dossiers prêts à l'emploi, un par grand thème (CFC niveaux 1 à 4, maturité niveaux 1 et 2). Chacun présente " +
+              'une entreprise fictive et 10 à 12 pièces : factures, tickets de caisse, quittances, avis bancaires, fiches de ' +
+              "salaire, notes internes. L'élève doit trouver lui-même l'écriture à partir du document.",
+          },
+          {
+            type: 'liste',
+            items: [
+              'Dossier PDF : à imprimer ou à déposer pour les élèves (situation, consignes, bilan d’ouverture, une pièce par page).',
+              'Corrigé PDF : écritures de chaque pièce, bouclement et états financiers, pour l’enseignant.',
+              'Fichier entraînement et fichier évaluation : à distribuer comme un exercice ordinaire. Dans le journal, la pièce ' +
+                's’affiche au-dessus de la grille de saisie.',
+              'Les dossiers figurent aussi dans la liste de la page d’accueil, en entraînement.',
             ],
           },
         ],
@@ -269,8 +372,10 @@ export const GUIDE: PartieGuide[] = [
           {
             type: 'etapes',
             items: [
-              'Onglet « Copies » de l’espace enseignant : choisissez l’exercice.',
-              '« Importer des copies… » : sélectionnez tous les fichiers .compta-copie.json reçus.',
+              'Les élèves cliquent sur « Exporter ma copie » et vous remettent leur fichier .compta-copie.json.',
+              'Onglet « Copies » : choisissez l’exercice. Il doit se trouver dans vos exercices avec son corrigé ; pour une ' +
+                'évaluation préparée par un collègue, importez d’abord sa version enseignant.',
+              '« Importer des copies… » : sélectionnez tous les fichiers reçus en une fois.',
               'Le tableau donne les points et la note de chaque élève, le détail par opération et les erreurs les plus ' +
                 'fréquentes de la classe.',
               '« Exporter les résultats (CSV) » produit un fichier qui s’ouvre dans Excel.',
@@ -290,7 +395,9 @@ export const GUIDE: PartieGuide[] = [
             type: 'p',
             texte:
               "Le logiciel fonctionne entièrement dans le navigateur. Aucune donnée d'élève n'est envoyée sur internet : les " +
-              'échanges se font uniquement par fichiers. Les copies importées dans l’onglet « Copies » ne sont pas enregistrées.',
+              'échanges se font uniquement par fichiers. Les copies importées dans l’onglet « Copies » ne sont pas ' +
+              'enregistrées : conservez les fichiers reçus. Vider les données du navigateur efface vos exercices : gardez ' +
+              'toujours la version enseignant de chacun.',
           },
         ],
       },

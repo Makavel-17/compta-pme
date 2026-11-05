@@ -24,6 +24,12 @@
       </div>
     </div>
     <p class="intro">{p.intro}</p>
+    {#if active === 'enseignant'}
+      <p class="intro">
+        Version complète à transmettre à vos collègues (page web, imprimable) :
+        <a href="./guide.html" target="_blank" rel="noopener">guide d'utilisation de Compta PME</a>.
+      </p>
+    {/if}
 
     <nav class="carte sommaire" aria-label="Sommaire">
       <h2>Sommaire</h2>
