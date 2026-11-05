@@ -2,7 +2,7 @@
   import { enseignant, nouvelIdentifiant } from '../enseignant.svelte';
   import { exercicesDemo } from '../../data/demos';
   import { plan } from '../../data/plan';
-  import { controlerExercice, exerciceVierge, LIBELLES_MODE, LIBELLES_NIVEAU, type Exercice } from '../../engine/exercice';
+  import { controlerExercice, etiquetteNiveau, exerciceVierge, LIBELLES_MODE, type Exercice } from '../../engine/exercice';
   import {
     EXT_EXERCICE,
     ErreurFichier,
@@ -20,6 +20,7 @@
   let message = $state('');
   let onglet = $state<'exercices' | 'copies' | 'parametres'>('exercices');
   let nouveauCode = $state('');
+  let modeleId = $state('');
 
   function deverrouiller(e: SubmitEvent) {
     e.preventDefault();
@@ -141,9 +142,20 @@
       {#if onglet === 'exercices'}
         <div class="barre">
           <button class="btn btn-principal" onclick={nouveau}>Nouvel exercice</button>
-          {#each exercicesDemo as modele}
-            <button class="btn" onclick={() => depuisExemple(modele)}>Partir de l'exemple {LIBELLES_NIVEAU[modele.niveau]}</button>
-          {/each}
+          <select class="champ modele" bind:value={modeleId} aria-label="Exercice de départ">
+            <option value="">Partir d'un exemple…</option>
+            {#each exercicesDemo as modele}
+              <option value={modele.id}>{etiquetteNiveau(modele)} — {modele.titre}</option>
+            {/each}
+          </select>
+          <button
+            class="btn"
+            disabled={!modeleId}
+            onclick={() => {
+              const m = exercicesDemo.find((x) => x.id === modeleId);
+              if (m) depuisExemple(m);
+            }}>Copier cet exemple</button
+          >
           <button class="btn" onclick={importer}>Importer un exercice…</button>
         </div>
         <section class="carte">
@@ -154,7 +166,7 @@
               <thead>
                 <tr>
                   <th>Titre</th>
-                  <th style="width:70px">Niveau</th>
+                  <th style="width:120px">Niveau</th>
                   <th style="width:110px">Mode</th>
                   <th style="width:100px">Opérations</th>
                   <th style="width:100px">Corrigé</th>
@@ -170,7 +182,7 @@
                       <span class="discret petit">{ex.raisonSociale}</span>
                       {#if ctrl.erreurs.length}<br /><span class="a-corriger">À compléter</span>{/if}
                     </td>
-                    <td>{LIBELLES_NIVEAU[ex.niveau]}</td>
+                    <td>{etiquetteNiveau(ex)}</td>
                     <td>{LIBELLES_MODE[ex.mode]}</td>
                     <td class="num">{ex.operations.length}</td>
                     <td class="num">{ex.corrige?.length ?? 0} / {ex.operations.length}</td>
@@ -216,7 +228,8 @@
   .etroit { max-width: 460px; }
   .actions { text-align: right; margin-top: 12px; display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; }
   td.actions { margin: 0; }
-  .barre { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .barre { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+  .modele { width: 360px; }
   .petit { font-size: 12px; }
   .aide { margin-top: 10px; }
   .a-corriger { font-size: 12px; font-weight: bold; color: var(--c-alerte-texte); }

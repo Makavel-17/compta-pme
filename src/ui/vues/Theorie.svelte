@@ -2,7 +2,7 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
   import { chapitresDuNiveau, THEORIE_VALIDEE, type ExempleEcriture } from '../../data/theorie';
-  import { LIBELLES_NIVEAU } from '../../engine/exercice';
+  import { etiquetteNiveau } from '../../engine/exercice';
   import { formatMontant } from '../../engine/money';
 
   const chapitres = $derived(chapitresDuNiveau(etat.exercice.niveau));
@@ -28,7 +28,7 @@
 
 <div class="titre">
   <h1>Théorie</h1>
-  <span class="sous">Rappels de cours · niveau {LIBELLES_NIVEAU[etat.exercice.niveau]}</span>
+  <span class="sous">Rappels de cours · {etiquetteNiveau(etat.exercice)}</span>
 </div>
 
 {#if !THEORIE_VALIDEE}

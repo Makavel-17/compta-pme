@@ -1,6 +1,6 @@
 <script lang="ts">
   import { etat, type Vue } from './etat.svelte';
-  import { LIBELLES_MODE, LIBELLES_NIVEAU } from '../engine/exercice';
+  import { etiquetteNiveau, LIBELLES_MODE } from '../engine/exercice';
   import { enseignant } from './enseignant.svelte';
   import { EXT_COPIE, exporterCopie, nomFichier } from '../io/fichiers';
   import { telecharger, telechargerBlob } from './fichiers-navigateur';
@@ -118,7 +118,7 @@
         <strong>{s.dossier.raisonSociale}</strong>
         <span class="meta">{s.dossier.formeJuridique === 'raison individuelle' ? 'Raison individuelle' : s.dossier.formeJuridique}</span>
         <span class="meta">Exercice {periode(s.dossier.debut, s.dossier.fin)}</span>
-        <span class="badge badge-niveau" title="Niveau">{LIBELLES_NIVEAU[s.exercice.niveau]}</span>
+        <span class="badge badge-niveau" title="Formation et niveau de difficulté">{etiquetteNiveau(s.exercice)}</span>
         <span class="badge badge-mode" class:corrige={s.role === 'corrige'} title="Mode">
           {s.role === 'corrige' ? 'Saisie du corrigé' : LIBELLES_MODE[s.exercice.mode]}
         </span>

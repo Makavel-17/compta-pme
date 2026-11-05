@@ -1,7 +1,7 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
   import { exercicesDemo } from '../../data/demos';
-  import { LIBELLES_MODE, LIBELLES_NIVEAU, type Exercice } from '../../engine/exercice';
+  import { classerExercices, etiquetteNiveau, LIBELLES_FILIERE, LIBELLES_MODE, type Exercice } from '../../engine/exercice';
   import { EXT_EXERCICE, ErreurFichier, importerExercice } from '../../io/fichiers';
   import { choisirFichiers } from '../fichiers-navigateur';
 
@@ -71,18 +71,33 @@
 
       <h2 class="separe">Exercice</h2>
       <div class="corps-carte">
-        {#each tous as ex}
+        {#snippet carte(ex: Exercice)}
           <label class="exercice" class:choisi={choix === ex.id}>
             <input type="radio" name="exercice" value={ex.id} bind:group={choix} />
             <span>
               <strong>{ex.titre}</strong>
-              <span class="badge niveau">{LIBELLES_NIVEAU[ex.niveau]}</span><br />
+              <span class="badge niveau">{etiquetteNiveau(ex)}</span><br />
               <span class="discret">
                 {ex.raisonSociale} · {ex.operations.length} opérations ·
                 {exercicesDemo.includes(ex) ? 'exercice de démonstration' : `fourni par l'enseignant · ${LIBELLES_MODE[ex.mode]}`}
               </span>
+              {#if ex.chapitres?.length}
+                <br /><span class="discret petit">Manuel E&S : ch. {ex.chapitres.join(' · ch. ')}</span>
+              {/if}
             </span>
           </label>
+        {/snippet}
+
+        {#if importes.length}
+          <h3 class="filiere">Exercices reçus de votre enseignant</h3>
+          {#each importes as ex (ex.id)}{@render carte(ex)}{/each}
+        {/if}
+        {#each classerExercices(exercicesDemo) as g, i}
+          {#if i === 0 || classerExercices(exercicesDemo)[i - 1]!.filiere !== g.filiere}
+            <h3 class="filiere">{LIBELLES_FILIERE[g.filiere]}</h3>
+          {/if}
+          <h4 class="niveau-titre">Niveau {g.difficulte}{g.titre ? ` — ${g.titre}` : ''}</h4>
+          {#each g.exercices as ex (ex.id)}{@render carte(ex)}{/each}
         {/each}
         <div class="ouvrir">
           <button type="button" class="btn" onclick={ouvrirFichier}>Ouvrir un exercice reçu…</button>
@@ -122,6 +137,9 @@
   .niveau { background: var(--c-structure); color: #fff; margin-left: 8px; }
   .petit { font-size: 12px; }
   .exercice + .exercice { margin-top: 8px; }
+  .filiere { font-size: 15px; color: var(--c-structure); margin: 18px 0 4px; padding-bottom: 4px; border-bottom: 2px solid var(--c-structure); }
+  .filiere:first-child { margin-top: 0; }
+  .niveau-titre { font-size: 13px; color: var(--c-texte-2); margin: 12px 0 6px; }
   .ouvrir { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
   .enseignant { text-align: right; margin-top: 16px; font-size: 13px; }
   .actions { padding: 0 14px 14px; text-align: right; }

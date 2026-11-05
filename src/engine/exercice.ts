@@ -28,10 +28,19 @@ export interface EcritureCorrigee {
   lignes: LigneEcriture[];
 }
 
+export type Filiere = 'CFC' | 'MP';
+
 export interface Exercice {
   id: string;
   titre: string;
+  /** Comptes et fonctions disponibles (CFC 1re année, CFC 2e année, maturité professionnelle). */
   niveau: Niveau;
+  /** Formation visée : CFC ou maturité professionnelle (par défaut d'après `niveau`). */
+  filiere?: Filiere;
+  /** Niveau de difficulté dans la formation : 1 = le plus simple. */
+  difficulte?: number;
+  /** Chapitres du manuel E&S travaillés, par exemple « 14 TVA ». */
+  chapitres?: string[];
   raisonSociale: string;
   formeJuridique: FormeJuridique;
   debut: DateISO;
@@ -246,3 +255,62 @@ export function corrigeDepuisEcritures(d: Dossier): EcritureCorrigee[] {
 export const LIBELLES_MODE: Record<Mode, string> = { entrainement: 'Entraînement', evaluation: 'Évaluation' };
 
 export const LIBELLES_NIVEAU: Record<Niveau, string> = { CFC1: 'CFC 1', CFC2: 'CFC 2', MP: 'MP' };
+
+/** Contenu disponible selon `niveau` (comptes et fonctions), libellés de l'éditeur. */
+export const LIBELLES_CONTENU: Record<Niveau, string> = {
+  CFC1: 'Bases (CFC, 1re année)',
+  CFC2: 'CFC complet (2e année : TVA, clôture, salaires)',
+  MP: 'Maturité professionnelle (sociétés, titres, analyse)',
+};
+
+export const LIBELLES_FILIERE: Record<Filiere, string> = { CFC: 'CFC', MP: 'Maturité professionnelle' };
+
+/** Titres des niveaux de difficulté (proposition à faire valider par l'enseignant). */
+export const TITRES_DIFFICULTE: Record<Filiere, Record<number, string>> = {
+  CFC: {
+    1: 'Bases : bilan, comptes, journal, bouclement',
+    2: 'TVA',
+    3: 'Opérations de clôture : amortissements, transitoires, créances, salaires',
+    4: 'Synthèse de plusieurs chapitres',
+  },
+  MP: {
+    1: 'Sociétés : clôture et répartition du bénéfice',
+    2: 'Synthèse de plusieurs chapitres',
+  },
+};
+
+export function filiereDe(ex: Pick<Exercice, 'filiere' | 'niveau'>): Filiere {
+  return ex.filiere ?? (ex.niveau === 'MP' ? 'MP' : 'CFC');
+}
+
+export function difficulteDe(ex: Pick<Exercice, 'difficulte'>): number {
+  return ex.difficulte && ex.difficulte > 0 ? Math.floor(ex.difficulte) : 1;
+}
+
+/** « CFC · niveau 3 » */
+export function etiquetteNiveau(ex: Pick<Exercice, 'filiere' | 'niveau' | 'difficulte'>): string {
+  return `${filiereDe(ex)} · niveau ${difficulteDe(ex)}`;
+}
+
+export interface GroupeExercices {
+  filiere: Filiere;
+  difficulte: number;
+  titre: string;
+  exercices: Exercice[];
+}
+
+/** Exercices classés par formation (CFC puis MP), puis par niveau de difficulté croissant. */
+export function classerExercices(exercices: readonly Exercice[]): GroupeExercices[] {
+  const groupes = new Map<string, GroupeExercices>();
+  for (const ex of exercices) {
+    const filiere = filiereDe(ex);
+    const difficulte = difficulteDe(ex);
+    const cle = `${filiere}|${difficulte}`;
+    if (!groupes.has(cle)) {
+      groupes.set(cle, { filiere, difficulte, titre: TITRES_DIFFICULTE[filiere][difficulte] ?? '', exercices: [] });
+    }
+    groupes.get(cle)!.exercices.push(ex);
+  }
+  const ordre = (f: Filiere) => (f === 'CFC' ? 0 : 1);
+  return [...groupes.values()].sort((a, b) => ordre(a.filiere) - ordre(b.filiere) || a.difficulte - b.difficulte);
+}

@@ -4,7 +4,7 @@
 
 import type { Dossier } from '../engine/dossier';
 import type { Exercice } from '../engine/exercice';
-import { LIBELLES_MODE, LIBELLES_NIVEAU } from '../engine/exercice';
+import { etiquetteNiveau, LIBELLES_MODE } from '../engine/exercice';
 import { balance } from '../engine/ledger';
 import { bilan, compteDeResultat, type Groupe } from '../engine/statements';
 import { estExtournee } from '../engine/journal';
@@ -68,7 +68,7 @@ export async function genererPdfCopie(eleve: Eleve, ex: Exercice, d: Dossier, no
   const infos = [
     `Élève : ${eleve.prenom} ${eleve.nom}, classe ${eleve.classe}`,
     `Entreprise : ${d.raisonSociale} (${d.formeJuridique})`,
-    `Exercice du ${dt(d.debut)} au ${dt(d.fin)} · niveau ${LIBELLES_NIVEAU[ex.niveau]} · ${LIBELLES_MODE[ex.mode]}`,
+    `Exercice du ${dt(d.debut)} au ${dt(d.fin)} · ${etiquetteNiveau(ex)} · ${LIBELLES_MODE[ex.mode]}`,
     `Document établi le ${new Date().toLocaleDateString('fr-CH')}`,
   ];
   infos.forEach((t) => {

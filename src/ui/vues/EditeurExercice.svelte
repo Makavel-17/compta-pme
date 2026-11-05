@@ -7,6 +7,11 @@
     comptesChoisis,
     controlerExercice,
     LIBELLES_NIVEAU,
+    LIBELLES_CONTENU,
+    TITRES_DIFFICULTE,
+    filiereDe,
+    difficulteDe,
+    type Filiere,
     type Exercice,
     type LibellesT,
     type Mode,
@@ -35,6 +40,10 @@
 
   let titre = $state(source.titre);
   let niveau = $state<Niveau>(source.niveau);
+  const SAUT = String.fromCharCode(10); // saut de ligne entre les chapitres
+  let filiere = $state<Filiere>(filiereDe(source));
+  let difficulte = $state<number>(difficulteDe(source));
+  let chapitres = $state((source.chapitres ?? []).join(SAUT));
   let raisonSociale = $state(source.raisonSociale);
   let formeJuridique = $state<FormeJuridique>(source.formeJuridique);
   let debut = $state(dt(source.debut));
@@ -117,6 +126,9 @@
       ...actuel,
       titre: titre.trim(),
       niveau,
+      filiere,
+      difficulte: Math.max(1, Math.floor(Number(difficulte) || 1)),
+      chapitres: chapitres.split(SAUT).map((c) => c.trim()).filter(Boolean),
       raisonSociale: raisonSociale.trim(),
       formeJuridique,
       debut: iso(debut),
@@ -213,10 +225,29 @@
       <input id="ex-titre" class="champ" bind:value={titre} placeholder="Ex. Cycles du Léman — premier trimestre" />
     </div>
     <div>
-      <label class="bloc" for="ex-niveau">Niveau</label>
+      <label class="bloc" for="ex-niveau">Comptes et fonctions</label>
       <select id="ex-niveau" class="champ" bind:value={niveau}>
-        {#each NIVEAUX as nv}<option value={nv}>{LIBELLES_NIVEAU[nv]}</option>{/each}
+        {#each NIVEAUX as nv}<option value={nv}>{LIBELLES_CONTENU[nv]}</option>{/each}
       </select>
+    </div>
+    <div>
+      <label class="bloc" for="ex-filiere">Formation</label>
+      <select id="ex-filiere" class="champ" bind:value={filiere}>
+        <option value="CFC">CFC</option>
+        <option value="MP">Maturité professionnelle</option>
+      </select>
+    </div>
+    <div>
+      <label class="bloc" for="ex-difficulte">Niveau de difficulté</label>
+      <select id="ex-difficulte" class="champ" bind:value={difficulte}>
+        {#each [1, 2, 3, 4, 5] as n}
+          <option value={n}>Niveau {n}{TITRES_DIFFICULTE[filiere][n] ? ` — ${TITRES_DIFFICULTE[filiere][n]}` : ''}</option>
+        {/each}
+      </select>
+    </div>
+    <div class="large">
+      <label class="bloc" for="ex-chapitres">Chapitres du manuel E&S (un par ligne)</label>
+      <textarea id="ex-chapitres" class="champ" rows="2" bind:value={chapitres} placeholder="14 Taxe sur la valeur ajoutée"></textarea>
     </div>
     <div>
       <label class="bloc" for="ex-mode">Mode</label>
