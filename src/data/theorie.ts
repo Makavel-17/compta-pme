@@ -673,8 +673,26 @@ export const CHAPITRES: Chapitre[] = [
           {
             type: 'retenir',
             texte:
-              "Valeur comptable = valeur d'acquisition − amortissements cumulés. Le compte à utiliser pour le bénéfice ou la " +
-              'perte sur la vente est celui indiqué par votre enseignant.',
+              "Valeur comptable = valeur d'acquisition − amortissements cumulés. Le bénéfice sur la vente va en 8510 " +
+              'Produits exceptionnels, la perte en 8500 Charges exceptionnelles.',
+          },
+          {
+            type: 'ecritures',
+            titre: 'Exemples (montants fictifs)',
+            exemples: [
+              {
+                cas:
+                  "Méthode indirecte : machine achetée 20'000.00, amortie de 15'000.00 (valeur comptable 5'000.00), vendue " +
+                  "6'000.00 payés par la banque : bénéfice de 1'000.00.",
+                lignes: [D('1020', 6000), D('1509', 15000), C('1500', 20000), C('8510', 1000)],
+              },
+              {
+                cas:
+                  "Méthode directe : véhicule d'une valeur comptable de 4'000.00, vendu 3'000.00 payés par la banque : " +
+                  "perte de 1'000.00.",
+                lignes: [D('1020', 3000), D('8500', 1000), C('1530', 4000)],
+              },
+            ],
           },
         ],
       },
