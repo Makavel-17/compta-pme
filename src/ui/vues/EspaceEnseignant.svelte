@@ -18,6 +18,7 @@
   } from '../../io/fichiers';
   import { choisirFichiers, telecharger } from '../fichiers-navigateur';
   import EditeurExercice from './EditeurExercice.svelte';
+  import { dateHeure } from '../format';
   import SyntheseCopies from './SyntheseCopies.svelte';
   import DossiersEnseignant from './DossiersEnseignant.svelte';
 
@@ -98,7 +99,7 @@
 
   const texteSauvegarde = $derived(
     enseignant.derniereSauvegarde
-      ? `Dernière sauvegarde : ${new Date(enseignant.derniereSauvegarde).toLocaleString('fr-CH', { dateStyle: 'short', timeStyle: 'short' })}`
+      ? `Dernière sauvegarde : ${dateHeure(enseignant.derniereSauvegarde)}`
       : 'Aucune sauvegarde',
   );
 

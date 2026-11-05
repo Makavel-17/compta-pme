@@ -90,6 +90,31 @@ export function exporterExerciceEnseignant(ex: Exercice): string {
   return JSON.stringify({ format: 'compta-pme/exercice-enseignant', version: VERSION, exercice: ex }, null, 2);
 }
 
+// ---------- Rappel d'export de la copie ----------
+
+export interface DernierExport {
+  /** Date ISO de l'export. */
+  le: string;
+  /** Empreinte du travail au moment de l'export. */
+  empreinte: string;
+}
+
+/** Empreinte courte du travail de l'élève (écritures et fiches) : change dès que le travail change. */
+export function empreinteTravail(dossier: Pick<Dossier, 'ecritures'>, fiches?: unknown): string {
+  const texte = JSON.stringify([dossier.ecritures, fiches ?? null]);
+  let h = 5381;
+  for (let i = 0; i < texte.length; i++) h = ((h << 5) + h + texte.charCodeAt(i)) | 0;
+  return `${dossier.ecritures.length}-${(h >>> 0).toString(36)}`;
+}
+
+export type StatutExport = 'vide' | 'jamais' | 'modifie' | 'a-jour';
+
+/** Où en est l'export de la copie : rien à exporter, jamais exportée, modifiée depuis, ou à jour. */
+export function statutExport(dossier: Pick<Dossier, 'ecritures'>, fiches: unknown, dernier?: DernierExport | null): StatutExport {
+  if (!dernier) return dossier.ecritures.length === 0 ? 'vide' : 'jamais';
+  return empreinteTravail(dossier, fiches) === dernier.empreinte ? 'a-jour' : 'modifie';
+}
+
 // ---------- Sauvegarde de l'espace enseignant ----------
 
 export const EXT_SAUVEGARDE = '.compta-sauvegarde.json';

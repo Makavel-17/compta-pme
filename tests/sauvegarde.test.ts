@@ -43,3 +43,21 @@ describe("sauvegarde de l'espace enseignant", () => {
     expect(r.exercices.map((e) => e.titre)).toEqual(['Titre modifié', demoMp.titre]);
   });
 });
+
+describe("rappel d'export de la copie", () => {
+  it('vide, jamais exportée, à jour, puis modifiée', async () => {
+    const { empreinteTravail, statutExport } = await import('../src/io/fichiers');
+    const { ajouterEcriture } = await import('../src/engine/journal');
+    const vide = creerDossier(demoCfc1, plan);
+    expect(statutExport(vide, {}, null)).toBe('vide');
+    const c = demoCfc1.corrige![0]!;
+    const r = ajouterEcriture(vide, { id: 'E1', date: demoCfc1.operations[0]!.date, piece: c.piece, libelle: 'x', lignes: c.lignes });
+    expect(r.ok).toBe(true);
+    const d = r.ok ? r.valeur : vide;
+    expect(statutExport(d, {}, null)).toBe('jamais');
+    const dernier = { le: '2026-11-05T18:00:00Z', empreinte: empreinteTravail(d, {}) };
+    expect(statutExport(d, {}, dernier)).toBe('a-jour');
+    expect(statutExport(d, { analyse: { roi: '5' } }, dernier)).toBe('modifie');
+    expect(statutExport(vide, {}, dernier)).toBe('modifie');
+  });
+});

@@ -6,6 +6,7 @@ import { corrigeDepuisEcritures, creerDossier, fonctionsExercice, type EcritureC
 import { ajouterEcriture } from '../engine/journal';
 import { plan as planParDefaut } from '../data/plan';
 import { ecrire, lire } from '../io/stockage';
+import type { DernierExport } from '../io/fichiers';
 import type { Suivi } from '../engine/correction';
 
 export type Vue =
@@ -41,6 +42,8 @@ export interface Session {
   role: 'eleve' | 'corrige';
   /** Contenu des fiches de calcul, enregistré avec le travail de l'élève. */
   fiches: Fiches;
+  /** Dernier export de la copie (rappel d'export). */
+  dernierExport?: DernierExport | null;
 }
 
 export interface FicheSalaire {

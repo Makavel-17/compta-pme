@@ -2,10 +2,10 @@
   import { etat, type Vue } from './etat.svelte';
   import { etiquetteNiveau, LIBELLES_MODE } from '../engine/exercice';
   import { enseignant } from './enseignant.svelte';
-  import { EXT_COPIE, exporterCopie, nomFichier } from '../io/fichiers';
+  import { EXT_COPIE, empreinteTravail, exporterCopie, nomFichier, statutExport } from '../io/fichiers';
   import { telecharger, telechargerBlob } from './fichiers-navigateur';
   import EspaceEnseignant from './vues/EspaceEnseignant.svelte';
-  import { periode } from './format';
+  import { dateHeure, periode } from './format';
   import Accueil from './vues/Accueil.svelte';
   import TableauDeBord from './vues/TableauDeBord.svelte';
   import Journal from './vues/Journal.svelte';
@@ -35,7 +35,19 @@
       fiches: s.fiches,
     });
     telecharger(nomFichier([s.eleve.nom, s.eleve.prenom, s.eleve.classe, s.exercice.titre], EXT_COPIE), texte);
+    s.dernierExport = { le: new Date().toISOString(), empreinte: empreinteTravail(s.dossier, $state.snapshot(s.fiches)) };
   }
+
+  const statut = $derived(
+    etat.session && etat.session.role === 'eleve'
+      ? statutExport(etat.session.dossier, $state.snapshot(etat.session.fiches), etat.session.dernierExport)
+      : 'vide',
+  );
+  const heureExport = $derived(
+    etat.session?.dernierExport
+      ? dateHeure(etat.session.dernierExport.le)
+      : '',
+  );
 
   let pdfEnCours = $state(false);
   async function exporterPdf() {
@@ -150,6 +162,13 @@
           <button class="action-lateral" onclick={() => terminerCorrige(false)}>Abandonner</button>
         {:else}
           <button class="action-lateral principale" onclick={exporterMaCopie}>Exporter ma copie</button>
+          {#if statut !== 'vide'}
+            <p class="rappel-export" class:a-faire={statut !== 'a-jour'} role="status">
+              {#if statut === 'jamais'}Copie jamais exportée. Votre travail n'existe que dans ce navigateur.
+              {:else if statut === 'modifie'}Modifiée depuis le dernier export ({heureExport}). Exportez à nouveau avant de rendre.
+              {:else}Copie exportée le {heureExport}.{/if}
+            </p>
+          {/if}
           <button class="action-lateral" onclick={exporterPdf} disabled={pdfEnCours}>{pdfEnCours ? 'Création du PDF…' : 'Exporter en PDF'}</button>
           <button class="action-lateral discrete" onclick={() => (etat.guide = 'eleve')}>Guide d'utilisation</button>
           <button class="action-lateral discrete" onclick={() => (enseignant.ouvert = true)}>Espace enseignant</button>
@@ -210,6 +229,8 @@
   }
   .action-lateral:hover { background: var(--c-structure-2); }
   .action-lateral.principale { background: var(--c-action); border-color: var(--c-action); font-weight: bold; }
+  .rappel-export { margin: 0 2px 4px; font-size: 12px; line-height: 1.35; color: #b9cde0; }
+  .rappel-export.a-faire { color: #fff; border-left: 3px solid var(--c-accent); padding-left: 7px; }
   .action-lateral.discrete { border: none; color: #b9cde0; font-size: 12px; padding: 4px 10px; }
   .badge-mode.corrige { background: var(--c-action); color: #fff; }
   .principal { overflow: auto; padding: 20px 24px 40px; min-width: 0; }

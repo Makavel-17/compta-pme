@@ -200,6 +200,12 @@ export const GUIDE: PartieGuide[] = [
             ],
           },
           {
+            type: 'p',
+            texte:
+              'Sous le bouton « Exporter ma copie », une ligne indique où vous en êtes : copie jamais exportée, modifiée ' +
+              'depuis le dernier export (exportez-la à nouveau avant de la rendre), ou exportée à telle date et heure.',
+          },
+          {
             type: 'retenir',
             texte:
               "Votre travail n'existe que dans le navigateur de cet ordinateur. Exportez votre copie avant de changer " +

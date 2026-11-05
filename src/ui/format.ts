@@ -5,6 +5,13 @@ import type { LibellesT } from '../engine/exercice';
 export const m = formatMontant;
 export const dt = formatDate;
 
+/** Date et heure locales au format suisse : « 05.11.2026 à 18:40 ». */
+export function dateHeure(iso: string): string {
+  const d = new Date(iso);
+  const z = (n: number) => String(n).padStart(2, '0');
+  return `${z(d.getDate())}.${z(d.getMonth() + 1)}.${d.getFullYear()} à ${z(d.getHours())}:${z(d.getMinutes())}`;
+}
+
 /** « Exercice 01.01.–31.12.2026 » ou dates complètes si l'exercice chevauche deux années. */
 export function periode(debut: string, fin: string): string {
   const a = formatDate(debut);
