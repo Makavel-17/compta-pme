@@ -92,6 +92,8 @@ numero;intitule;classe;type;niveau_min
 6940;Charges des titres;6;charge;MP
 6950;Produits financiers (intérêts-produits);6;produit;MP
 6952;Produits des titres;6;produit;MP
+7500;Produits d'immeubles;7;produit;MP
+7510;Charges d'immeubles;7;charge;MP
 8000;Charges hors exploitation;8;charge;MP
 8100;Produits hors exploitation;8;produit;MP
 8500;Charges exceptionnelles;8;charge;CFC2

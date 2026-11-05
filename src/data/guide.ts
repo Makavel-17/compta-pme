@@ -383,7 +383,7 @@ export const GUIDE: PartieGuide[] = [
           {
             type: 'p',
             texte:
-              "Douze dossiers prêts à l'emploi, un par grand thème (CFC niveaux 1 à 4, maturité niveaux 1 à 4). Chacun présente " +
+              "Quatorze dossiers prêts à l'emploi, un par grand thème (CFC niveaux 1 à 4, maturité niveaux 1 à 5). Chacun présente " +
               'une entreprise fictive et 10 à 12 pièces : factures, tickets de caisse, quittances, avis bancaires, fiches de ' +
               "salaire, notes internes. L'élève doit trouver lui-même l'écriture à partir du document.",
           },

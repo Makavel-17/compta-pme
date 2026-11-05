@@ -3,7 +3,7 @@
 // Fonctionne dans le navigateur (export à la demande) et dans Node (script de génération des fichiers).
 
 import type { Exercice } from '../engine/exercice';
-import { creerDossier, etiquetteNiveau } from '../engine/exercice';
+import { creerDossier, difficulteDe, etiquetteNiveau } from '../engine/exercice';
 import type { Compte } from '../engine/plan';
 import type { PieceComptable } from '../engine/pieces';
 import type { Dossier, LigneEcriture } from '../engine/dossier';
@@ -11,6 +11,7 @@ import { ajouterEcriture } from '../engine/journal';
 import { ecrituresDeBouclement } from '../engine/closing';
 import { bilan, compteDeResultat } from '../engine/statements';
 import { repartir } from '../engine/repartition';
+import { RATIOS, ratios } from '../engine/analyse';
 import { formatMontant as m } from '../engine/money';
 import { formatDate as dt } from '../engine/dates';
 import { cote, lignesEtat } from './copie';
@@ -282,6 +283,22 @@ export async function genererPdfCorrige(ex: Exercice, plan: Compte[], nomDocumen
       ],
       styles: { font: 'helvetica', fontSize: 9, cellPadding: 1.4 },
       columnStyles: { 1: { halign: 'right', cellWidth: 34 } },
+    });
+    y = finY(doc, y) + 8;
+  }
+
+  if (ex.niveau === 'MP' && difficulteDe(ex) >= 5) {
+    // Ratios (dossiers d'analyse financière et de synthèse MP) de la fiche « Analyse », calculés sur les comptes avant bouclement.
+    const r = ratios(d);
+    y = titreSection(doc, 'Ratios de la fiche « Analyse » (avant bouclement)', y);
+    autoTable(doc, {
+      startY: y,
+      margin: { left: MARGE, right: MARGE },
+      head: [['Ratio', 'Formule', 'Résultat']],
+      body: RATIOS.map((x) => [x.libelle, x.formule, r[x.cle] === null ? '—' : `${r[x.cle]!.toFixed(1)} %`]),
+      styles: { font: 'helvetica', fontSize: 8.5, cellPadding: 1.3 },
+      headStyles: { fillColor: BLEU, textColor: 255 },
+      columnStyles: { 2: { halign: 'right', cellWidth: 24 } },
     });
     y = finY(doc, y) + 8;
   }

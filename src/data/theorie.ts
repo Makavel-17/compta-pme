@@ -1193,6 +1193,110 @@ export const CHAPITRES: Chapitre[] = [
     ],
   },
   {
+    id: 'immeubles',
+    titre: 'Immeubles',
+    niveau: 'MP',
+    resume: "Immeuble de l'entreprise aussi habité par le propriétaire : charges et produits d'immeubles, loyers internes, dette hypothécaire.",
+    sections: [
+      {
+        titre: 'Trois situations',
+        blocs: [
+          {
+            type: 'liste',
+            items: [
+              "Immeuble commercial : il sert seulement à l'activité. Ses charges sont des charges d'exploitation ordinaires (classes 5 et 6).",
+              "Immeuble d'une raison individuelle aussi utilisé à des fins privées, l'usage commercial restant prépondérant : " +
+                "ses charges et ses produits ont leurs propres comptes, 7510 Charges d'immeubles et 7500 Produits d'immeubles (activité annexe).",
+              "Immeuble entièrement loué à des tiers : son résultat est hors exploitation (classe 8).",
+            ],
+          },
+          {
+            type: 'p',
+            texte:
+              "La suite de ce chapitre traite la deuxième situation. Le solde des deux comptes d'immeubles montre ce que " +
+              "l'immeuble rapporte ou coûte à l'entreprise.",
+          },
+        ],
+      },
+      {
+        titre: "Charges d'immeubles",
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Entretien et réparations, chauffage, électricité des parties communes, assurance du bâtiment, impôt foncier, " +
+              "intérêts hypothécaires et amortissement de l'immeuble vont au débit de 7510. Une dépense qui augmente " +
+              "durablement la valeur de l'immeuble (agrandissement, installation nouvelle) n'est pas une charge : elle est " +
+              "portée au compte 1600 Immeubles.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: 'Facture du ramonage et de l’entretien de la chaudière, 680.00', lignes: s('7510', '2000', 680) },
+              { cas: "Amortissement indirect de 1 % sur une valeur d'acquisition de 600'000.00", lignes: s('7510', '1609', 6000) },
+              { cas: "Pose d'un ascenseur qui augmente la valeur du bâtiment, 45'000.00", lignes: s('1600', '2000', 45000) },
+            ],
+          },
+        ],
+      },
+      {
+        titre: 'Loyers internes',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Pour connaître le vrai résultat de l'immeuble, on comptabilise à la clôture deux loyers qui ne donnent lieu à " +
+              "aucun paiement : le loyer des locaux utilisés par l'entreprise elle-même, qui est une charge d'exploitation, et " +
+              "la valeur locative du logement occupé par le propriétaire, qui est un prélèvement privé. Les loyers de " +
+              "locataires tiers sont aussi des produits d'immeubles.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Loyer annuel de l'atelier utilisé par l'entreprise, 24'000.00", lignes: s('6000', '7500', 24000) },
+              { cas: "Valeur locative de l'appartement du propriétaire, 18'000.00", lignes: s('2850', '7500', 18000) },
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Le loyer interne de l'entreprise ne change pas le bénéfice : il déplace une charge de l'immeuble vers " +
+              "l'exploitation. La valeur locative du propriétaire, elle, augmente le bénéfice et diminue le compte Privé.",
+          },
+        ],
+      },
+      {
+        titre: 'Dette hypothécaire et annuité',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "L'annuité payée à la banque comprend l'intérêt hypothécaire, qui est une charge, et le remboursement d'une " +
+              "partie de la dette (amortissement financier), qui diminue le compte 2401 Dettes hypothécaires. Avec une " +
+              "annuité dégressive, le remboursement est constant et l'intérêt diminue chaque année ; avec une annuité " +
+              "constante, le total payé reste le même et la part de remboursement augmente.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              {
+                cas: "Annuité sur une dette de 300'000.00 : intérêt 2 % et remboursement de 5'000.00, débités par la banque",
+                lignes: [D('7510', 6000), D('2401', 5000), C('1020', 11000)],
+              },
+              { cas: "Intérêts courus du 01.07 au 31.12 sur 295'000.00 à 2 %, à la clôture", lignes: s('7510', '2300', 2950) },
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Intérêt hypothécaire : 6900 pour un immeuble commercial, 7510 pour un immeuble à usage mixte, compte de " +
+              'charges hors exploitation pour un immeuble locatif.',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'interets',
     titre: 'Intérêts, frais bancaires, escomptes et frais d\'achat',
     niveau: 'MP',

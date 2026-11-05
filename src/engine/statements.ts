@@ -43,6 +43,7 @@ const GROUPES_CHARGES: DefGroupe[] = [
   { titre: "Autres charges d'exploitation", de: '6000', a: '6799', type: 'charge' },
   { titre: 'Amortissements', de: '6800', a: '6899', type: 'charge' },
   { titre: 'Charges financières', de: '6900', a: '6949', type: 'charge' },
+  { titre: "Charges d'immeubles (activité annexe)", de: '7000', a: '7999', type: 'charge' },
   { titre: 'Charges hors exploitation', de: '8000', a: '8099', type: 'charge' },
   { titre: 'Charges exceptionnelles', de: '8500', a: '8509', type: 'charge' },
   { titre: 'Impôts', de: '8900', a: '8999', type: 'charge' },
@@ -50,6 +51,7 @@ const GROUPES_CHARGES: DefGroupe[] = [
 const GROUPES_PRODUITS: DefGroupe[] = [
   { titre: "Chiffre d'affaires", de: '3000', a: '3999', type: 'produit' },
   { titre: 'Produits financiers', de: '6950', a: '6999', type: 'produit' },
+  { titre: "Produits d'immeubles (activité annexe)", de: '7000', a: '7999', type: 'produit' },
   { titre: 'Produits hors exploitation', de: '8100', a: '8199', type: 'produit' },
   { titre: 'Produits exceptionnels', de: '8510', a: '8599', type: 'produit' },
 ];

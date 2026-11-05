@@ -38,6 +38,7 @@ export const TITRES_CLASSES: Record<number, string> = {
   4: 'Classe 4 : Charges de marchandises et de services',
   5: 'Classe 5 : Charges de personnel',
   6: "Classe 6 : Autres charges d'exploitation, amortissements, résultat financier",
+  7: "Classe 7 : Résultats des activités annexes d'exploitation (immeubles)",
   8: 'Classe 8 : Résultats hors exploitation et exceptionnels',
   9: 'Classe 9 : Clôture',
 };

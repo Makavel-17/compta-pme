@@ -15,7 +15,7 @@ describe('classement des exercices par formation et niveau', () => {
 
   it('CFC avant MP, niveaux croissants', () => {
     const g = classerExercices(exercicesDemo);
-    expect(g.map((x) => `${x.filiere}${x.difficulte}`)).toEqual(['CFC1', 'CFC2', 'CFC3', 'CFC4', 'MP1', 'MP2', 'MP3', 'MP4', 'MP6']);
+    expect(g.map((x) => `${x.filiere}${x.difficulte}`)).toEqual(['CFC1', 'CFC2', 'CFC3', 'CFC4', 'MP1', 'MP2', 'MP3', 'MP4', 'MP5', 'MP6']);
     expect(g[0]!.exercices).toHaveLength(5); // 3 exercices + 2 dossiers de pièces
     expect(g[0]!.titre).toMatch(/^Bases/);
   });
