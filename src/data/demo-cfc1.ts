@@ -10,7 +10,7 @@ export const demoCfc1: Exercice = {
   niveau: 'CFC1',
   filiere: 'CFC',
   difficulte: 1,
-  chapitres: ["1 Structure du bilan et du résultat", "12 Comptabilité de l'entreprise commerciale", "35 Clôture des entreprises individuelles"],
+  sujets: ["Bilan d'ouverture", "Achats et ventes de marchandises", "Charges d'exploitation", "Compte privé", "Bouclement"],
   raisonSociale: 'Cycles du Léman',
   formeJuridique: 'raison individuelle',
   debut: '2026-01-01',

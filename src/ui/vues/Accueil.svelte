@@ -81,8 +81,8 @@
                 {ex.raisonSociale} · {ex.operations.length} opérations ·
                 {exercicesDemo.includes(ex) ? 'exercice de démonstration' : `fourni par l'enseignant · ${LIBELLES_MODE[ex.mode]}`}
               </span>
-              {#if ex.chapitres?.length}
-                <br /><span class="discret petit">Manuel E&S : ch. {ex.chapitres.join(' · ch. ')}</span>
+              {#if ex.sujets?.length}
+                <br /><span class="discret petit">Sujets traités : {ex.sujets.join(' · ')}</span>
               {/if}
             </span>
           </label>

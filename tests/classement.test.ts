@@ -3,11 +3,13 @@ import { exercicesDemo } from '../src/data/demos';
 import { classerExercices, difficulteDe, etiquetteNiveau, exerciceVierge, filiereDe } from '../src/engine/exercice';
 
 describe('classement des exercices par formation et niveau', () => {
-  it('chaque exercice fourni a une formation, un niveau et des chapitres du manuel', () => {
+  it('chaque exercice fourni a une formation, un niveau et des sujets traités', () => {
     for (const ex of exercicesDemo) {
       expect(ex.filiere, ex.titre).toBeDefined();
       expect(ex.difficulte, ex.titre).toBeGreaterThanOrEqual(1);
-      expect(ex.chapitres?.length, ex.titre).toBeGreaterThan(0);
+      expect(ex.sujets?.length, ex.titre).toBeGreaterThan(0);
+      // aucune référence aux manuels dans ce qui est montré aux élèves
+      for (const t of [ex.titre, ex.introduction, ex.situation ?? '', ...(ex.sujets ?? [])]) expect(t).not.toMatch(/E&S|\bch(ap)?\. ?\d|chapitre|manuel du cours/i);
     }
   });
 

@@ -12,7 +12,7 @@ export const demoCfc2: Exercice = {
   niveau: 'CFC2',
   filiere: 'CFC',
   difficulte: 4,
-  chapitres: ["14 Taxe sur la valeur ajoutée", "22 Pertes sur créances", "23 Amortissements", "24 Comptes de régularisation/provision", "25 Décompte de salaire"],
+  sujets: ["TVA", "Salaires", "Pertes sur créances", "Transitoires", "Amortissements", "Ducroire"],
   raisonSociale: "Papeterie de l'Arve",
   formeJuridique: 'raison individuelle',
   debut: '2026-01-01',

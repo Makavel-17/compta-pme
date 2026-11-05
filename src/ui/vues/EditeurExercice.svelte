@@ -40,10 +40,10 @@
 
   let titre = $state(source.titre);
   let niveau = $state<Niveau>(source.niveau);
-  const SAUT = String.fromCharCode(10); // saut de ligne entre les chapitres
+  const SAUT = String.fromCharCode(10); // saut de ligne entre les sujets
   let filiere = $state<Filiere>(filiereDe(source));
   let difficulte = $state<number>(difficulteDe(source));
-  let chapitres = $state((source.chapitres ?? []).join(SAUT));
+  let sujets = $state((source.sujets ?? []).join(SAUT));
   let raisonSociale = $state(source.raisonSociale);
   let formeJuridique = $state<FormeJuridique>(source.formeJuridique);
   let debut = $state(dt(source.debut));
@@ -128,7 +128,7 @@
       niveau,
       filiere,
       difficulte: Math.max(1, Math.floor(Number(difficulte) || 1)),
-      chapitres: chapitres.split(SAUT).map((c) => c.trim()).filter(Boolean),
+      sujets: sujets.split(SAUT).map((c) => c.trim()).filter(Boolean),
       raisonSociale: raisonSociale.trim(),
       formeJuridique,
       debut: iso(debut),
@@ -246,8 +246,8 @@
       </select>
     </div>
     <div class="large">
-      <label class="bloc" for="ex-chapitres">Chapitres du manuel E&S (un par ligne)</label>
-      <textarea id="ex-chapitres" class="champ" rows="2" bind:value={chapitres} placeholder="14 Taxe sur la valeur ajoutée"></textarea>
+      <label class="bloc" for="ex-sujets">Sujets traités (un par ligne, affichés aux élèves)</label>
+      <textarea id="ex-sujets" class="champ" rows="2" bind:value={sujets} placeholder="TVA"></textarea>
     </div>
     <div>
       <label class="bloc" for="ex-mode">Mode</label>

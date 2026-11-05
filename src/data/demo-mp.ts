@@ -12,7 +12,7 @@ export const demoMp: Exercice = {
   niveau: 'MP',
   filiere: 'MP',
   difficulte: 2,
-  chapitres: ["12 Comptabilité de l'entreprise commerciale", "14 Taxe sur la valeur ajoutée", "23 Amortissements", "24 Comptes de régularisation/provision", "36 Clôture des sociétés anonymes", "54 Les titres"],
+  sujets: ["Répartition du bénéfice", "Impôt anticipé", "Titres", "TVA et escompte", "Intérêts et frais bancaires", "Provisions", "Amortissements"],
   raisonSociale: 'Lémantec SA',
   formeJuridique: 'SA',
   debut: '2026-01-01',

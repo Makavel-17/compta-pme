@@ -39,8 +39,8 @@ export interface Exercice {
   filiere?: Filiere;
   /** Niveau de difficulté dans la formation : 1 = le plus simple. */
   difficulte?: number;
-  /** Chapitres du manuel E&S travaillés, par exemple « 14 TVA ». */
-  chapitres?: string[];
+  /** Sujets traités, affichés aux élèves (par exemple « TVA », « Amortissements »). */
+  sujets?: string[];
   raisonSociale: string;
   formeJuridique: FormeJuridique;
   debut: DateISO;
