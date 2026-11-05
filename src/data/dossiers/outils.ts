@@ -13,6 +13,13 @@ export const S = (debit: string, credit: string, centimes: number): LigneEcritur
 export const BANQUE: Partie = { nom: 'Banque Rhodanienne', adresse: ['Place des Bergues 12', '1201 Genève'] };
 export const POSTE: Partie = { nom: 'Service postal des paiements', adresse: ['Case postale', '3030 Berne'] };
 
+/** Tableau ajouté au corrigé PDF (calculs attendus hors journal). Même forme que dans src/pdf/dossier.ts. */
+export interface TableauComplement {
+  titre: string;
+  entetes: string[];
+  lignes: string[][];
+}
+
 export interface ElementDossier {
   date: DateISO;
   piece: PieceComptable;

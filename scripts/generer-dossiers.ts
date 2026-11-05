@@ -2,7 +2,7 @@
 // version enseignant. Lancer avec : npm run dossiers
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DOSSIERS, versionEvaluation } from '../src/data/dossiers';
+import { COMPLEMENTS_CORRIGE, DOSSIERS, versionEvaluation } from '../src/data/dossiers';
 import { plan } from '../src/data/plan';
 import { EXT_EXERCICE, exporterExercice, exporterExerciceEnseignant, nomFichier } from '../src/io/fichiers';
 import { genererPdfCorrige, genererPdfDossier } from '../src/pdf/dossier';
@@ -16,7 +16,7 @@ for (const ex of DOSSIERS) {
   const nomPdf = nomFichier([ex.raisonSociale, 'dossier'], '.pdf');
   const nomCorrige = nomFichier([ex.raisonSociale, 'corrige'], '.pdf');
   ecrire(nomPdf, new Uint8Array(await (await genererPdfDossier(ex, plan, nomPdf)).arrayBuffer()));
-  ecrire(nomCorrige, new Uint8Array(await (await genererPdfCorrige(ex, plan, nomCorrige)).arrayBuffer()));
+  ecrire(nomCorrige, new Uint8Array(await (await genererPdfCorrige(ex, plan, nomCorrige, COMPLEMENTS_CORRIGE[ex.id])).arrayBuffer()));
   ecrire(nomFichier([ex.raisonSociale, 'entrainement'], EXT_EXERCICE), exporterExercice(ex));
   const evaluation = versionEvaluation(ex);
   ecrire(nomFichier([ex.raisonSociale, 'evaluation'], EXT_EXERCICE), exporterExercice(evaluation));

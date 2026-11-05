@@ -33,3 +33,16 @@ describe.each(DOSSIERS.map((d) => [d.titre, d] as const))('dossier %s', (_titre,
     if (ex.parametres.corrigerBouclement) expect(boucler(d).ok).toBe(true);
   });
 });
+
+describe('réserves latentes : le corrigé complémentaire concorde avec les comptes', () => {
+  it('le bénéfice comptable du tableau est celui du dossier corrigé', async () => {
+    const { COMPLEMENTS_CORRIGE } = await import('../src/data/dossiers');
+    const { dossierCorrige } = await import('../src/pdf/dossier');
+    const { resultatExercice } = await import('../src/engine/statements');
+    const { formatMontant } = await import('../src/engine/money');
+    const ex = DOSSIERS.find((d) => d.id === 'dossier-mp3-ateliers-genevois-reserves-latentes')!;
+    const benefice = resultatExercice(dossierCorrige(ex, plan));
+    const tableau = COMPLEMENTS_CORRIGE[ex.id]![1]!;
+    expect(tableau.lignes[0]![1]).toBe(formatMontant(benefice));
+  });
+});

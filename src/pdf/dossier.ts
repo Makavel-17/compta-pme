@@ -226,7 +226,19 @@ export function dossierCorrige(ex: Exercice, plan: Compte[]): Dossier {
 }
 
 /** Corrigé de l'enseignant. */
-export async function genererPdfCorrige(ex: Exercice, planCours: Compte[], nomDocument: string): Promise<Blob> {
+/** Tableau ajouté à la fin des écritures du corrigé (calculs attendus hors journal : réserves latentes, revenu…). */
+export interface TableauComplement {
+  titre: string;
+  entetes: string[];
+  lignes: string[][];
+}
+
+export async function genererPdfCorrige(
+  ex: Exercice,
+  planCours: Compte[],
+  nomDocument: string,
+  complements: TableauComplement[] = [],
+): Promise<Blob> {
   const plan = planSelonForme(planCours, ex.formeJuridique);
   const { doc, autoTable } = await outils();
   const nom = new Map(plan.map((c) => [c.numero, c.intitule]));
@@ -265,6 +277,20 @@ export async function genererPdfCorrige(ex: Exercice, planCours: Compte[], nomDo
     columnStyles: { 2: { halign: 'right', cellWidth: 30 } },
   });
   y = finY(doc, y) + 8;
+
+  for (const t of complements) {
+    y = titreSection(doc, t.titre, y);
+    autoTable(doc, {
+      startY: y,
+      margin: { left: MARGE, right: MARGE },
+      head: [t.entetes],
+      body: t.lignes,
+      styles: { font: 'helvetica', fontSize: 9, cellPadding: 1.4 },
+      headStyles: { fillColor: BLEU, textColor: 255 },
+      columnStyles: Object.fromEntries(t.entetes.slice(1).map((_, i) => [i + 1, { halign: 'right' }])),
+    });
+    y = finY(doc, y) + 8;
+  }
 
   const rep = ex.parametres.repartition ? repartir(ex.parametres.repartition) : null;
   if (rep?.ok) {

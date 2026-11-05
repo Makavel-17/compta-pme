@@ -1,6 +1,6 @@
 <!-- Espace enseignant, onglet « Dossiers » : dossiers de pièces comptables à distribuer (PDF et fichiers d'exercice). -->
 <script lang="ts">
-  import { DOSSIERS, versionEvaluation } from '../../data/dossiers';
+  import { COMPLEMENTS_CORRIGE, DOSSIERS, versionEvaluation } from '../../data/dossiers';
   import { plan } from '../../data/plan';
   import { classerExercices, etiquetteNiveau, LIBELLES_FILIERE, type Exercice } from '../../engine/exercice';
   import { EXT_EXERCICE, exporterExercice, nomFichier } from '../../io/fichiers';
@@ -20,7 +20,7 @@
         telechargerBlob(nom, await m.genererPdfDossier(ex, plan, nom));
       } else {
         const nom = nomFichier([ex.raisonSociale, 'corrige'], '.pdf');
-        telechargerBlob(nom, await m.genererPdfCorrige(ex, plan, nom));
+        telechargerBlob(nom, await m.genererPdfCorrige(ex, plan, nom, COMPLEMENTS_CORRIGE[ex.id]));
       }
     } catch (e) {
       erreur = `Le PDF n'a pas pu être créé : ${e instanceof Error ? e.message : String(e)}`;
