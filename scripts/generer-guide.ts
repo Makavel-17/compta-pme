@@ -3,7 +3,7 @@
 import { writeFileSync } from 'node:fs';
 import { GUIDE, type BlocGuide, type PartieGuide } from '../src/data/guide';
 
-const SITE = 'https://makavel-17.github.io/compta-pme/';
+const SITE = 'https://klaidi-b.github.io/compta-pme/';
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const autonome = args.includes('--autonome'); // document HTML complet (site public), sinon fragment pour une page Claude
 const sortie = args.find((a) => !a.startsWith('--')) ?? 'guide-compta-pme.html';
