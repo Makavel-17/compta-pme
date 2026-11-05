@@ -18,6 +18,7 @@
   import Tva from './vues/Tva.svelte';
   import Salaire from './vues/Salaire.svelte';
   import Repartition from './vues/Repartition.svelte';
+  import Theorie from './vues/Theorie.svelte';
   import Analyse from './vues/Analyse.svelte';
   import Visite from './composants/Visite.svelte';
 
@@ -99,6 +100,7 @@
           ...(f.has('repartition') ? [{ vue: 'repartition' as Vue, libelle: 'Répartition du bénéfice' }] : []),
         ],
       },
+      { titre: 'Cours', entrees: [{ vue: 'theorie', libelle: 'Théorie' }] },
     ];
   });
 </script>
@@ -170,6 +172,7 @@
       {:else if etat.vue === 'salaire' && etat.fonctions.has('salaire')}<Salaire />
       {:else if etat.vue === 'repartition' && etat.fonctions.has('repartition')}<Repartition />
       {:else if etat.vue === 'analyse' && etat.fonctions.has('analyse')}<Analyse />
+      {:else if etat.vue === 'theorie'}<Theorie />
       {:else}<TableauDeBord />
       {/if}
     </main>
