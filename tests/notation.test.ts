@@ -90,3 +90,27 @@ describe('correction d\'une copie et synthèse', () => {
     expect(stats.find((s) => s.piece === '2')).toMatchObject({ reussites: 1, total: 2, erreurs: [{ diagnostic: 'manquante', nombre: 1 }] });
   });
 });
+
+describe('détail d’une copie : écritures de l’élève et corrigé', () => {
+  it('rapproche les lignes de la pièce, sans les écritures extournées', async () => {
+    const { comparaisonOperation } = await import('../src/engine/notation');
+    const { demoCfc1 } = await import('../src/data/demo-cfc1');
+    const { creerDossier } = await import('../src/engine/exercice');
+    const { ajouterEcriture, extourner } = await import('../src/engine/journal');
+    const { plan } = await import('./fixtures');
+    const c1 = demoCfc1.corrige!.find((c) => c.piece === '1')!;
+    let d = creerDossier(demoCfc1, plan);
+    const date = demoCfc1.operations[0]!.date;
+    const inverse = c1.lignes.map((l) => ({ debit: l.credit, credit: l.debit, montant: l.montant }));
+    let r = ajouterEcriture(d, { id: 'E1', date, piece: '1', libelle: 'faux', lignes: inverse });
+    if (r.ok) d = r.valeur;
+    r = extourner(d, 'E1', date);
+    if (r.ok) d = r.valeur;
+    r = ajouterEcriture(d, { id: 'E3', date, piece: '1', libelle: 'juste', lignes: c1.lignes });
+    if (r.ok) d = r.valeur;
+    const cmp = comparaisonOperation(demoCfc1, d, '1');
+    expect(cmp.eleve).toEqual(c1.lignes);
+    expect(cmp.corrige).toEqual(c1.lignes);
+    expect(comparaisonOperation(demoCfc1, d, '2').eleve).toEqual([]);
+  });
+});

@@ -8,11 +8,13 @@
   import { exercicesDemo } from '../../data/demos';
   import { DOSSIERS_EVALUATION } from '../../data/dossiers';
   import type { Exercice } from '../../engine/exercice';
-  import { corrigerCopie, statistiquesOperations, type CorrectionCopie } from '../../engine/notation';
+  import { comparaisonOperation, corrigerCopie, statistiquesOperations, type CorrectionCopie } from '../../engine/notation';
+  import { formatMontant } from '../../engine/money';
+  import type { LigneEcriture } from '../../engine/dossier';
   import { LIBELLES_DIAGNOSTIC } from '../../engine/correction';
   import { bouclementCorrige, PIECE_BOUCLEMENT } from '../../engine/correction-bouclement';
   import { EXT_COPIE, ErreurFichier, importerCopie, nomFichier, type Copie } from '../../io/fichiers';
-  import { choisirFichiers, telecharger } from '../fichiers-navigateur';
+  import { choisirFichiers, telecharger, telechargerBlob } from '../fichiers-navigateur';
 
   const disponibles = $derived<Exercice[]>(
     [...enseignant.exercices, ...exercicesDemo, ...DOSSIERS_EVALUATION].filter((e) => (e.corrige?.length ?? 0) > 0),
@@ -78,7 +80,32 @@
     telecharger(nomFichier([exercice.titre, 'resultats'], '.csv'), '﻿' + csv, 'text/csv');
   }
 
+  let pdfEnCours = $state(false);
+  async function exporterPdf() {
+    if (!exercice) return;
+    pdfEnCours = true;
+    try {
+      const { genererPdfCopiesCorrigees } = await import('../../pdf/copies-corrigees');
+      const nom = nomFichier([exercice.titre, 'copies-corrigees'], '.pdf');
+      telechargerBlob(nom, await genererPdfCopiesCorrigees(exercice, lignes.map((l) => ({ copie: l.copie, correction: l.correction })), nom));
+    } catch (e) {
+      messages = [`Le PDF n'a pas pu être créé : ${e instanceof Error ? e.message : String(e)}`];
+    } finally {
+      pdfEnCours = false;
+    }
+  }
+
   const fmt = (x: number) => (Number.isInteger(x) ? String(x) : x.toFixed(1));
+  let voirJustes = $state(false);
+
+  /** Lignes d'écriture lisibles : « Débit Banque (1020) · Crédit Ventes (3200) · 1'000.00 ». */
+  function lisibles(lignes: LigneEcriture[], copie: Copie): string[] {
+    const nom = new Map(copie.dossier.plan.map((c) => [c.numero, c.intitule]));
+    const cpt = (n: string) => `${nom.get(n) ?? n} (${n})`;
+    return lignes.map((l) =>
+      [l.debit ? `D ${cpt(l.debit)}` : '', l.credit ? `C ${cpt(l.credit)}` : '', formatMontant(l.montant)].filter(Boolean).join(' · '),
+    );
+  }
 </script>
 
 <section class="carte">
@@ -93,6 +120,7 @@
     </label>
     <button class="btn btn-principal" disabled={!exercice} onclick={importer}>Importer des copies…</button>
     <button class="btn" disabled={!lignes.length} onclick={exporterCsv}>Exporter les résultats (CSV)</button>
+    <button class="btn" disabled={!lignes.length || pdfEnCours} onclick={exporterPdf}>{pdfEnCours ? 'Création du PDF…' : 'Copies corrigées (PDF)'}</button>
   </div>
   <p class="discret petit aide">
     Les copies importées restent dans cette page : elles ne sont ni enregistrées ni envoyées en ligne. Seuls les exercices
@@ -139,6 +167,11 @@
               <td colspan="5" class="detail">
                 <table>
                   <tbody>
+                    <tr>
+                      <td colspan="4" class="options">
+                        <label><input type="checkbox" bind:checked={voirJustes} /> Montrer aussi les écritures des opérations justes</label>
+                      </td>
+                    </tr>
                     {#each l.correction.operations as o}
                       <tr>
                         <td class="num" style="width:40px">{o.piece}</td>
@@ -146,6 +179,24 @@
                         <td style="width:220px" class:faux={o.diagnostic !== 'juste'}>{LIBELLES_DIAGNOSTIC[o.diagnostic]}</td>
                         <td class="montant" style="width:80px">{fmt(o.points)} / {fmt(o.max)}</td>
                       </tr>
+                      {#if voirJustes || o.diagnostic !== 'juste'}
+                        {@const cmp = comparaisonOperation(exercice!, l.copie.dossier, o.piece)}
+                        <tr class="comparaison">
+                          <td></td>
+                          <td colspan="3">
+                            <div class="cote-a-cote">
+                              <div>
+                                <div class="etiquette">Écritures de l'élève</div>
+                                {#each lisibles(cmp.eleve, l.copie) as t}<div class="ligne-ecr">{t}</div>{:else}<div class="discret">Aucune écriture.</div>{/each}
+                              </div>
+                              <div>
+                                <div class="etiquette">Corrigé</div>
+                                {#each lisibles(cmp.corrige, l.copie) as t}<div class="ligne-ecr">{t}</div>{/each}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      {/if}
                     {/each}
                   </tbody>
                 </table>
@@ -197,4 +248,9 @@
   .detail { background: var(--c-fond-2); padding: 6px 14px 10px; }
   .detail td { background: none; }
   .faux { color: var(--c-alerte-texte); font-weight: bold; }
+  .options { padding: 4px 0 8px; font-size: 12px; }
+  .comparaison td { padding-top: 0; padding-bottom: 10px; }
+  .cote-a-cote { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 12px; }
+  .etiquette { font-weight: bold; color: var(--c-structure); margin-bottom: 2px; }
+  .ligne-ecr { font-variant-numeric: tabular-nums; }
 </style>

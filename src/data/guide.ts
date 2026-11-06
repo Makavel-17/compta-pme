@@ -435,7 +435,11 @@ export const GUIDE: PartieGuide[] = [
               '« Importer des copies… » : sélectionnez tous les fichiers reçus en une fois.',
               'Le tableau donne les points et la note de chaque élève, le détail par opération et les erreurs les plus ' +
                 'fréquentes de la classe.',
+              '« Détail » affiche, pour chaque opération fausse, les écritures de l’élève à côté du corrigé (la case à ' +
+                'cocher montre aussi celles des opérations justes).',
               '« Exporter les résultats (CSV) » produit un fichier qui s’ouvre dans Excel.',
+              '« Copies corrigées (PDF) » produit un seul document pour la classe : le tableau des notes, puis une page par ' +
+                'élève avec le résultat de chaque opération et, pour les erreurs, ses écritures à côté du corrigé.',
             ],
           },
           {

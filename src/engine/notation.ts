@@ -129,3 +129,13 @@ export function statistiquesOperations(corrections: readonly CorrectionCopie[]):
   for (const s of parPiece.values()) s.erreurs.sort((a, b) => b.nombre - a.nombre);
   return [...parPiece.values()];
 }
+
+/** Écritures de l'élève et corrigé d'une opération, côte à côte (détail d'une copie). */
+export function comparaisonOperation(ex: Exercice, d: Dossier, piece: string): { eleve: LigneEcriture[]; corrige: LigneEcriture[] } {
+  const eleve = ecrituresRetenues(ecrituresPourNotation(d, ex))
+    .filter((e) => e.piece === piece)
+    .flatMap((e) => e.lignes);
+  const corrige =
+    piece === PIECE_BOUCLEMENT ? (corrigeBouclement(d, ex)?.lignes ?? []) : ((ex.corrige ?? []).find((c) => c.piece === piece)?.lignes ?? []);
+  return { eleve, corrige };
+}
