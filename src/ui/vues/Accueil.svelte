@@ -12,7 +12,7 @@
 
   // ---- Travail en cours (reprise) ----
   /** Session au moment de l'ouverture de l'accueil : sert seulement à préremplir le formulaire. */
-  const depart = etat.session?.role === 'eleve' ? etat.session : null;
+  const depart = etat.session?.role === 'eleve' ? etat.session : (Object.values(etat.autres)[0] ?? null);
   const enCours = $derived(etat.session && etat.session.role === 'eleve' ? etat.session : null);
   const av = $derived(enCours ? avancementSession(enCours) : null);
   const correction = $derived(enCours ? avecCorrection(enCours) : false);
@@ -60,10 +60,17 @@
   const rechercheActive = $derived(recherche.trim().length > 0);
 
   function etatExercice(ex: Exercice): { texte: string; classe: string } {
-    if (!enCours || enCours.exercice.id !== ex.id || !av) return { texte: '', classe: '' };
-    const fini = correction ? av.justes === av.total : av.saisies === av.total;
-    return fini ? { texte: 'Terminé', classe: 'fini' } : { texte: `En cours · ${av.saisies} / ${av.total}`, classe: 'encours' };
+    const s = etat.sessionDe(ex.id);
+    const a = s ? avancementSession(s) : null;
+    if (!s || !a) return { texte: '', classe: '' };
+    const fini = avecCorrection(s) ? a.justes === a.total : a.saisies === a.total;
+    return fini ? { texte: 'Terminé', classe: 'fini' } : { texte: `En cours · ${a.saisies} / ${a.total}`, classe: 'encours' };
   }
+
+  // Autres exercices commencés dans ce navigateur (l'exercice actif a sa propre carte).
+  const autres = $derived(Object.values(etat.autres).sort((a, b) => (b.derniereActivite ?? '').localeCompare(a.derniereActivite ?? '')));
+  /** Élève dont le travail est enregistré dans ce navigateur. */
+  const eleveConnu = $derived(enCours?.eleve ?? autres[0]?.eleve ?? null);
 
   // ---- Élève et démarrage ----
   let prenom = $state(depart?.eleve.prenom ?? '');
@@ -71,7 +78,9 @@
   let classe = $state(depart?.eleve.classe ?? '');
   let choix = $state(depart?.exercice.id ?? '');
   let erreurs = $state<string[]>([]);
+  /** Un autre élève sur le même ordinateur : confirmation avant d'effacer le travail enregistré. */
   let confirmer = $state(false);
+  const meme = (a: string, b: string) => normaliser(a.trim()) === normaliser(b.trim());
 
   function commencer(e: SubmitEvent) {
     e.preventDefault();
@@ -83,11 +92,12 @@
     if (!ex) err.push('Choisissez un exercice dans la liste.');
     erreurs = err;
     if (err.length || !ex) return;
-    if (enCours && enCours.exercice.id === ex.id) return etat.reprendre();
-    if (enCours && enCours.dossier.ecritures.length > 0 && !confirmer) {
+    const autreEleve = eleveConnu && !(meme(eleveConnu.prenom, prenom) && meme(eleveConnu.nom, nom));
+    if (autreEleve && !confirmer) {
       confirmer = true;
       return;
     }
+    if (autreEleve) etat.quitter();
     confirmer = false;
     etat.commencer({ prenom: prenom.trim(), nom: nom.trim(), classe: classe.trim() }, ex);
   }
@@ -96,7 +106,7 @@
 <div class="page">
   <header class="bandeau-haut"><span class="logo">Compta PME</span></header>
   <main class="contenu">
-    <h1>{enCours ? `Bon retour, ${enCours.eleve.prenom}` : 'Bienvenue'}</h1>
+    <h1>{eleveConnu ? `Bon retour, ${eleveConnu.prenom}` : 'Bienvenue'}</h1>
     <p class="discret">
       Logiciel de comptabilité en partie double, plan comptable suisse. Vos données restent dans ce navigateur :
       rien n'est envoyé en ligne.
@@ -137,8 +147,27 @@
       </section>
     {/if}
 
+    {#if autres.length}
+      <section class="carte" aria-labelledby="titre-autres">
+        <h2 id="titre-autres" class="tete-simple">Vos autres exercices en cours</h2>
+        {#each autres as s (s.exercice.id)}
+          {@const a = avancementSession(s)}
+          <div class="autre">
+            <span class="infos">
+              <strong>{s.exercice.titre}</strong><br />
+              <span class="discret petit">
+                {etiquetteNiveau(s.exercice)} · {LIBELLES_MODE[s.exercice.mode]}{s.derniereActivite ? ` · dernière activité : ${dateHeure(s.derniereActivite)}` : ''}
+              </span>
+            </span>
+            {#if a}<span class="petit"><BarreAvancement {a} correction={avecCorrection(s)} largeur={120} /> {a.saisies} / {a.total}</span>{/if}
+            <button class="btn" onclick={() => etat.commencer(s.eleve, s.exercice)}>Reprendre</button>
+          </div>
+        {/each}
+      </section>
+    {/if}
+
     <form class="carte" onsubmit={commencer} novalidate>
-      <h2 class="tete-simple">{enCours ? 'Choisir un autre exercice' : 'Vos informations'}</h2>
+      <h2 class="tete-simple">{eleveConnu ? 'Choisir un autre exercice' : 'Vos informations'}</h2>
       <div class="corps-carte grille">
         <div>
           <label class="bloc" for="prenom">Prénom</label>
@@ -222,18 +251,19 @@
           <ul>{#each erreurs as e}<li>{e}</li>{/each}</ul>
         </div>
       {/if}
-      {#if confirmer && enCours}
+      {#if confirmer && eleveConnu}
         <div class="alerte" role="alert" style="margin:0 14px 14px">
-          Votre travail sur « {enCours.exercice.titre} » sera remplacé et effacé de ce navigateur. Si vous devez le rendre,
-          reprenez-le d'abord et cliquez sur « Exporter ma copie ».
+          Ce navigateur contient le travail de {eleveConnu.prenom} {eleveConnu.nom}. Si vous n'êtes pas cette personne, ce
+          travail sera effacé pour laisser la place au vôtre. S'il doit être rendu, reprenez-le d'abord et cliquez sur
+          « Exporter ma copie ».
           <div class="actions-confirmation">
-            <button type="submit" class="btn btn-principal">Remplacer et commencer</button>
+            <button type="submit" class="btn btn-principal">Effacer et commencer</button>
             <button type="button" class="btn" onclick={() => (confirmer = false)}>Annuler</button>
           </div>
         </div>
       {:else}
         <div class="actions">
-          <button type="submit" class="btn btn-principal">{enCours && choix === enCours.exercice.id ? 'Reprendre' : 'Commencer'}</button>
+          <button type="submit" class="btn btn-principal">{etat.sessionDe(choix) ? 'Reprendre' : 'Commencer'}</button>
         </div>
       {/if}
     </form>
@@ -294,6 +324,8 @@
   .enseignant { text-align: right; margin-top: 16px; font-size: 13px; }
   .sep { margin: 0 8px; color: var(--c-texte-2); }
   .actions { padding: 0 14px 14px; text-align: right; }
+  .autre { display: flex; gap: 16px; align-items: center; padding: 9px 14px; border-top: 1px solid var(--c-bordure-2); flex-wrap: wrap; }
+  .tete-simple + .autre { border-top: 0; }
   .actions-confirmation { display: flex; gap: 8px; margin-top: 10px; }
   @media (max-width: 640px) { .grille { grid-template-columns: 1fr; } }
 </style>

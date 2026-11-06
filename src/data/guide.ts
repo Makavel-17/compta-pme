@@ -50,10 +50,16 @@ export const GUIDE: PartieGuide[] = [
           {
             type: 'p',
             texte:
-              "Quand vous revenez sur le site, l'accueil affiche « Reprendre où vous en étiez » avec votre avancement : un clic " +
-              "sur « Reprendre » vous ramène dans votre exercice. Le bouton « Changer d'exercice » du tableau de bord ouvre " +
-              "l'accueil sans rien effacer ; votre travail n'est remplacé que si vous commencez un autre exercice, après " +
-              'confirmation.',
+              "Quand vous revenez sur le site, l'accueil affiche « Reprendre où vous en étiez » avec votre avancement, puis vos " +
+              "autres exercices en cours. Vous pouvez travailler sur plusieurs exercices : le bouton « Changer d'exercice » du " +
+              "tableau de bord ouvre l'accueil, et chaque exercice reprend là où vous l'aviez laissé. Dans la liste, chaque " +
+              "exercice commencé indique « En cours » ou « Terminé ».",
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Ordinateur partagé : si un autre élève indique son nom, le logiciel prévient que le travail enregistré sera " +
+              "effacé. Exportez toujours votre copie avant de laisser l'ordinateur à quelqu'un d'autre.",
           },
         ],
       },
