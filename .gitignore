@@ -5,3 +5,7 @@ dist/
 
 # Fichiers générés par npm run dossiers
 /dossiers/
+
+# Résultats des tests des écrans
+test-results/
+playwright-report/

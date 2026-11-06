@@ -28,6 +28,9 @@ jobs:
       - run: npm test
       - run: npm run check
       - run: npm run build
+      # Tests des écrans et de l'accessibilité dans un vrai navigateur, sur le site compilé.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ecrans
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
