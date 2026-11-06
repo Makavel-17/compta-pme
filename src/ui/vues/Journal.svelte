@@ -271,12 +271,12 @@
       <table>
         <thead>
           <tr>
-            <th style="width:104px">Date</th>
-            <th style="width:56px">Pièce</th>
+            <th class="c-date">Date</th>
+            <th class="c-piece">Pièce</th>
             <th>Libellé</th>
-            <th style="width:210px">Compte au débit</th>
-            <th style="width:210px">Compte au crédit</th>
-            <th style="width:118px" class="montant">Montant CHF</th>
+            <th class="c-compte">Compte au débit</th>
+            <th class="c-compte">Compte au crédit</th>
+            <th class="montant c-montant">Montant CHF</th>
             <th style="width:30px"><span class="sr-only">Retirer</span></th>
           </tr>
         </thead>
@@ -526,8 +526,20 @@
   .enonce li.bouclement { display: grid; grid-template-columns: 26px 1fr; gap: 2px 4px; padding: 9px 14px; font-style: italic; }
   .etat { grid-column: 2; font-size: 12px; color: var(--c-texte-2); }
 
+  .c-date { width: 104px; }
+  .c-piece { width: 56px; }
+  .c-compte { width: 210px; }
+  .c-montant { width: 118px; }
+
   @media (max-width: 1440px) {
     .mise-en-page { grid-template-columns: 1fr; }
     .enonce ol { max-height: none; }
+  }
+  /* Tablette en paysage et petits écrans : comptes et montant plus étroits pour laisser de la place au libellé. */
+  @media (max-width: 1180px) {
+    .c-date { width: 96px; }
+    .c-piece { width: 48px; }
+    .c-compte { width: 175px; }
+    .c-montant { width: 100px; }
   }
 </style>

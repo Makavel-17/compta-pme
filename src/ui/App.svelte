@@ -253,7 +253,12 @@
     background: var(--c-alerte-fond); border: 1px solid var(--c-accent); border-radius: 3px;
   }
   .principal { overflow: auto; padding: 20px 24px 40px; min-width: 0; }
-  @media (max-width: 1280px) { .eleve { display: none; } }
+  @media (max-width: 1280px) {
+    .eleve { display: none; }
+    /* Tablette : le nom de l'entreprise reste lisible ; forme juridique et période sont au tableau de bord. */
+    .dossier .meta { display: none; }
+    .entete { gap: 14px; }
+  }
   @media (max-width: 1100px) {
     .app { grid-template-columns: 170px minmax(0, 1fr); }
     .logo { width: 130px; }
