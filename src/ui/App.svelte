@@ -65,6 +65,11 @@
     }
   }
 
+  function fermerApercu() {
+    etat.fermerApercu();
+    enseignant.ouvert = true;
+  }
+
   function terminerCorrige(garder: boolean) {
     if (!garder && !confirm('Abandonner la saisie du corrigé ? Les modifications seront perdues.')) return;
     const r = etat.fermerCorrige(garder);
@@ -162,6 +167,8 @@
         {#if s.role === 'corrige'}
           <button class="action-lateral principale" onclick={() => terminerCorrige(true)}>Enregistrer le corrigé</button>
           <button class="action-lateral" onclick={() => terminerCorrige(false)}>Abandonner</button>
+        {:else if s.apercu}
+          <button class="action-lateral principale" onclick={fermerApercu}>Fermer l'aperçu</button>
         {:else}
           <button class="action-lateral principale" onclick={exporterMaCopie}>Exporter ma copie</button>
           {#if statut !== 'vide'}
@@ -179,6 +186,12 @@
     </nav>
 
     <main class="principal">
+      {#if s.apercu}
+        <div class="bandeau-apercu" role="status">
+          <span><b>Aperçu enseignant.</b> Vous voyez l'exercice comme vos élèves{s.exercice.mode === 'evaluation' ? ' (évaluation : aucun retour pendant la saisie)' : ''}. Ce que vous saisissez ici n'est ni enregistré dans l'exercice, ni dans une copie.</span>
+          <button class="btn" onclick={fermerApercu}>Fermer l'aperçu</button>
+        </div>
+      {/if}
       {#if etat.stockageIndisponible}
         <div class="alerte" style="margin-bottom:16px">
           Le navigateur refuse l'enregistrement local (navigation privée ?). Votre travail sera perdu à la fermeture de
@@ -235,6 +248,10 @@
   .rappel-export.a-faire { color: #fff; border-left: 3px solid var(--c-accent); padding-left: 7px; }
   .action-lateral.discrete { border: none; color: #b9cde0; font-size: 12px; padding: 4px 10px; }
   .badge-mode.corrige { background: var(--c-action); color: #fff; }
+  .bandeau-apercu {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: -4px 0 16px; padding: 10px 14px;
+    background: var(--c-alerte-fond); border: 1px solid var(--c-accent); border-radius: 3px;
+  }
   .principal { overflow: auto; padding: 20px 24px 40px; min-width: 0; }
   @media (max-width: 1280px) { .eleve { display: none; } }
   @media (max-width: 1100px) {

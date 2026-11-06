@@ -117,6 +117,12 @@
     }
   }
 
+  /** Ouvre l'exercice comme un élève le voit ; « Fermer l'aperçu » ramène ici. */
+  function apercu(ex: Exercice) {
+    etat.ouvrirApercu($state.snapshot(ex) as Exercice);
+    enseignant.ouvert = false;
+  }
+
   function supprimer(ex: Exercice) {
     if (confirm(`Supprimer l'exercice « ${ex.titre || 'sans titre'} » de ce navigateur ?`)) enseignant.supprimer(ex.id);
   }
@@ -194,6 +200,14 @@
               if (m) depuisExemple(m);
             }}>Copier cet exemple</button
           >
+          <button
+            class="btn"
+            disabled={!modeleId}
+            onclick={() => {
+              const m = exercicesDemo.find((x) => x.id === modeleId);
+              if (m) apercu(m);
+            }}>Aperçu</button
+          >
           <button class="btn" onclick={importer}>Importer un exercice…</button>
         </div>
         <div class="barre sauvegarde" role="group" aria-label="Sauvegarde">
@@ -233,6 +247,7 @@
                     <td class="num">{ex.corrige?.length ?? 0} / {ex.operations.length}</td>
                     <td class="actions">
                       <button class="btn-lien" onclick={() => (enseignant.edition = ex.id)}>Modifier</button>
+                      <button class="btn-lien" onclick={() => apercu(ex)}>Aperçu</button>
                       <button class="btn-lien" onclick={() => exporter(ex, 'eleves')}>Exporter pour les élèves</button>
                       <button class="btn-lien" onclick={() => exporter(ex, 'enseignant')}>Version enseignant</button>
                       <button class="btn-lien" onclick={() => supprimer(ex)}>Supprimer</button>

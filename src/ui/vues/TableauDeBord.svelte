@@ -52,7 +52,7 @@
       </button>
       <button class="btn" onclick={() => (etat.visiteOuverte = true)}>Revoir la visite guidée</button>
       <button class="btn" onclick={recommencer}>Recommencer l'exercice</button>
-      <button class="btn" onclick={quitter}>Changer d'exercice</button>
+      {#if !s.apercu}<button class="btn" onclick={quitter}>Changer d'exercice</button>{/if}
     </div>
   </div>
 </section>

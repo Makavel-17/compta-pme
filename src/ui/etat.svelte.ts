@@ -46,6 +46,8 @@ export interface Session {
   dernierExport?: DernierExport | null;
   /** Date ISO de la dernière écriture enregistrée (accueil : « Reprendre où vous en étiez »). */
   derniereActivite?: string | null;
+  /** Aperçu enseignant : l'exercice vu comme un élève ; le travail de l'élève est mis de côté puis restauré. */
+  apercu?: boolean;
 }
 
 export interface FicheSalaire {
@@ -108,7 +110,7 @@ class Etat {
       this.sessionMiseDeCote = s.sessionMiseDeCote ?? null;
     }
     // Arrivée sur le site (sans rubrique dans l'adresse) avec un travail en cours : l'accueil propose de le reprendre.
-    if (this.session?.role === 'eleve' && (!location.hash || location.hash === '#')) this.accueilOuvert = true;
+    if (this.session?.role === 'eleve' && !this.session.apercu && (!location.hash || location.hash === '#')) this.accueilOuvert = true;
     window.addEventListener('hashchange', () => (this.vue = vueDepuisAdresse()));
   }
 
@@ -188,6 +190,20 @@ class Etat {
       if (r.ok) d = r.valeur;
     });
     this.session!.dossier = d;
+  }
+
+  /** Aperçu enseignant : ouvre l'exercice comme un élève, sans toucher au travail en cours dans ce navigateur. */
+  ouvrirApercu(ex: Exercice) {
+    if (this.session && this.session.role === 'eleve' && !this.session.apercu) this.sessionMiseDeCote = this.session;
+    this.commencer({ prenom: 'Aperçu', nom: 'enseignant', classe: '—' }, ex, 'eleve');
+    this.session!.apercu = true;
+  }
+
+  /** Ferme l'aperçu et restaure le travail mis de côté. */
+  fermerApercu() {
+    this.session = this.sessionMiseDeCote;
+    this.sessionMiseDeCote = null;
+    this.aller('tableau');
   }
 
   /** Termine la saisie du corrigé ; renvoie le corrigé (ou null si abandon) et restaure le travail de l'élève. */

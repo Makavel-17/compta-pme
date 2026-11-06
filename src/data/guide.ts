@@ -305,6 +305,9 @@ export const GUIDE: PartieGuide[] = [
                 'corrigé. Votre éventuel travail d’élève est mis de côté puis restauré.',
               'Vérifiez le cadre « Contrôle de l’exercice » en bas de page : il liste ce qui manque. Quand il indique ' +
                 '« L’exercice est complet et peut être distribué », l’exercice est prêt.',
+              "« Aperçu » (dans la liste de vos exercices, à côté des exemples et dans l'onglet « Dossiers ») ouvre " +
+                "l'exercice exactement comme vos élèves le verront, avec le retour en entraînement. « Fermer l'aperçu » vous " +
+                "ramène dans l'espace enseignant ; ce que vous avez saisi pendant l'aperçu n'est conservé nulle part.",
             ],
           },
           {

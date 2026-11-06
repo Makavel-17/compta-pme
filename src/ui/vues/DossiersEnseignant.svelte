@@ -5,6 +5,8 @@
   import { classerExercices, etiquetteNiveau, LIBELLES_FILIERE, type Exercice } from '../../engine/exercice';
   import { EXT_EXERCICE, exporterExercice, nomFichier } from '../../io/fichiers';
   import { telecharger, telechargerBlob } from '../fichiers-navigateur';
+  import { etat } from '../etat.svelte';
+  import { enseignant } from '../enseignant.svelte';
 
   const groupes = classerExercices(DOSSIERS);
   let enCours = $state<string | null>(null);
@@ -45,6 +47,11 @@
     }
   }
 
+  function apercu(ex: Exercice) {
+    etat.ouvrirApercu(ex);
+    enseignant.ouvert = false;
+  }
+
   function fichier(ex: Exercice, mode: 'entrainement' | 'evaluation') {
     const e = mode === 'evaluation' ? versionEvaluation(ex) : ex;
     telecharger(nomFichier([ex.raisonSociale, mode === 'evaluation' ? 'evaluation' : 'entrainement'], EXT_EXERCICE), exporterExercice(e));
@@ -70,7 +77,8 @@
         {#each g.exercices as ex (ex.id)}
           <tr>
             <td>
-              <strong>{ex.raisonSociale}</strong> <span class="badge niveau">{etiquetteNiveau(ex)}</span><br />
+              <strong>{ex.raisonSociale}</strong> <span class="badge niveau">{etiquetteNiveau(ex)}</span>
+              <button class="btn-lien" onclick={() => apercu(ex)}>Aperçu</button><br />
               <span class="discret petit">{(ex.sujets ?? []).join(' · ')}</span>
             </td>
             <td class="num">{ex.operations.length}</td>
