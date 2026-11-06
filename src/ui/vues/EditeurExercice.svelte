@@ -75,6 +75,7 @@
   );
   let pointsPartiels = $state(source.pointsPartiels ?? true);
   let corrigerBouclement = $state(source.parametres.corrigerBouclement ?? false);
+  let bouclementAutomatique = $state(source.parametres.bouclementAutomatique ?? false);
   let pointsBouclement = $state<number>(source.bareme?.[PIECE_BOUCLEMENT] ?? POINTS_BOUCLEMENT_PAR_DEFAUT);
   const totalPoints = $derived(operations.reduce((s, o) => s + (Number(o.points) || 0), 0));
   let message = $state('');
@@ -150,7 +151,8 @@
         modificationDirecte: mode === 'entrainement' && modificationDirecte,
         libellesT,
         modeBouclement,
-        corrigerBouclement: modeBouclement === 'compteDeResultat' && corrigerBouclement,
+        corrigerBouclement: modeBouclement === 'compteDeResultat' && !bouclementAutomatique && corrigerBouclement,
+        bouclementAutomatique: modeBouclement === 'compteDeResultat' && bouclementAutomatique,
         tvaMethode,
         ficheSalaire,
         calculatriceTva,
@@ -312,6 +314,11 @@
     </div>
     {#if modeBouclement === 'compteDeResultat'}
       <label class="case">
+        <input type="checkbox" bind:checked={bouclementAutomatique} /> Bouclement automatique (le logiciel passe les écritures ; non noté)
+      </label>
+    {/if}
+    {#if modeBouclement === 'compteDeResultat' && !bouclementAutomatique}
+      <label class="case">
         <input type="checkbox" bind:checked={corrigerBouclement} /> Corriger et noter les écritures de bouclement
       </label>
       {#if corrigerBouclement}
@@ -455,7 +462,7 @@
     <div class="pied-ops">
       <button class="btn" onclick={ajouterOperation}>Ajouter une opération</button>
       <label class="case"><input type="checkbox" bind:checked={pointsPartiels} /> Points partiels pour les écritures multiples</label>
-      <span>Total du barème : <b class="num">{totalPoints + (modeBouclement === 'compteDeResultat' && corrigerBouclement ? Number(pointsBouclement) || 0 : 0)}</b> points</span>
+      <span>Total du barème : <b class="num">{totalPoints + (modeBouclement === 'compteDeResultat' && !bouclementAutomatique && corrigerBouclement ? Number(pointsBouclement) || 0 : 0)}</b> points</span>
     </div>
   </div>
 </section>

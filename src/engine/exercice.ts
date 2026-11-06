@@ -75,6 +75,8 @@ export interface Exercice {
     calculatriceTva?: boolean;
     /** Corriger (entraînement) et noter (évaluation) les écritures de bouclement. */
     corrigerBouclement?: boolean;
+    /** Mode compte de résultat : le logiciel passe lui-même les écritures de bouclement (bouton à l'écran Bouclement). */
+    bouclementAutomatique?: boolean;
     /** MP, sociétés : données de la répartition du bénéfice décidée par l'assemblée générale. */
     repartition?: DonneesRepartition;
   };

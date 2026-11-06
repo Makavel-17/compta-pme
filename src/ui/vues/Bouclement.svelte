@@ -1,6 +1,6 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
-  import { estBoucle, reouvrir } from '../../engine/closing';
+  import { boucler, estBoucle, reouvrir } from '../../engine/closing';
   import { compteDeResultat } from '../../engine/statements';
   import { m } from '../format';
   import { bouclementCorrige, diagnostiquerBouclement } from '../../engine/correction-bouclement';
@@ -15,6 +15,20 @@
       ? diagnostiquerBouclement(d, etat.exercice)
       : null,
   );
+
+  const automatique = $derived(mode === 'compteDeResultat' && !!etat.exercice.parametres.bouclementAutomatique);
+  let erreurBouclement = $state('');
+
+  /** Bouclement automatique (option d'exercice) : le logiciel passe les écritures B1, B2… au journal. */
+  function boucleAutomatiquement() {
+    erreurBouclement = '';
+    const r = boucler(d);
+    if (!r.ok) {
+      erreurBouclement = r.erreurs.join(' ');
+      return;
+    }
+    etat.majDossier(r.valeur);
+  }
 
   function rouvrir() {
     if (!confirm("Ouvrir l'exercice suivant ? L'exercice actuel sera archivé.")) return;
@@ -56,7 +70,11 @@
     {:else}
       <p>Total des produits {m(cr.totalProduits)} − total des charges {m(cr.totalCharges)} =
         <b>{cr.resultat >= 0 ? 'bénéfice' : 'perte'} de {m(Math.abs(cr.resultat))}</b>.</p>
-      {#if mode === 'compteDeResultat'}
+      {#if automatique}
+        <p class="discret">Pour cet exercice, le logiciel passe lui-même les écritures de bouclement ; vous les retrouverez dans le journal (pièces B1, B2…).</p>
+        <p><button class="btn btn-principal" onclick={boucleAutomatiquement}>Passer les écritures de bouclement</button></p>
+        {#if erreurBouclement}<div class="alerte" role="alert">{erreurBouclement}</div>{/if}
+      {:else if mode === 'compteDeResultat'}
         <p class="discret">Passez au journal les écritures de bouclement (compte privé, clôture des charges et produits par le compte 9000, résultat), avec des pièces B1, B2, B3.</p>
       {/if}
     {/if}

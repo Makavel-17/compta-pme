@@ -101,3 +101,13 @@ describe('correction du bouclement', () => {
     expect(corrigerCopie(sansBouclement, d).operations.some((o) => o.piece === PIECE_BOUCLEMENT)).toBe(false);
   });
 });
+
+describe('bouclement automatique', () => {
+  it("n'est jamais corrigé ni noté, même si la correction est cochée", async () => {
+    const { bouclementCorrige } = await import('../src/engine/correction-bouclement');
+    const { demoCfc1 } = await import('../src/data/demo-cfc1');
+    const ex = { ...demoCfc1, parametres: { ...demoCfc1.parametres, corrigerBouclement: true } };
+    expect(bouclementCorrige(ex)).toBe(true);
+    expect(bouclementCorrige({ ...ex, parametres: { ...ex.parametres, bouclementAutomatique: true } })).toBe(false);
+  });
+});

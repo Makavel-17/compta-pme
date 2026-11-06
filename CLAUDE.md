@@ -41,7 +41,7 @@ Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fi
 - `src/ui/` : composants Svelte. `src/io/` : fichiers, CSV, localStorage. `src/data/` : plan comptable, exercices de démo.
 - Commandes : `npm run dev`, `npm test`, `npm run check`, `npm run build`.
 - Conventions du moteur : solde positif = débiteur ; dates ISO `AAAA-MM-JJ` en interne ; fonctions pures retournant `Resultat<T>` (`ok` / `erreurs` en français) ; écriture = lignes `{debit, credit, montant}` (une ligne à deux comptes = écriture simple, lignes à un seul côté = écriture composée) ; une extourne garde le même numéro de pièce.
-- Bouclement : en mode `compteDeResultat`, l'élève passe lui-même les écritures de bouclement au journal (pièces B1, B2…) ; question ouverte à l'enseignant : génération automatique ou non.
+- Bouclement : en mode `compteDeResultat`, l'élève passe lui-même les écritures de bouclement au journal (pièces B1, B2…). Option d'exercice `bouclementAutomatique` (validée le 06.11.2026, désactivée par défaut) : bouton « Passer les écritures de bouclement » à l'écran Bouclement ; jamais corrigé ni noté.
 - Bouclement : deux modes — `compteDeResultat` (via 9000, **par défaut**) et `aLaReouverture` (résultat et privé intégrés au capital à la réouverture).
 - Versionnement : Git, dépôt GitHub, déploiement GitHub Pages par GitHub Actions (`.github/workflows/`).
 

@@ -16,7 +16,7 @@ export const POINTS_BOUCLEMENT_PAR_DEFAUT = 3;
 
 /** Le bouclement est-il corrigé (et noté) dans cet exercice ? */
 export function bouclementCorrige(ex: Exercice): boolean {
-  return ex.parametres.modeBouclement === 'compteDeResultat' && !!ex.parametres.corrigerBouclement;
+  return ex.parametres.modeBouclement === 'compteDeResultat' && !!ex.parametres.corrigerBouclement && !ex.parametres.bouclementAutomatique;
 }
 
 /** Une écriture appartient au bouclement si sa pièce n'est pas une opération de l'énoncé. */
