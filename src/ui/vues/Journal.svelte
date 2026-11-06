@@ -99,6 +99,15 @@
   const equilibree = $derived(utiles.length > 0 && !incomplete && ecart === 0 && totalDebit > 0);
   const operationCourante = $derived(operations.find((o) => o.numero === piece.trim()));
 
+  // Ouverture depuis le récapitulatif de l'avancement : sélectionne l'opération demandée.
+  $effect(() => {
+    const cible = etat.pieceCiblee;
+    if (cible) {
+      etat.pieceCiblee = null;
+      choisirOperation(cible);
+    }
+  });
+
   function choisirOperation(numero: string) {
     const o = operations.find((x) => x.numero === numero);
     if (!o) return;

@@ -35,8 +35,9 @@ export const GUIDE: PartieGuide[] = [
             type: 'etapes',
             items: [
               'Sur la page d’accueil, indiquez votre prénom, votre nom et votre classe.',
-              "Choisissez l'exercice : soit un exercice de la liste, classé par formation (CFC ou maturité) et par niveau, " +
-                "soit le fichier reçu de votre enseignant avec le bouton « Ouvrir un exercice reçu… ».",
+              "Choisissez votre formation (CFC ou maturité professionnelle), puis ouvrez un niveau et choisissez l'exercice. " +
+                "La recherche trouve un exercice par sujet (« TVA », « salaires »…). Un fichier reçu de votre enseignant " +
+                "s'ouvre avec le bouton « Ouvrir un exercice reçu… ».",
               'Cliquez sur « Commencer ». Le tableau de bord présente votre situation dans l’entreprise : lisez-la avant de commencer.',
               'Cliquez sur « Commencer la saisie » pour ouvrir le journal.',
             ],
@@ -45,6 +46,14 @@ export const GUIDE: PartieGuide[] = [
             type: 'retenir',
             texte:
               'Votre travail est enregistré automatiquement dans ce navigateur, sur cet ordinateur. Rien n’est envoyé sur internet.',
+          },
+          {
+            type: 'p',
+            texte:
+              "Quand vous revenez sur le site, l'accueil affiche « Reprendre où vous en étiez » avec votre avancement : un clic " +
+              "sur « Reprendre » vous ramène dans votre exercice. Le bouton « Changer d'exercice » du tableau de bord ouvre " +
+              "l'accueil sans rien effacer ; votre travail n'est remplacé que si vous commencez un autre exercice, après " +
+              'confirmation.',
           },
         ],
       },
@@ -148,6 +157,13 @@ export const GUIDE: PartieGuide[] = [
                 'mauvais compte, montant erroné, TVA oubliée…), sans donner la réponse.',
               'Après une deuxième tentative fausse, le bouton « Voir la solution » apparaît.',
             ],
+          },
+          {
+            type: 'p',
+            texte:
+              "En haut à droite, la barre d'avancement indique combien de pièces vous avez saisies : en vert les justes, en " +
+              "orange celles à revoir. Un clic ouvre le récapitulatif de toutes les pièces ; un clic sur une pièce l'ouvre " +
+              "dans le journal. En évaluation, la barre indique seulement le nombre de pièces saisies.",
           },
           {
             type: 'p',

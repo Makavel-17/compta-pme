@@ -5,6 +5,7 @@
   import { EXT_COPIE, empreinteTravail, exporterCopie, nomFichier, statutExport } from '../io/fichiers';
   import { telecharger, telechargerBlob } from './fichiers-navigateur';
   import EspaceEnseignant from './vues/EspaceEnseignant.svelte';
+  import AvancementEntete from './composants/AvancementEntete.svelte';
   import { dateHeure, periode } from './format';
   import Accueil from './vues/Accueil.svelte';
   import TableauDeBord from './vues/TableauDeBord.svelte';
@@ -122,7 +123,7 @@
   <Guide partie={etat.guide} onFermer={() => (etat.guide = null)} />
 {:else if enseignant.ouvert}
   <EspaceEnseignant />
-{:else if !etat.session}
+{:else if !etat.session || etat.accueilOuvert}
   <Accueil onEnseignant={() => (enseignant.ouvert = true)} />
 {:else}
   {@const s = etat.session}
@@ -138,6 +139,7 @@
           {s.role === 'corrige' ? 'Saisie du corrigé' : LIBELLES_MODE[s.exercice.mode]}
         </span>
       </div>
+      {#if s.role === 'eleve'}<AvancementEntete />{/if}
       {#if s.role === 'eleve'}<div class="eleve">{s.eleve.prenom} {s.eleve.nom} · {s.eleve.classe}</div>{/if}
     </header>
 

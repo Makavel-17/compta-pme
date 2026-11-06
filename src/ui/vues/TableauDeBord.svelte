@@ -13,8 +13,9 @@
   function recommencer() {
     if (confirm("Recommencer l'exercice ? Toutes vos écritures seront effacées.")) etat.recommencer();
   }
+  // L'accueil s'ouvre par-dessus le travail en cours : rien n'est effacé tant qu'un autre exercice n'est pas commencé.
   function quitter() {
-    if (confirm("Changer d'élève ou d'exercice ? Le travail en cours sera effacé de ce navigateur.")) etat.quitter();
+    etat.accueilOuvert = true;
   }
 </script>
 
@@ -51,7 +52,7 @@
       </button>
       <button class="btn" onclick={() => (etat.visiteOuverte = true)}>Revoir la visite guidée</button>
       <button class="btn" onclick={recommencer}>Recommencer l'exercice</button>
-      <button class="btn" onclick={quitter}>Changer d'élève ou d'exercice</button>
+      <button class="btn" onclick={quitter}>Changer d'exercice</button>
     </div>
   </div>
 </section>

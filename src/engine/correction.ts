@@ -152,3 +152,51 @@ export function enregistrerTentative(suivi: Suivi, piece: string, d: Diagnostic)
 export function solutionDisponible(s: SuiviOperation | undefined): boolean {
   return !!s && s.essais >= 2 && s.dernier !== 'juste';
 }
+
+// ---------- Avancement de l'élève ----------
+
+export type StatutOperation = 'juste' | 'revoir' | 'incomplete' | 'saisie' | 'manquante';
+
+export interface Avancement {
+  total: number;
+  saisies: number;
+  justes: number;
+  aRevoir: number;
+  incompletes: number;
+  nonSaisies: number;
+  /** Statut de chaque opération de l'énoncé, dans l'ordre. « saisie » : écrite, sans correction (évaluation). */
+  parOperation: { numero: string; statut: StatutOperation }[];
+}
+
+/**
+ * Avancement de l'élève sur les opérations de l'énoncé. Avec correction (entraînement, corrigé disponible), chaque
+ * opération saisie est juste, à revoir ou incomplète ; sans correction (évaluation), elle est seulement « saisie ».
+ */
+export function avancement(
+  operations: readonly { numero: string }[],
+  ecritures: readonly Ecriture[],
+  corrige: readonly EcritureCorrigee[] | null,
+): Avancement {
+  const retenues = ecrituresRetenues(ecritures);
+  const pieces = new Set(retenues.map((e) => e.piece));
+  const parPiece = new Map((corrige ?? []).map((c) => [c.piece, c]));
+  const parOperation = operations.map((o) => {
+    if (!pieces.has(o.numero)) return { numero: o.numero, statut: 'manquante' as StatutOperation };
+    const c = corrige ? parPiece.get(o.numero) : undefined;
+    if (!c) return { numero: o.numero, statut: 'saisie' as StatutOperation };
+    const d = diagnostiquer(retenues, c);
+    const statut: StatutOperation = d === 'juste' ? 'juste' : d === 'incomplete' ? 'incomplete' : d === 'manquante' ? 'manquante' : 'revoir';
+    return { numero: o.numero, statut };
+  });
+  const compte = (s: StatutOperation) => parOperation.filter((x) => x.statut === s).length;
+  const nonSaisies = compte('manquante');
+  return {
+    total: operations.length,
+    saisies: operations.length - nonSaisies,
+    justes: compte('juste'),
+    aRevoir: compte('revoir'),
+    incompletes: compte('incomplete'),
+    nonSaisies,
+    parOperation,
+  };
+}

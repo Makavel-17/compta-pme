@@ -1,11 +1,24 @@
 <script lang="ts">
   import { etat } from '../etat.svelte';
   import { estDossier, exercicesDemo } from '../../data/demos';
-  import { classerExercices, etiquetteNiveau, LIBELLES_FILIERE, LIBELLES_MODE, type Exercice } from '../../engine/exercice';
-  import { EXT_EXERCICE, ErreurFichier, importerExercice } from '../../io/fichiers';
+  import { classerExercices, etiquetteNiveau, filiereDe, LIBELLES_FILIERE, LIBELLES_MODE, type Exercice, type Filiere } from '../../engine/exercice';
+  import { EXT_EXERCICE, ErreurFichier, importerExercice, statutExport } from '../../io/fichiers';
   import { choisirFichiers } from '../fichiers-navigateur';
+  import { avancementSession, avecCorrection } from '../avancement';
+  import { dateHeure, normaliser } from '../format';
+  import BarreAvancement from '../composants/BarreAvancement.svelte';
 
   let { onEnseignant }: { onEnseignant: () => void } = $props();
+
+  // ---- Travail en cours (reprise) ----
+  /** Session au moment de l'ouverture de l'accueil : sert seulement à préremplir le formulaire. */
+  const depart = etat.session?.role === 'eleve' ? etat.session : null;
+  const enCours = $derived(etat.session && etat.session.role === 'eleve' ? etat.session : null);
+  const av = $derived(enCours ? avancementSession(enCours) : null);
+  const correction = $derived(enCours ? avecCorrection(enCours) : false);
+  const exporte = $derived(enCours ? statutExport(enCours.dossier, $state.snapshot(enCours.fiches), enCours.dernierExport) : 'vide');
+
+  // ---- Exercices ----
   let importes = $state<Exercice[]>([]);
   const tous = $derived([...importes, ...exercicesDemo]);
   let erreurImport = $state('');
@@ -23,11 +36,42 @@
     }
   }
 
-  let prenom = $state('');
-  let nom = $state('');
-  let classe = $state('');
-  let choix = $state(exercicesDemo[0]?.id ?? '');
+  let filiere = $state<Filiere>(etat.prefs.filiere ?? (depart ? filiereDe(depart.exercice) : 'CFC'));
+  function choisirFiliere(f: Filiere) {
+    filiere = f;
+    etat.prefs.filiere = f;
+  }
+  let recherche = $state('');
+  let voirExercices = $state(true);
+  let voirDossiers = $state(true);
+
+  const correspond = (ex: Exercice) => {
+    const r = normaliser(recherche.trim());
+    if (!r) return true;
+    return normaliser([ex.titre, ex.raisonSociale, ...(ex.sujets ?? [])].join(' ')).includes(r);
+  };
+  const visible = (ex: Exercice) => (estDossier(ex) ? voirDossiers : voirExercices) && correspond(ex);
+  const groupes = $derived(
+    classerExercices(exercicesDemo)
+      .filter((g) => g.filiere === filiere)
+      .map((g) => ({ ...g, visibles: g.exercices.filter(visible) }))
+      .filter((g) => g.visibles.length > 0),
+  );
+  const rechercheActive = $derived(recherche.trim().length > 0);
+
+  function etatExercice(ex: Exercice): { texte: string; classe: string } {
+    if (!enCours || enCours.exercice.id !== ex.id || !av) return { texte: '', classe: '' };
+    const fini = correction ? av.justes === av.total : av.saisies === av.total;
+    return fini ? { texte: 'Terminé', classe: 'fini' } : { texte: `En cours · ${av.saisies} / ${av.total}`, classe: 'encours' };
+  }
+
+  // ---- Élève et démarrage ----
+  let prenom = $state(depart?.eleve.prenom ?? '');
+  let nom = $state(depart?.eleve.nom ?? '');
+  let classe = $state(depart?.eleve.classe ?? '');
+  let choix = $state(depart?.exercice.id ?? '');
   let erreurs = $state<string[]>([]);
+  let confirmer = $state(false);
 
   function commencer(e: SubmitEvent) {
     e.preventDefault();
@@ -36,9 +80,15 @@
     if (!nom.trim()) err.push('Indiquez votre nom.');
     if (!classe.trim()) err.push('Indiquez votre classe (par exemple 1CFC3).');
     const ex = tous.find((x) => x.id === choix);
-    if (!ex) err.push('Choisissez un exercice.');
+    if (!ex) err.push('Choisissez un exercice dans la liste.');
     erreurs = err;
     if (err.length || !ex) return;
+    if (enCours && enCours.exercice.id === ex.id) return etat.reprendre();
+    if (enCours && enCours.dossier.ecritures.length > 0 && !confirmer) {
+      confirmer = true;
+      return;
+    }
+    confirmer = false;
     etat.commencer({ prenom: prenom.trim(), nom: nom.trim(), classe: classe.trim() }, ex);
   }
 </script>
@@ -46,14 +96,49 @@
 <div class="page">
   <header class="bandeau-haut"><span class="logo">Compta PME</span></header>
   <main class="contenu">
-    <h1>Bienvenue</h1>
+    <h1>{enCours ? `Bon retour, ${enCours.eleve.prenom}` : 'Bienvenue'}</h1>
     <p class="discret">
       Logiciel de comptabilité en partie double, plan comptable suisse. Vos données restent dans ce navigateur :
       rien n'est envoyé en ligne.
     </p>
 
+    {#if enCours}
+      <section class="carte reprise" aria-labelledby="titre-reprise">
+        <div class="tete-carte">
+          <div>
+            <h2 id="titre-reprise">Reprendre où vous en étiez</h2>
+            <div class="discret petit">
+              {enCours.exercice.titre} · {etiquetteNiveau(enCours.exercice)} · {LIBELLES_MODE[enCours.exercice.mode]}
+            </div>
+          </div>
+          <button class="btn btn-principal" onclick={() => etat.reprendre()}>Reprendre</button>
+        </div>
+        <div class="corps-carte ligne-reprise">
+          {#if av}
+            <div>
+              <div><BarreAvancement a={av} {correction} largeur={260} /> <span class="petit">{av.saisies} / {av.total} pièces saisies</span></div>
+              {#if correction}
+                <div class="legende">
+                  <span><span class="pastille juste"></span>{av.justes} justes</span>
+                  <span><span class="pastille revoir"></span>{av.aRevoir} à revoir</span>
+                  <span><span class="pastille saisie"></span>{av.incompletes} incomplètes</span>
+                  <span>{av.nonSaisies} pas encore saisies</span>
+                </div>
+              {/if}
+            </div>
+          {/if}
+          <div class="discret petit">
+            {#if enCours.derniereActivite}Dernière activité : {dateHeure(enCours.derniereActivite)}<br />{/if}
+            {#if exporte === 'a-jour' && enCours.dernierExport}Copie exportée le {dateHeure(enCours.dernierExport.le)}
+            {:else if exporte === 'modifie'}<span class="a-exporter">Modifiée depuis le dernier export</span>
+            {:else if exporte === 'jamais'}<span class="a-exporter">Copie jamais exportée</span>{/if}
+          </div>
+        </div>
+      </section>
+    {/if}
+
     <form class="carte" onsubmit={commencer} novalidate>
-      <h2>Vos informations</h2>
+      <h2 class="tete-simple">{enCours ? 'Choisir un autre exercice' : 'Vos informations'}</h2>
       <div class="corps-carte grille">
         <div>
           <label class="bloc" for="prenom">Prénom</label>
@@ -69,51 +154,88 @@
         </div>
       </div>
 
-      <h2 class="separe">Exercice</h2>
-      <div class="corps-carte">
-        {#snippet carte(ex: Exercice)}
-          <label class="exercice" class:choisi={choix === ex.id}>
-            <input type="radio" name="exercice" value={ex.id} bind:group={choix} />
-            <span>
-              <strong>{ex.titre}</strong>
-              <span class="badge niveau">{etiquetteNiveau(ex)}</span><br />
-              <span class="discret">
-                {ex.raisonSociale} · {ex.operations.length} {estDossier(ex) ? 'pièces comptables' : 'opérations'} ·
-                {exercicesDemo.includes(ex) ? (estDossier(ex) ? 'dossier de pièces' : 'exercice de démonstration') : `fourni par l'enseignant · ${LIBELLES_MODE[ex.mode]}`}
-              </span>
-              {#if ex.sujets?.length}
-                <br /><span class="discret petit">Sujets traités : {ex.sujets.join(' · ')}</span>
-              {/if}
-            </span>
-          </label>
-        {/snippet}
-
-        {#if importes.length}
-          <h3 class="filiere">Exercices reçus de votre enseignant</h3>
-          {#each importes as ex (ex.id)}{@render carte(ex)}{/each}
-        {/if}
-        {#each classerExercices(exercicesDemo) as g, i}
-          {#if i === 0 || classerExercices(exercicesDemo)[i - 1]!.filiere !== g.filiere}
-            <h3 class="filiere">{LIBELLES_FILIERE[g.filiere]}</h3>
-          {/if}
-          <h4 class="niveau-titre">Niveau {g.difficulte}{g.titre ? ` — ${g.titre}` : ''}</h4>
-          {#each g.exercices as ex (ex.id)}{@render carte(ex)}{/each}
-        {/each}
-        <div class="ouvrir">
-          <button type="button" class="btn" onclick={ouvrirFichier}>Ouvrir un exercice reçu…</button>
-          <span class="discret petit">Fichier {EXT_EXERCICE} remis par votre enseignant.</span>
+      <div class="separe corps-carte">
+        <div class="filtres">
+          <div class="onglets" role="group" aria-label="Formation">
+            {#each ['CFC', 'MP'] as const as f}
+              <button type="button" aria-pressed={filiere === f} onclick={() => choisirFiliere(f)}>{LIBELLES_FILIERE[f]}</button>
+            {/each}
+          </div>
+          <input
+            class="champ recherche"
+            type="search"
+            bind:value={recherche}
+            placeholder="Rechercher : TVA, salaires, titres…"
+            aria-label="Rechercher un exercice"
+          />
+          <label class="case"><input type="checkbox" bind:checked={voirExercices} /> Exercices</label>
+          <label class="case"><input type="checkbox" bind:checked={voirDossiers} /> Dossiers de pièces</label>
         </div>
-        {#if erreurImport}<div class="alerte" role="alert" style="margin-top:10px">{erreurImport}</div>{/if}
       </div>
+
+      {#snippet ligne(ex: Exercice)}
+        {@const st = etatExercice(ex)}
+        <label class="exercice" class:choisi={choix === ex.id}>
+          <input type="radio" name="exercice" value={ex.id} bind:group={choix} />
+          <span class="infos">
+            <strong>{ex.titre}</strong>
+            <span class={`type ${estDossier(ex) ? 'dossier' : 'exo'}`}>{estDossier(ex) ? 'Dossier de pièces' : 'Exercice'}</span>
+            {#if !exercicesDemo.includes(ex)}<span class="type exo">{LIBELLES_MODE[ex.mode]}</span>{/if}<br />
+            <span class="discret petit">
+              {ex.operations.length} {estDossier(ex) ? 'pièces' : 'opérations'}{ex.sujets?.length ? ` · ${ex.sujets.join(' · ')}` : ''}
+            </span>
+          </span>
+          {#if st.texte}<span class={`etat ${st.classe}`}>{st.texte}</span>{/if}
+        </label>
+      {/snippet}
+
+      {#if importes.length}
+        <div class="bloc-niveaux">
+          <h3 class="recus">Exercices reçus de votre enseignant</h3>
+          {#each importes as ex (ex.id)}{@render ligne(ex)}{/each}
+        </div>
+      {/if}
+
+      <div class="bloc-niveaux">
+        {#each groupes as g (g.difficulte)}
+          {@const ouvert = rechercheActive || g.visibles.some((x) => x.id === choix)}
+          <details class="niveau" open={ouvert}>
+            <summary>
+              <strong>Niveau {g.difficulte}{g.titre ? ` — ${g.titre}` : ''}</strong>
+              <span class="discret petit">{g.visibles.length} {g.visibles.length > 1 ? 'exercices' : 'exercice'}</span>
+            </summary>
+            {#each g.visibles as ex (ex.id)}{@render ligne(ex)}{/each}
+          </details>
+        {:else}
+          <p class="vide">Aucun exercice ne correspond à votre recherche.</p>
+        {/each}
+      </div>
+
+      <div class="corps-carte ouvrir">
+        <button type="button" class="btn" onclick={ouvrirFichier}>Ouvrir un exercice reçu…</button>
+        <span class="discret petit">Fichier {EXT_EXERCICE} remis par votre enseignant.</span>
+      </div>
+      {#if erreurImport}<div class="alerte" role="alert" style="margin:0 14px 14px">{erreurImport}</div>{/if}
 
       {#if erreurs.length}
         <div class="alerte" role="alert" style="margin:0 14px 14px">
           <ul>{#each erreurs as e}<li>{e}</li>{/each}</ul>
         </div>
       {/if}
-      <div class="actions">
-        <button type="submit" class="btn btn-principal">Commencer</button>
-      </div>
+      {#if confirmer && enCours}
+        <div class="alerte" role="alert" style="margin:0 14px 14px">
+          Votre travail sur « {enCours.exercice.titre} » sera remplacé et effacé de ce navigateur. Si vous devez le rendre,
+          reprenez-le d'abord et cliquez sur « Exporter ma copie ».
+          <div class="actions-confirmation">
+            <button type="submit" class="btn btn-principal">Remplacer et commencer</button>
+            <button type="button" class="btn" onclick={() => (confirmer = false)}>Annuler</button>
+          </div>
+        </div>
+      {:else}
+        <div class="actions">
+          <button type="submit" class="btn btn-principal">{enCours && choix === enCours.exercice.id ? 'Reprendre' : 'Commencer'}</button>
+        </div>
+      {/if}
     </form>
     <p class="enseignant">
       <button class="btn-lien" onclick={() => (etat.guide = 'eleve')}>Guide d'utilisation</button>
@@ -127,26 +249,51 @@
   .page { min-height: 100%; }
   .bandeau-haut { background: var(--c-structure); padding: 14px 24px; }
   .logo { color: #fff; font-weight: bold; font-size: 16px; }
-  .contenu { max-width: 720px; margin: 0 auto; padding: 32px 16px; }
+  .contenu { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
   .contenu > p { margin: 8px 0 20px; }
-  form h2 { padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); }
+  .carte + .carte, .carte + form { margin-top: 16px; }
+  .tete-carte { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); flex-wrap: wrap; }
+  .tete-simple { padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); }
+  .reprise { border-left: 4px solid var(--c-action); }
+  .ligne-reprise { display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .legende { display: flex; gap: 14px; font-size: 12px; color: var(--c-texte-2); margin-top: 6px; flex-wrap: wrap; }
+  .pastille { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }
+  .pastille.juste { background: var(--c-ok); }
+  .pastille.revoir { background: var(--c-accent); }
+  .pastille.saisie { background: #8fa9c4; }
+  .a-exporter { color: var(--c-alerte-texte); font-weight: bold; }
   .separe { border-top: 1px solid var(--c-bordure-2); }
   .grille { display: grid; grid-template-columns: 1fr 1fr 160px; gap: 14px; }
+  .filtres { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .onglets { display: inline-flex; border: 1px solid var(--c-structure); border-radius: 3px; overflow: hidden; }
+  .onglets button { font: inherit; border: 0; background: #fff; color: var(--c-structure); padding: 6px 14px; cursor: pointer; }
+  .onglets button[aria-pressed='true'] { background: var(--c-structure); color: #fff; font-weight: bold; }
+  .recherche { width: 260px; max-width: 100%; }
+  .case { display: inline-flex; gap: 6px; align-items: center; }
+  .bloc-niveaux { border-top: 1px solid var(--c-bordure-2); }
+  .recus { font-size: 14px; color: var(--c-structure); margin: 0; padding: 10px 14px; }
+  details.niveau + details.niveau { border-top: 1px solid var(--c-bordure-2); }
+  details.niveau > summary { padding: 10px 14px; cursor: pointer; display: flex; gap: 12px; align-items: baseline; }
+  details.niveau > summary strong { color: var(--c-structure); flex: 1; }
   .exercice {
-    display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--c-bordure);
-    border-radius: 3px; cursor: pointer;
+    display: flex; gap: 10px; align-items: flex-start; padding: 9px 14px 9px 30px; border-top: 1px solid var(--c-bordure-2); cursor: pointer;
   }
-  .exercice.choisi { background: var(--c-selection); border-color: var(--c-structure); }
+  .exercice:hover { background: var(--c-zebra); }
+  .exercice.choisi { background: var(--c-selection); }
   .exercice input { margin-top: 3px; }
-  .niveau { background: var(--c-structure); color: #fff; margin-left: 8px; }
+  .infos { flex: 1; min-width: 0; }
+  .type { display: inline-block; font-size: 11px; font-weight: bold; padding: 1px 7px; border-radius: 3px; margin-left: 8px; white-space: nowrap; }
+  .type.dossier { background: var(--c-alerte-fond); color: var(--c-alerte-texte); border: 1px solid #f2c7ad; }
+  .type.exo { background: var(--c-selection); color: var(--c-structure); }
+  .etat { font-size: 12px; font-weight: bold; white-space: nowrap; }
+  .etat.encours { color: var(--c-action); }
+  .etat.fini { color: var(--c-ok); }
+  .vide { padding: 14px; color: var(--c-texte-2); margin: 0; }
   .petit { font-size: 12px; }
-  .exercice + .exercice { margin-top: 8px; }
-  .filiere { font-size: 15px; color: var(--c-structure); margin: 18px 0 4px; padding-bottom: 4px; border-bottom: 2px solid var(--c-structure); }
-  .filiere:first-child { margin-top: 0; }
-  .niveau-titre { font-size: 13px; color: var(--c-texte-2); margin: 12px 0 6px; }
-  .ouvrir { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .ouvrir { display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--c-bordure-2); }
   .enseignant { text-align: right; margin-top: 16px; font-size: 13px; }
   .sep { margin: 0 8px; color: var(--c-texte-2); }
   .actions { padding: 0 14px 14px; text-align: right; }
+  .actions-confirmation { display: flex; gap: 8px; margin-top: 10px; }
   @media (max-width: 640px) { .grille { grid-template-columns: 1fr; } }
 </style>

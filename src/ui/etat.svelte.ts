@@ -44,6 +44,8 @@ export interface Session {
   fiches: Fiches;
   /** Dernier export de la copie (rappel d'export). */
   dernierExport?: DernierExport | null;
+  /** Date ISO de la dernière écriture enregistrée (accueil : « Reprendre où vous en étiez »). */
+  derniereActivite?: string | null;
 }
 
 export interface FicheSalaire {
@@ -60,6 +62,8 @@ export interface Fiches {
 interface Preferences {
   visiteVue: boolean;
   numerosComptes: boolean;
+  /** Formation affichée à l'accueil (mémorisée). */
+  filiere?: 'CFC' | 'MP';
 }
 
 interface Sauvegarde {
@@ -85,6 +89,10 @@ class Etat {
   /** Guide d'utilisation ouvert (partie affichée), ou null. */
   guide = $state<null | 'eleve' | 'enseignant'>(null);
   stockageIndisponible = $state(false);
+  /** Accueil affiché par-dessus une session en cours (reprise ou choix d'un autre exercice). */
+  accueilOuvert = $state(false);
+  /** Opération à sélectionner à l'ouverture du journal (récapitulatif de l'avancement). */
+  pieceCiblee = $state<string | null>(null);
 
   constructor() {
     const s = lire<Sauvegarde>();
@@ -97,6 +105,8 @@ class Etat {
       this.prefs = { ...this.prefs, ...s.prefs };
       this.sessionMiseDeCote = s.sessionMiseDeCote ?? null;
     }
+    // Arrivée sur le site (sans rubrique dans l'adresse) avec un travail en cours : l'accueil propose de le reprendre.
+    if (this.session?.role === 'eleve' && (!location.hash || location.hash === '#')) this.accueilOuvert = true;
     window.addEventListener('hashchange', () => (this.vue = vueDepuisAdresse()));
   }
 
@@ -119,10 +129,24 @@ class Etat {
 
   majDossier(d: Dossier) {
     this.session!.dossier = d;
+    this.session!.derniereActivite = new Date().toISOString();
+  }
+
+  /** Revient au travail en cours depuis l'accueil. */
+  reprendre() {
+    this.accueilOuvert = false;
+    if (!location.hash || location.hash === '#') this.aller('tableau');
+  }
+
+  /** Ouvre le journal sur une opération donnée. */
+  ouvrirOperation(numero: string) {
+    this.pieceCiblee = numero;
+    this.aller('journal');
   }
 
   commencer(eleve: Eleve, exercice: Exercice, role: Session['role'] = 'eleve') {
     this.session = { eleve, exercice, dossier: creerDossier(exercice, planParDefaut), archives: [], suivi: {}, role, fiches: {} };
+    this.accueilOuvert = false;
     // L'élève découvre d'abord sa situation sur le tableau de bord ; l'enseignant va directement au journal.
     this.aller(role === 'eleve' ? 'tableau' : 'journal');
   }
