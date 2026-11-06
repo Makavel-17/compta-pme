@@ -9,7 +9,34 @@ import type { EcritureCorrigee, Exercice } from '../engine/exercice';
 import type { Suivi } from '../engine/correction';
 import type { Relecture } from './relecture';
 
-const VERSION = 1;
+/**
+ * Version du format des fichiers. Quand le format change : augmenter VERSION et ajouter dans MIGRATIONS la fonction
+ * qui convertit un fichier de la version précédente, pour que les fichiers des années passées restent lisibles.
+ */
+export const VERSION = 1;
+
+type Brut = Record<string, unknown>;
+/** MIGRATIONS[n] convertit un fichier de la version n vers la version n + 1. */
+const MIGRATIONS: Record<number, (f: Brut) => Brut> = {};
+
+/** Amène un fichier à la version courante ; refuse un fichier plus récent que le logiciel. */
+export function migrer(f: Brut, quoi: string, migrations: Record<number, (f: Brut) => Brut> = MIGRATIONS, versionCourante = VERSION): Brut {
+  const v = f.version;
+  if (typeof v !== 'number' || !Number.isInteger(v) || v < 1) throw new ErreurFichier(`${quoi} n'indique pas de version lisible.`);
+  if (v > versionCourante) {
+    throw new ErreurFichier(
+      `${quoi} a été créé avec une version plus récente de Compta PME. Rechargez la page (Ctrl + F5) pour obtenir ` +
+        'la dernière version du logiciel, puis réessayez.',
+    );
+  }
+  let r = f;
+  for (let n = v; n < versionCourante; n++) {
+    const m = migrations[n];
+    if (!m) throw new ErreurFichier(`${quoi} est dans un ancien format qui ne peut plus être converti.`);
+    r = { ...m(r), version: n + 1 };
+  }
+  return r;
+}
 export const EXT_EXERCICE = '.compta-exercice.json';
 export const EXT_COPIE = '.compta-copie.json';
 
@@ -52,6 +79,15 @@ export interface Copie {
 }
 
 export class ErreurFichier extends Error {}
+
+/** Paramètres d'exercice par défaut (complètent un fichier qui n'en indique qu'une partie). */
+const PARAMETRES_PAR_DEFAUT: Exercice['parametres'] = {
+  libellesT: 'SI/SF',
+  modificationDirecte: false,
+  modeBouclement: 'compteDeResultat',
+  comptesAjoutes: [],
+  comptesMasques: [],
+};
 
 // ---------- Encodage du corrigé ----------
 
@@ -131,7 +167,7 @@ export function exporterSauvegarde(exercices: Exercice[], maintenant = new Date(
 
 /** Lit une sauvegarde ; accepte aussi un fichier d'exercice isolé (version élève ou enseignant). */
 export function importerSauvegarde(texte: string): Exercice[] {
-  const f = lireJson(texte);
+  let f = lireJson(texte);
   if (f.format === 'compta-pme/exercice' || f.format === 'compta-pme/exercice-enseignant') return [importerExercice(texte)];
   if (f.format !== 'compta-pme/sauvegarde-enseignant') {
     throw new ErreurFichier(
@@ -140,7 +176,7 @@ export function importerSauvegarde(texte: string): Exercice[] {
         : "Ce fichier n'est pas une sauvegarde Compta PME.",
     );
   }
-  if (f.version !== VERSION) throw new ErreurFichier('Cette sauvegarde a été créée avec une autre version de Compta PME.');
+  f = migrer(f, 'Cette sauvegarde');
   if (!Array.isArray(f.exercices)) throw new ErreurFichier('La sauvegarde est endommagée : liste des exercices absente.');
   return f.exercices.map((e) => verifierExercice(e));
 }
@@ -198,13 +234,15 @@ function verifierExercice(ex: unknown): Exercice {
     e.ouverturePassif &&
     e.parametres;
   if (!ok) throw new ErreurFichier("Le fichier d'exercice est incomplet ou endommagé.");
-  return { mode: 'entrainement', ...e } as Exercice;
+  // Paramètres ajoutés au fil des versions : valeurs par défaut pour les fichiers plus anciens ou incomplets.
+  const parametres = { ...PARAMETRES_PAR_DEFAUT, ...e.parametres } as Exercice['parametres'];
+  return { mode: 'entrainement', ...e, parametres } as Exercice;
 }
 
 /** Lit un fichier d'exercice (version élève ou version enseignant). */
 export function importerExercice(texte: string): Exercice {
-  const f = lireJson(texte);
-  if (f.version !== VERSION) throw new ErreurFichier('Ce fichier a été créé avec une autre version de Compta PME.');
+  let f = lireJson(texte);
+  f = migrer(f, 'Ce fichier');
   if (f.format === 'compta-pme/exercice-enseignant') return verifierExercice(f.exercice);
   if (f.format !== 'compta-pme/exercice') {
     throw new ErreurFichier(
@@ -237,7 +275,7 @@ export function exporterCopie(c: Omit<Copie, 'exporteLe'>, maintenant = new Date
 }
 
 export function importerCopie(texte: string): Copie {
-  const f = lireJson(texte);
+  let f = lireJson(texte);
   if (f.format !== 'compta-pme/copie') {
     throw new ErreurFichier(
       String(f.format).startsWith('compta-pme/exercice')
@@ -245,7 +283,7 @@ export function importerCopie(texte: string): Copie {
         : "Ce fichier n'est pas une copie Compta PME.",
     );
   }
-  if (f.version !== VERSION) throw new ErreurFichier('Cette copie a été créée avec une autre version de Compta PME.');
+  f = migrer(f, 'Cette copie');
   const c = f as unknown as FichierCopie;
   if (!c.eleve || !c.dossier || !Array.isArray(c.dossier.ecritures)) {
     throw new ErreurFichier('La copie est incomplète ou endommagée.');

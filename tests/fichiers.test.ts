@@ -76,3 +76,30 @@ describe('noms de fichiers', () => {
     );
   });
 });
+
+describe('compatibilité des fichiers dans la durée', () => {
+  it('refuse un fichier plus récent avec un message clair', async () => {
+    const { importerExercice, exporterExerciceEnseignant } = await import('../src/io/fichiers');
+    const f = JSON.parse(exporterExerciceEnseignant(demoCfc1));
+    f.version = 99;
+    expect(() => importerExercice(JSON.stringify(f))).toThrow(/version plus récente/);
+  });
+
+  it('complète les paramètres manquants d’un ancien fichier', async () => {
+    const { importerExercice, exporterExerciceEnseignant } = await import('../src/io/fichiers');
+    const f = JSON.parse(exporterExerciceEnseignant(demoCfc1));
+    f.exercice.parametres = { libellesT: 'San/Spb' };
+    const ex = importerExercice(JSON.stringify(f));
+    expect(ex.parametres.libellesT).toBe('San/Spb');
+    expect(ex.parametres.modeBouclement).toBe('compteDeResultat');
+    expect(ex.parametres.comptesAjoutes).toEqual([]);
+  });
+
+  it('applique les conversions successives d’un ancien format', async () => {
+    const { migrer } = await import('../src/io/fichiers');
+    const migrations = { 1: (f: Record<string, unknown>) => ({ ...f, a: 1 }), 2: (f: Record<string, unknown>) => ({ ...f, b: 2 }) };
+    expect(migrer({ version: 1 }, 'Ce fichier', migrations, 3)).toEqual({ version: 3, a: 1, b: 2 });
+    expect(() => migrer({ version: 1 }, 'Ce fichier', {}, 2)).toThrow(/ancien format/);
+    expect(() => migrer({}, 'Ce fichier')).toThrow(/version lisible/);
+  });
+});
