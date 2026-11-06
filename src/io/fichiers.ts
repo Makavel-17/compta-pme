@@ -7,6 +7,7 @@
 import type { Dossier } from '../engine/dossier';
 import type { EcritureCorrigee, Exercice } from '../engine/exercice';
 import type { Suivi } from '../engine/correction';
+import type { Relecture } from './relecture';
 
 const VERSION = 1;
 export const EXT_EXERCICE = '.compta-exercice.json';
@@ -120,9 +121,9 @@ export function statutExport(dossier: Pick<Dossier, 'ecritures'>, fiches: unknow
 export const EXT_SAUVEGARDE = '.compta-sauvegarde.json';
 
 /** Tous les exercices de l'espace enseignant (corrigés en clair) dans un seul fichier. Le code d'accès n'y figure pas. */
-export function exporterSauvegarde(exercices: Exercice[], maintenant = new Date()): string {
+export function exporterSauvegarde(exercices: Exercice[], maintenant = new Date(), relecture: Relecture = {}): string {
   return JSON.stringify(
-    { format: 'compta-pme/sauvegarde-enseignant', version: VERSION, creeLe: maintenant.toISOString(), exercices },
+    { format: 'compta-pme/sauvegarde-enseignant', version: VERSION, creeLe: maintenant.toISOString(), exercices, relecture },
     null,
     2,
   );
@@ -142,6 +143,17 @@ export function importerSauvegarde(texte: string): Exercice[] {
   if (f.version !== VERSION) throw new ErreurFichier('Cette sauvegarde a été créée avec une autre version de Compta PME.');
   if (!Array.isArray(f.exercices)) throw new ErreurFichier('La sauvegarde est endommagée : liste des exercices absente.');
   return f.exercices.map((e) => verifierExercice(e));
+}
+
+/** Avis de relecture contenus dans une sauvegarde (vide pour un autre fichier ou une ancienne sauvegarde). */
+export function relectureDeSauvegarde(texte: string): Relecture {
+  try {
+    const f = lireJson(texte);
+    if (f.format !== 'compta-pme/sauvegarde-enseignant' || !f.relecture || typeof f.relecture !== 'object') return {};
+    return f.relecture as Relecture;
+  } catch {
+    return {};
+  }
 }
 
 /** Fusionne une sauvegarde dans la liste existante : un exercice de même identifiant est remplacé, les autres ajoutés. */

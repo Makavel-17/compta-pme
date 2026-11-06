@@ -263,7 +263,7 @@ export const GUIDE: PartieGuide[] = [
       },
       {
         id: 'onglets',
-        titre: 'Les quatre onglets',
+        titre: 'Les onglets',
         blocs: [
           {
             type: 'liste',
@@ -271,6 +271,7 @@ export const GUIDE: PartieGuide[] = [
               'Exercices : vos exercices (création, modification, import, export).',
               'Dossiers : les dossiers de pièces comptables prêts à distribuer (PDF élève, corrigé PDF, fichiers d’exercice).',
               'Copies : correction automatique des copies rendues par les élèves, notes et statistiques de la classe.',
+              'Relecture : liste de tout le contenu proposé (théorie, exercices, dossiers, niveaux des comptes) à valider ou à commenter.',
               'Paramètres : changement du code d’accès.',
             ],
           },
@@ -445,6 +446,35 @@ export const GUIDE: PartieGuide[] = [
           {
             type: 'retenir',
             texte: 'Note = 1 + points obtenus / points maximum × 5, arrondie au demi-point.',
+          },
+        ],
+      },
+      {
+        id: 'relecture',
+        titre: 'Relire et valider le contenu',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "La théorie, les exercices et les dossiers fournis avec le logiciel sont des propositions à relire. L'onglet " +
+              "« Relecture » les liste tous, avec l'avancement de votre relecture.",
+          },
+          {
+            type: 'etapes',
+            items: [
+              '« Aperçu » ouvre un exercice ou un dossier comme le voient les élèves ; « Lire » ouvre un chapitre de théorie.',
+              'Cochez « Validé » quand le contenu est juste. Sinon, cliquez sur « Remarque » et notez ce qu’il faut corriger ' +
+                '(numéro de pièce ou section, montant, compte, formulation).',
+              'Les boutons « À relire », « Avec remarque » et « Tout » filtrent la liste.',
+              '« Exporter mes remarques (texte) » produit un fichier qui classe les éléments : à corriger, validés, pas encore relus.',
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Vos avis restent dans ce navigateur et sont inclus dans votre sauvegarde. Ils ne changent pas ce que voient les " +
+              "élèves : transmettez le fichier de remarques pour que le contenu officiel soit corrigé et que la mention " +
+              "« proposé » disparaisse.",
           },
         ],
       },

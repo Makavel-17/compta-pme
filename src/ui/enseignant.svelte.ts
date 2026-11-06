@@ -2,23 +2,27 @@
 
 import type { Exercice } from '../engine/exercice';
 import { CLE_ENSEIGNANT, ecrire, lire } from '../io/stockage';
+import type { Relecture } from '../io/relecture';
 
 interface DonneesEnseignant {
   code: string | null;
   exercices: Exercice[];
   /** Date ISO de la dernière sauvegarde exportée. */
   derniereSauvegarde?: string | null;
+  /** Avis de relecture du contenu (exercices, dossiers, théorie). */
+  relecture?: Relecture;
 }
 
 class Enseignant {
   code = $state<string | null>(null);
   exercices = $state<Exercice[]>([]);
   derniereSauvegarde = $state<string | null>(null);
+  relecture = $state<Relecture>({});
   /** Espace affiché à la place de l'accueil élève. */
   ouvert = $state(false);
   deverrouille = $state(false);
   /** Onglet affiché ; gardé en mémoire pour revenir au même endroit après un aperçu. */
-  onglet = $state<'exercices' | 'dossiers' | 'copies' | 'parametres'>('exercices');
+  onglet = $state<'exercices' | 'dossiers' | 'copies' | 'relecture' | 'parametres'>('exercices');
   /** Exercice en cours d'édition (identifiant). */
   edition = $state<string | null>(null);
 
@@ -28,17 +32,27 @@ class Enseignant {
       this.code = d.code;
       this.exercices = d.exercices ?? [];
       this.derniereSauvegarde = d.derniereSauvegarde ?? null;
+      this.relecture = d.relecture ?? {};
     }
   }
 
   sauver() {
-    ecrire($state.snapshot({ code: this.code, exercices: this.exercices, derniereSauvegarde: this.derniereSauvegarde }), CLE_ENSEIGNANT);
+    ecrire(
+      $state.snapshot({ code: this.code, exercices: this.exercices, derniereSauvegarde: this.derniereSauvegarde, relecture: this.relecture }),
+      CLE_ENSEIGNANT,
+    );
   }
 
   enregistrer(ex: Exercice) {
     const i = this.exercices.findIndex((x) => x.id === ex.id);
     if (i >= 0) this.exercices[i] = ex;
     else this.exercices.unshift(ex);
+  }
+
+  /** Met à jour l'avis de relecture d'un élément. */
+  avis(cle: string, changement: { valide?: boolean; remarque?: string }) {
+    const ancien = this.relecture[cle] ?? { valide: false, remarque: '' };
+    this.relecture[cle] = { ...ancien, ...changement, le: new Date().toISOString() };
   }
 
   supprimer(id: string) {

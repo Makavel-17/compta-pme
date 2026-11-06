@@ -14,6 +14,7 @@
     fusionnerExercices,
     importerExercice,
     importerSauvegarde,
+    relectureDeSauvegarde,
     nomFichier,
   } from '../../io/fichiers';
   import { choisirFichiers, telecharger } from '../fichiers-navigateur';
@@ -21,6 +22,7 @@
   import { dateHeure } from '../format';
   import SyntheseCopies from './SyntheseCopies.svelte';
   import DossiersEnseignant from './DossiersEnseignant.svelte';
+  import Relecture from './Relecture.svelte';
 
   let code = $state('');
   let confirmation = $state('');
@@ -76,7 +78,7 @@
   function sauvegarder() {
     const maintenant = new Date();
     const jour = maintenant.toISOString().slice(0, 10);
-    telecharger(nomFichier(['compta-pme', 'sauvegarde', jour], EXT_SAUVEGARDE), exporterSauvegarde($state.snapshot(enseignant.exercices) as Exercice[], maintenant));
+    telecharger(nomFichier(['compta-pme', 'sauvegarde', jour], EXT_SAUVEGARDE), exporterSauvegarde($state.snapshot(enseignant.exercices) as Exercice[], maintenant, $state.snapshot(enseignant.relecture)));
     enseignant.derniereSauvegarde = maintenant.toISOString();
     message = `Sauvegarde de ${enseignant.exercices.length} exercice(s) enregistrée dans vos téléchargements. Conservez ce fichier en lieu sûr.`;
   }
@@ -88,6 +90,7 @@
     try {
       const r = fusionnerExercices($state.snapshot(enseignant.exercices) as Exercice[], importerSauvegarde(f.texte));
       enseignant.exercices = r.exercices;
+      enseignant.relecture = { ...enseignant.relecture, ...relectureDeSauvegarde(f.texte) };
       message =
         `Restauration terminée : ${r.ajoutes} exercice(s) ajouté(s)` +
         (r.remplaces ? `, ${r.remplaces} remplacé(s) par la version de la sauvegarde.` : '.');
@@ -172,11 +175,12 @@
   {:else}
     <main class="contenu">
       <div class="titre">
-        <h1>{enseignant.onglet === 'copies' ? 'Copies des élèves' : enseignant.onglet === 'dossiers' ? 'Dossiers de pièces comptables' : enseignant.onglet === 'parametres' ? 'Paramètres' : 'Exercices'}</h1>
+        <h1>{enseignant.onglet === 'copies' ? 'Copies des élèves' : enseignant.onglet === 'dossiers' ? 'Dossiers de pièces comptables' : enseignant.onglet === 'parametres' ? 'Paramètres' : enseignant.onglet === 'relecture' ? 'Relecture du contenu' : 'Exercices'}</h1>
         <div class="segments" role="group" aria-label="Rubrique">
           <button aria-pressed={enseignant.onglet === 'exercices'} onclick={() => (enseignant.onglet = 'exercices')}>Exercices</button>
           <button aria-pressed={enseignant.onglet === 'dossiers'} onclick={() => (enseignant.onglet = 'dossiers')}>Dossiers</button>
           <button aria-pressed={enseignant.onglet === 'copies'} onclick={() => (enseignant.onglet = 'copies')}>Copies</button>
+          <button aria-pressed={enseignant.onglet === 'relecture'} onclick={() => (enseignant.onglet = 'relecture')}>Relecture</button>
           <button aria-pressed={enseignant.onglet === 'parametres'} onclick={() => (enseignant.onglet = 'parametres')}>Paramètres</button>
         </div>
       </div>
@@ -263,6 +267,8 @@
         </p>
       {:else if enseignant.onglet === 'dossiers'}
         <DossiersEnseignant />
+      {:else if enseignant.onglet === 'relecture'}
+        <Relecture />
       {:else if enseignant.onglet === 'copies'}
         <SyntheseCopies />
       {:else}
