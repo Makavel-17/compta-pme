@@ -7,7 +7,8 @@
 
   const chapitres = $derived(chapitresDuNiveau(etat.exercice.niveau));
   const intitules = $derived(new Map(etat.dossier.plan.map((c) => [c.numero, c.intitule])));
-  let choisi = $state<string | null>(null);
+  let choisi = $state<string | null>(etat.chapitreCible);
+  etat.chapitreCible = null;
   const chapitre = $derived(chapitres.find((c) => c.id === choisi) ?? null);
   const rang = $derived(chapitre ? chapitres.indexOf(chapitre) : -1);
 

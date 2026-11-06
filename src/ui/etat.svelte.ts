@@ -93,6 +93,8 @@ class Etat {
   accueilOuvert = $state(false);
   /** Opération à sélectionner à l'ouverture du journal (récapitulatif de l'avancement). */
   pieceCiblee = $state<string | null>(null);
+  /** Chapitre de théorie à ouvrir (lien « Revoir la théorie » sous un indice). */
+  chapitreCible = $state<string | null>(null);
 
   constructor() {
     const s = lire<Sauvegarde>();

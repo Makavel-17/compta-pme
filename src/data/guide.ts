@@ -155,6 +155,7 @@ export const GUIDE: PartieGuide[] = [
               '« Incomplète » : une partie de l’opération manque encore (par exemple une ligne d’une écriture composée).',
               "« À revoir » avec un indice : l'indice dit quel type d'erreur vous avez fait (débit et crédit inversés, " +
                 'mauvais compte, montant erroné, TVA oubliée…), sans donner la réponse.',
+              'Sous l’indice, le lien « Revoir la théorie » ouvre le chapitre du cours qui correspond à l’opération.',
               'Après une deuxième tentative fausse, le bouton « Voir la solution » apparaît.',
             ],
           },
@@ -406,6 +407,9 @@ export const GUIDE: PartieGuide[] = [
           {
             type: 'liste',
             items: [
+              'Paquet élèves (ZIP) : le dossier PDF et le fichier d’entraînement, à déposer tels quels pour la classe.',
+              'Paquet complet (ZIP) : en plus, le corrigé PDF, le fichier d’évaluation et sa version enseignant. Il contient ' +
+                'les corrigés : gardez-le pour vous.',
               'Dossier PDF : à imprimer ou à déposer pour les élèves (situation, consignes, bilan d’ouverture, une pièce par page).',
               'Corrigé PDF : écritures de chaque pièce, bouclement et états financiers, pour l’enseignant.',
               'Fichier entraînement et fichier évaluation : à distribuer comme un exercice ordinaire. Dans le journal, la pièce ' +

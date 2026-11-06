@@ -29,6 +29,22 @@
     }
   }
 
+  /** Paquet ZIP : « eleves » (dossier PDF + fichier d'entraînement) ou « enseignant » (tout, corrigé compris). */
+  async function paquet(ex: Exercice, pour: 'eleves' | 'enseignant') {
+    erreur = '';
+    enCours = `${ex.id}:${pour}`;
+    try {
+      const [p, z] = await Promise.all([import('../../pdf/paquet'), import('../../io/zip')]);
+      const fichiers = pour === 'eleves' ? await p.paquetEleves(ex, plan) : await p.paquetEnseignant(ex, plan, COMPLEMENTS_CORRIGE[ex.id]);
+      const zip = z.creerZip(fichiers);
+      telechargerBlob(nomFichier([ex.raisonSociale, pour], '.zip'), new Blob([zip], { type: 'application/zip' }));
+    } catch (e) {
+      erreur = `Le paquet n'a pas pu être créé : ${e instanceof Error ? e.message : String(e)}`;
+    } finally {
+      enCours = null;
+    }
+  }
+
   function fichier(ex: Exercice, mode: 'entrainement' | 'evaluation') {
     const e = mode === 'evaluation' ? versionEvaluation(ex) : ex;
     telecharger(nomFichier([ex.raisonSociale, mode === 'evaluation' ? 'evaluation' : 'entrainement'], EXT_EXERCICE), exporterExercice(e));
@@ -59,6 +75,9 @@
             </td>
             <td class="num">{ex.operations.length}</td>
             <td class="actions">
+              <button class="btn btn-principal" disabled={enCours !== null} onclick={() => paquet(ex, 'eleves')}>
+                {enCours === `${ex.id}:eleves` ? 'Création…' : 'Paquet élèves (ZIP)'}
+              </button>
               <button class="btn" disabled={enCours !== null} onclick={() => pdf(ex, 'dossier')}>
                 {enCours === `${ex.id}:dossier` ? 'Création…' : 'Dossier PDF'}
               </button>
@@ -66,6 +85,9 @@
               <button class="btn" onclick={() => fichier(ex, 'evaluation')}>Fichier évaluation</button>
             </td>
             <td class="actions">
+              <button class="btn btn-principal" disabled={enCours !== null} onclick={() => paquet(ex, 'enseignant')}>
+                {enCours === `${ex.id}:enseignant` ? 'Création…' : 'Paquet complet (ZIP)'}
+              </button>
               <button class="btn" disabled={enCours !== null} onclick={() => pdf(ex, 'corrige')}>
                 {enCours === `${ex.id}:corrige` ? 'Création…' : 'Corrigé PDF'}
               </button>
@@ -78,6 +100,8 @@
 {/each}
 
 <p class="discret petit aide">
+  Paquet élèves : dossier PDF et fichier d'entraînement, à déposer tel quel pour la classe. Paquet complet : en plus, le
+  corrigé PDF, le fichier d'évaluation et sa version enseignant ; il contient les corrigés, à garder pour vous.
   Fichier entraînement : corrigé encodé, retour immédiat. Fichier évaluation : sans corrigé, aucun retour pendant la
   saisie ; les copies se corrigent dans l'onglet « Copies » (le corrigé y est déjà connu). Le corrigé PDF contient les
   écritures de chaque pièce, le bouclement s'il est demandé et les états financiers.

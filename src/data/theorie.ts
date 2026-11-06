@@ -1603,3 +1603,33 @@ export function chapitresDuNiveau(niveau: Niveau): Chapitre[] {
   const ordre: Niveau[] = ['CFC1', 'CFC2', 'MP'];
   return CHAPITRES.filter((c) => ordre.indexOf(c.niveau) <= ordre.indexOf(niveau));
 }
+
+/**
+ * Chapitre de théorie à revoir pour une opération, d'après les comptes de son corrigé (premier thème reconnu).
+ * Sert au lien « Revoir la théorie » sous l'indice ; null si aucun chapitre du niveau ne correspond.
+ */
+const THEMES: { id: string; comptes: string[] }[] = [
+  { id: 'tva', comptes: ['1170', '1171', '2200', '2205'] },
+  { id: 'salaires', comptes: ['5200', '5270', '2170', '2171', '2172', '1140'] },
+  { id: 'creances', comptes: ['1108', '1109', '3805'] },
+  { id: 'transitoires', comptes: ['1300', '2300'] },
+  { id: 'amortissements', comptes: ['6800', '1509', '1519', '1529', '1539', '1609', '8510', '8500'] },
+  { id: 'titres', comptes: ['1060', '6940', '6952', '1176'] },
+  { id: 'immeubles', comptes: ['7500', '7510', '2401'] },
+  { id: 'societes', comptes: ['1850', '1860', '2810', '2900', '2950', '2960', '2970', '2230', '6550'] },
+  { id: 'provisions', comptes: ['2600', '2640', '2660', '2690'] },
+  { id: 'interets', comptes: ['6900', '6950'] },
+  { id: 'marchandises', comptes: ['1200', '3200', '3209', '4200', '4209', '4270', '4280'] },
+];
+
+export function chapitrePourComptes(comptes: readonly string[], niveau: Niveau): Chapitre | null {
+  const dispo = chapitresDuNiveau(niveau);
+  const presents = new Set(comptes);
+  for (const t of THEMES) {
+    if (t.comptes.some((c) => presents.has(c))) {
+      const ch = dispo.find((c) => c.id === t.id);
+      if (ch) return ch;
+    }
+  }
+  return dispo.find((c) => c.id === 'journal') ?? null;
+}

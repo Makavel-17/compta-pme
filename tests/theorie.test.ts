@@ -46,3 +46,14 @@ describe('théorie', () => {
     }
   });
 });
+
+describe('lien de l’indice vers la théorie', () => {
+  it('reconnaît le thème d’après les comptes du corrigé, dans les chapitres du niveau', async () => {
+    const { chapitrePourComptes } = await import('../src/data/theorie');
+    expect(chapitrePourComptes(['1100', '3200', '2200'], 'CFC2')?.id).toBe('tva');
+    expect(chapitrePourComptes(['6800', '1509'], 'CFC2')?.id).toBe('amortissements');
+    expect(chapitrePourComptes(['1060', '1020'], 'MP')?.id).toBe('titres');
+    // Chapitre hors niveau : on retombe sur le journal.
+    expect(chapitrePourComptes(['1060', '1020'], 'CFC1')?.id).toBe('journal');
+  });
+});

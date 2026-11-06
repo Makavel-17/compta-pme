@@ -13,6 +13,7 @@
   import ChampCompte from '../composants/ChampCompte.svelte';
   import ChampMontant from '../composants/ChampMontant.svelte';
   import PieceVue from '../composants/PieceVue.svelte';
+  import { chapitrePourComptes } from '../../data/theorie';
 
   type LigneSaisie = { cle: number; debit: string | null; credit: string | null; montant: Centimes | null };
 
@@ -70,6 +71,18 @@
     x === 'juste' ? 'Juste' : x === 'incomplete' ? 'Incomplète' : x && x !== 'manquante' ? 'À revoir' : '';
   const classeStatut = (x: Diagnostic | null) =>
     x === 'juste' ? 'juste' : x === 'incomplete' ? 'neutre' : x && x !== 'manquante' ? 'revoir' : '';
+
+  /** Chapitre de théorie lié à une opération, d'après les comptes de son corrigé. */
+  function chapitreDe(k: string) {
+    const c = solutionDe(k);
+    if (!c) return null;
+    const comptes = c.lignes.flatMap((l) => [l.debit, l.credit]).filter((x): x is string => !!x);
+    return chapitrePourComptes(comptes, ex.niveau);
+  }
+  function revoirTheorie(id: string) {
+    etat.chapitreCible = id;
+    etat.aller('theorie');
+  }
 
   function voirSolution(p: string) {
     const ancien = suivi[p];
@@ -395,6 +408,9 @@
                         {#if solutionDisponible(s) && !s?.solutionVue}
                           <button class="btn-lien solution" onclick={() => voirSolution(kc)}>Voir la solution</button>
                         {/if}
+                        {#each [chapitreDe(kc)].filter((x) => x !== null) as ch (ch.id)}
+                          <button class="btn-lien solution" onclick={() => revoirTheorie(ch.id)}>Revoir la théorie : {ch.titre}</button>
+                        {/each}
                       </div>
                       {#if solution}
                         <div class="solution-detail">
