@@ -25,7 +25,6 @@
   let code = $state('');
   let confirmation = $state('');
   let message = $state('');
-  let onglet = $state<'exercices' | 'dossiers' | 'copies' | 'parametres'>('exercices');
   let nouveauCode = $state('');
   let modeleId = $state('');
 
@@ -173,17 +172,17 @@
   {:else}
     <main class="contenu">
       <div class="titre">
-        <h1>{onglet === 'copies' ? 'Copies des élèves' : onglet === 'dossiers' ? 'Dossiers de pièces comptables' : onglet === 'parametres' ? 'Paramètres' : 'Exercices'}</h1>
+        <h1>{enseignant.onglet === 'copies' ? 'Copies des élèves' : enseignant.onglet === 'dossiers' ? 'Dossiers de pièces comptables' : enseignant.onglet === 'parametres' ? 'Paramètres' : 'Exercices'}</h1>
         <div class="segments" role="group" aria-label="Rubrique">
-          <button aria-pressed={onglet === 'exercices'} onclick={() => (onglet = 'exercices')}>Exercices</button>
-          <button aria-pressed={onglet === 'dossiers'} onclick={() => (onglet = 'dossiers')}>Dossiers</button>
-          <button aria-pressed={onglet === 'copies'} onclick={() => (onglet = 'copies')}>Copies</button>
-          <button aria-pressed={onglet === 'parametres'} onclick={() => (onglet = 'parametres')}>Paramètres</button>
+          <button aria-pressed={enseignant.onglet === 'exercices'} onclick={() => (enseignant.onglet = 'exercices')}>Exercices</button>
+          <button aria-pressed={enseignant.onglet === 'dossiers'} onclick={() => (enseignant.onglet = 'dossiers')}>Dossiers</button>
+          <button aria-pressed={enseignant.onglet === 'copies'} onclick={() => (enseignant.onglet = 'copies')}>Copies</button>
+          <button aria-pressed={enseignant.onglet === 'parametres'} onclick={() => (enseignant.onglet = 'parametres')}>Paramètres</button>
         </div>
       </div>
       {#if message}<p class="info" role="status">{message}</p>{/if}
 
-      {#if onglet === 'exercices'}
+      {#if enseignant.onglet === 'exercices'}
         <div class="barre">
           <button class="btn btn-principal" onclick={nouveau}>Nouvel exercice</button>
           <select class="champ modele" bind:value={modeleId} aria-label="Exercice de départ">
@@ -262,9 +261,9 @@
           « Exporter pour les élèves » crée le fichier à distribuer : sans corrigé en évaluation, avec corrigé encodé en
           entraînement. « Version enseignant » contient le corrigé en clair : conservez-la pour corriger les copies.
         </p>
-      {:else if onglet === 'dossiers'}
+      {:else if enseignant.onglet === 'dossiers'}
         <DossiersEnseignant />
-      {:else if onglet === 'copies'}
+      {:else if enseignant.onglet === 'copies'}
         <SyntheseCopies />
       {:else}
         <form class="carte etroit" onsubmit={changerCode}>

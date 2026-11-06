@@ -17,6 +17,8 @@ class Enseignant {
   /** Espace affiché à la place de l'accueil élève. */
   ouvert = $state(false);
   deverrouille = $state(false);
+  /** Onglet affiché ; gardé en mémoire pour revenir au même endroit après un aperçu. */
+  onglet = $state<'exercices' | 'dossiers' | 'copies' | 'parametres'>('exercices');
   /** Exercice en cours d'édition (identifiant). */
   edition = $state<string | null>(null);
 
