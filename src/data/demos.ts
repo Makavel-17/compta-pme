@@ -1,4 +1,4 @@
-// Exercices de démonstration (un par niveau), puis exercices proposés en attente de validation.
+// Exercices de démonstration (un par niveau), puis exercices complémentaires (considérés comme validés le 06.11.2026).
 import type { Exercice } from '../engine/exercice';
 import { demoCfc1 } from './demo-cfc1';
 import { demoCfc2 } from './demo-cfc2';

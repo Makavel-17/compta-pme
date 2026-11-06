@@ -32,10 +32,10 @@ const attendus: Record<string, { resultat: number; soldes: Record<string, number
 };
 
 describe('exercices proposés', () => {
-  it('sont sept, marqués « proposé », avec une situation de départ', () => {
+  it('sont sept, sans mention « proposé » (validés le 06.11.2026), avec une situation de départ', () => {
     expect(exercicesProposes).toHaveLength(7);
     for (const ex of exercicesProposes) {
-      expect(ex.titre).toContain('(proposé)');
+      expect(ex.titre).not.toContain('(proposé)');
       expect(ex.situation).toContain(ex.raisonSociale);
       expect(ex.operations.length).toBeGreaterThanOrEqual(10);
       expect(ex.operations.length).toBeLessThanOrEqual(15);

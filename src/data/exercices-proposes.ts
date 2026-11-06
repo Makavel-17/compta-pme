@@ -23,7 +23,7 @@ const CONSIGNE =
 // ───────────────────────── 1. CFC 1 — commerce de détail ─────────────────────────
 export const propBouquinerie: Exercice = {
   id: 'prop-cfc1-bouquinerie-du-bourg',
-  titre: 'La Bouquinerie du Bourg — premier trimestre (proposé)',
+  titre: 'La Bouquinerie du Bourg — premier trimestre',
   niveau: 'CFC1',
   filiere: 'CFC',
   difficulte: 1,
@@ -87,7 +87,7 @@ export const propBouquinerie: Exercice = {
 // ───────────────────────── 2. CFC 1 — entreprise de services ─────────────────────────
 export const propLumen: Exercice = {
   id: 'prop-cfc1-atelier-lumen',
-  titre: 'Atelier Lumen — graphisme, premier trimestre (proposé)',
+  titre: 'Atelier Lumen — graphisme, premier trimestre',
   niveau: 'CFC1',
   filiere: 'CFC',
   difficulte: 1,
@@ -153,7 +153,7 @@ export const propLumen: Exercice = {
 // ───────────────────────── 3. CFC 2 — TVA, un trimestre au net ─────────────────────────
 export const propElectroSaleve: Exercice = {
   id: 'prop-cfc2-electro-saleve-tva',
-  titre: 'Électro Salève — TVA du premier trimestre (proposé)',
+  titre: 'Électro Salève — TVA du premier trimestre',
   niveau: 'CFC2',
   filiere: 'CFC',
   difficulte: 2,
@@ -218,7 +218,7 @@ export const propElectroSaleve: Exercice = {
 // ───────────────────── 4. CFC 2 — amortissements et transitoires ─────────────────────
 export const propImprimerie: Exercice = {
   id: 'prop-cfc2-imprimerie-mandement',
-  titre: 'Imprimerie du Mandement — amortissements et transitoires (proposé)',
+  titre: 'Imprimerie du Mandement — amortissements et transitoires',
   niveau: 'CFC2',
   filiere: 'CFC',
   difficulte: 3,
@@ -283,7 +283,7 @@ export const propImprimerie: Exercice = {
 // ───────────────── 5. CFC 2 — pertes sur créances, créances douteuses, ducroire ─────────────────
 export const propSportEvasion: Exercice = {
   id: 'prop-cfc2-sport-evasion-creances',
-  titre: 'Sport-Évasion — créances, pertes et ducroire (proposé)',
+  titre: 'Sport-Évasion — créances, pertes et ducroire',
   niveau: 'CFC2',
   filiere: 'CFC',
   difficulte: 3,
@@ -341,7 +341,7 @@ export const propSportEvasion: Exercice = {
 // ───────────────────────── 6. CFC 2 — salaires ─────────────────────────
 export const propJardinsMorel: Exercice = {
   id: 'prop-cfc2-jardins-morel-salaires',
-  titre: 'Jardins Morel — salaires du premier trimestre (proposé)',
+  titre: 'Jardins Morel — salaires du premier trimestre',
   niveau: 'CFC2',
   filiere: 'CFC',
   difficulte: 3,
@@ -409,7 +409,7 @@ export const propJardinsMorel: Exercice = {
 // ───────────── 7. MP — SA : répartition avec perte reportée, titres, provisions ─────────────
 export const propNovaterm: Exercice = {
   id: 'prop-mp-novaterm-sa',
-  titre: 'Novaterm SA — répartition, titres et provisions (proposé)',
+  titre: 'Novaterm SA — répartition, titres et provisions',
   niveau: 'MP',
   filiere: 'MP',
   difficulte: 3,
