@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette — accueil et avancement</title>
+<link rel="stylesheet" href="maquette.css">
+<style>
+  /* Maquette statique (06.11.2026) : à valider avant développement. */
+  .ecran { max-width: 1100px; margin: 0 auto 40px; background: #fff; border: 1px solid var(--c-bordure); }
+  .etiquette-maquette { max-width: 1100px; margin: 24px auto 8px; color: var(--c-texte-2); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+  .bandeau { background: var(--c-structure); color: #fff; padding: 12px 24px; font-weight: bold; font-size: 16px; }
+  .corps { padding: 20px 24px 28px; }
+  h1 { font-size: 20px; color: var(--c-structure); margin: 0 0 4px; }
+  h2 { font-size: 15px; color: var(--c-structure); margin: 0; }
+  .discret { color: var(--c-texte-2); }
+  .petit { font-size: 12px; }
+  .carte { border: 1px solid var(--c-bordure); border-radius: 4px; background: #fff; margin-top: 16px; }
+  .carte > header { padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .carte .contenu { padding: 12px 14px; }
+  .btn { font: inherit; padding: 7px 14px; border-radius: 3px; border: 1px solid var(--c-bordure); background: #fff; cursor: pointer; }
+  .btn-principal { background: var(--c-action); border-color: var(--c-action); color: #fff; font-weight: bold; }
+  .reprise { border-left: 4px solid var(--c-action); }
+  .reprise .ligne { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .barre { height: 10px; background: var(--c-bordure-2); border-radius: 5px; overflow: hidden; display: flex; width: 260px; }
+  .barre .juste { background: var(--c-ok); }
+  .barre .revoir { background: var(--c-accent); }
+  .barre .saisi { background: #8fa9c4; }
+  .legende { display: flex; gap: 14px; font-size: 12px; color: var(--c-texte-2); margin-top: 6px; }
+  .pastille { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }
+  .onglets { display: flex; gap: 0; border: 1px solid var(--c-structure); border-radius: 3px; overflow: hidden; }
+  .onglets button { font: inherit; border: 0; background: #fff; color: var(--c-structure); padding: 7px 16px; cursor: pointer; }
+  .onglets button[aria-pressed="true"] { background: var(--c-structure); color: #fff; font-weight: bold; }
+  .recherche { padding: 7px 10px; border: 1px solid var(--c-bordure); border-radius: 3px; font: inherit; width: 280px; }
+  .filtres { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 18px; }
+  .filtres label { display: inline-flex; gap: 6px; align-items: center; }
+  details.niveau { border-top: 1px solid var(--c-bordure-2); }
+  details.niveau > summary { padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; gap: 12px; list-style: none; }
+  details.niveau > summary::before { content: '▸'; color: var(--c-structure); margin-right: 8px; }
+  details.niveau[open] > summary::before { content: '▾'; }
+  details.niveau > summary strong { color: var(--c-structure); flex: 1; }
+  .exo { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 9px 14px 9px 36px; border-top: 1px solid var(--c-bordure-2); align-items: center; }
+  .exo:nth-child(even) { background: var(--c-zebra); }
+  .type { font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+  .type.dossier { background: #fdf3ee; color: var(--c-alerte-texte); border: 1px solid #f2c7ad; }
+  .type.exercice { background: var(--c-selection); color: var(--c-structure); }
+  .etat { font-size: 12px; white-space: nowrap; }
+  .etat.encours { color: var(--c-action); font-weight: bold; }
+  .etat.fini { color: var(--c-ok); font-weight: bold; }
+  /* En-tête de l'application */
+  .entete { background: var(--c-structure); color: #fff; display: flex; align-items: center; gap: 18px; padding: 10px 18px; flex-wrap: wrap; }
+  .entete .logo { font-weight: bold; }
+  .entete .meta { color: #b9cde0; font-size: 13px; }
+  .badge { font-size: 12px; font-weight: bold; padding: 2px 8px; border-radius: 3px; background: #fff; color: var(--c-structure); }
+  .avancement { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .avancement .barre { width: 160px; background: rgba(255,255,255,.25); }
+  .apres { display: grid; grid-template-columns: 200px 1fr; min-height: 160px; }
+  .lateral { background: var(--c-structure); opacity: .92; }
+  .note { padding: 16px; color: var(--c-texte-2); }
+  .annotation { background: #fffbe6; border: 1px dashed #d9b64a; padding: 8px 12px; font-size: 12.5px; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="etiquette-maquette">Écran 1 — Accueil (élève qui revient)</div>
+<div class="ecran">
+  <div class="bandeau">Compta PME</div>
+  <div class="corps">
+    <h1>Bon retour, Léa</h1>
+    <p class="discret">Vos données restent dans ce navigateur : rien n'est envoyé en ligne.</p>
+
+    <section class="carte reprise" aria-label="Exercice en cours">
+      <header>
+        <div>
+          <h2>Reprendre où vous en étiez</h2>
+          <div class="discret petit">Outils &amp; Cie — dossier de pièces, TVA du premier trimestre · CFC · niveau 2 · Entraînement</div>
+        </div>
+        <button class="btn btn-principal">Reprendre</button>
+      </header>
+      <div class="contenu">
+        <div class="ligne">
+          <div>
+            <div class="barre" aria-label="Avancement : 7 pièces sur 11">
+              <span class="juste" style="width:45%"></span><span class="revoir" style="width:9%"></span><span class="saisi" style="width:10%"></span>
+            </div>
+            <div class="legende">
+              <span><span class="pastille" style="background:var(--c-ok)"></span>5 justes</span>
+              <span><span class="pastille" style="background:var(--c-accent)"></span>1 à revoir</span>
+              <span><span class="pastille" style="background:#8fa9c4"></span>1 incomplète</span>
+              <span>4 pas encore saisies</span>
+            </div>
+          </div>
+          <div class="discret petit">Dernière activité : 05.11.2026 à 16:42<br>Copie exportée le 05.11.2026 à 16:40</div>
+        </div>
+      </div>
+    </section>
+    <div class="annotation">La carte n'apparaît que si un exercice est en cours dans ce navigateur. Les informations de l'élève (prénom, nom, classe) sont reprises : plus besoin de les ressaisir.</div>
+
+    <section class="carte" aria-label="Choisir un autre exercice">
+      <header>
+        <h2>Choisir un autre exercice</h2>
+        <div class="onglets" role="group" aria-label="Formation">
+          <button aria-pressed="true">CFC</button><button aria-pressed="false">Maturité professionnelle</button>
+        </div>
+      </header>
+      <div class="contenu" style="padding-bottom:0">
+        <div class="filtres" style="margin-top:0">
+          <input class="recherche" type="search" placeholder="Rechercher : TVA, salaires, amortissements…" aria-label="Rechercher un exercice">
+          <label><input type="checkbox" checked> Exercices</label>
+          <label><input type="checkbox" checked> Dossiers de pièces</label>
+          <button class="btn">Ouvrir un exercice reçu…</button>
+        </div>
+      </div>
+
+      <details class="niveau" style="margin-top:12px">
+        <summary><strong>Niveau 1 — Bases : bilan, comptes, journal, bouclement</strong><span class="discret petit">5 exercices · 1 terminé</span></summary>
+      </details>
+      <details class="niveau" open>
+        <summary><strong>Niveau 2 — TVA</strong><span class="discret petit">2 exercices · 1 en cours</span></summary>
+        <div class="exo">
+          <div><strong>Électro Salève — TVA du premier trimestre</strong> <span class="type exercice">Exercice</span><br>
+            <span class="discret petit">13 opérations · TVA (méthode effective, au net) · Décompte et paiement de la TVA</span></div>
+          <span class="etat">Pas commencé</span>
+        </div>
+        <div class="exo">
+          <div><strong>Outils &amp; Cie — TVA du premier trimestre</strong> <span class="type dossier">Dossier de pièces</span><br>
+            <span class="discret petit">11 pièces · Impôt préalable sur marchandises et investissements · Décompte TVA</span></div>
+          <span class="etat encours">En cours · 7 / 11</span>
+        </div>
+      </details>
+      <details class="niveau">
+        <summary><strong>Niveau 3 — Opérations de clôture</strong><span class="discret petit">7 exercices</span></summary>
+      </details>
+      <details class="niveau">
+        <summary><strong>Niveau 4 — Synthèse</strong><span class="discret petit">1 exercice</span></summary>
+      </details>
+    </section>
+    <div class="annotation">Le niveau de l'exercice en cours s'ouvre seul ; les autres restent repliés. La recherche ouvre les niveaux qui contiennent un résultat. La formation choisie est mémorisée. Un clic sur un exercice demande les informations de l'élève seulement si elles ne sont pas encore connues.</div>
+  </div>
+</div>
+
+<div class="etiquette-maquette">Écran 2 — En-tête pendant le travail (entraînement)</div>
+<div class="ecran">
+  <div class="entete">
+    <span class="logo">Compta PME</span>
+    <strong>Outils &amp; Cie</strong>
+    <span class="meta">Raison individuelle · Exercice 01.01.–31.12.2026</span>
+    <span class="badge">CFC · niveau 2</span>
+    <span class="badge">Entraînement</span>
+    <div class="avancement" aria-label="Avancement">
+      <span>7 / 11 pièces</span>
+      <span class="barre"><span class="juste" style="width:45%"></span><span class="revoir" style="width:9%"></span><span class="saisi" style="width:10%"></span></span>
+      <span>Léa Martin · 2CFC1</span>
+    </div>
+  </div>
+  <div class="apres"><div class="lateral"></div><div class="note">… journal, comptes, états (inchangés) …</div></div>
+</div>
+<div class="corps" style="max-width:1100px;margin:0 auto">
+  <div class="annotation">Un clic sur la barre ouvre le récapitulatif des pièces (justes, à revoir, pas encore faites), avec un lien vers chacune. <strong>En évaluation</strong>, la barre est grise et indique seulement « 7 / 11 pièces saisies », sans juste ni faux.</div>
+</div>
+
+</body>
+</html>
