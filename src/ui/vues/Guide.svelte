@@ -58,10 +58,11 @@
 
 <style>
   .page { min-height: 100%; }
-  .bandeau-haut { background: var(--c-structure); padding: 14px 24px; display: flex; align-items: baseline; gap: 18px; }
-  .logo { color: #fff; font-weight: bold; font-size: 16px; }
-  .titre-espace { color: #b9cde0; flex: 1; }
-  .fermer { color: #fff; }
+  .bandeau-haut { background: #fff; border-bottom: 1px solid var(--c-bordure-2); padding: 0 28px; height: 60px; display: flex; align-items: center; gap: 18px; }
+  .logo { color: var(--c-texte); font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+  .logo::before { content: 'CP'; width: 28px; height: 28px; border-radius: 7px; background: var(--c-action); color: #fff; display: grid; place-items: center; font-size: 12px; }
+  .titre-espace { color: var(--c-texte-2); flex: 1; }
+  .fermer { color: var(--c-structure); }
   .contenu { max-width: 900px; margin: 0 auto; padding: 24px 16px 48px; }
   .intro { margin: 0 0 16px; line-height: 1.5; }
   section, .sommaire { margin-bottom: 14px; }

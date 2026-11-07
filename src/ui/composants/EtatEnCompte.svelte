@@ -58,8 +58,8 @@
 <style>
   .etat { display: grid; grid-template-columns: 1fr 1fr; }
   .colonne { display: flex; flex-direction: column; min-width: 0; }
-  .separee { border-left: 2px solid var(--c-structure); }
-  .tete { background: var(--c-structure); color: #fff; font-weight: bold; padding: 8px 14px; }
+  .separee { border-left: 1px solid var(--c-bordure-2); }
+  .tete { background: var(--c-fond-tete); color: var(--c-texte-2); font-weight: bold; padding: 11px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--c-bordure-2); }
   .corps { flex: 1; padding: 6px 0; }
   .groupe { font-weight: bold; color: var(--c-structure); padding: 10px 14px 4px; }
   .poste { display: grid; grid-template-columns: 48px minmax(0, 1fr) 110px 110px; padding: 4px 14px; }

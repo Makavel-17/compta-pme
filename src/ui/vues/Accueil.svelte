@@ -239,7 +239,7 @@
       {#if importes.length}
         <div class="bloc-niveaux">
           <h3 class="recus">Exercices reçus de votre enseignant</h3>
-          {#each importes as ex (ex.id)}{@render ligne(ex)}{/each}
+          <div class="cartes-exo">{#each importes as ex (ex.id)}{@render ligne(ex)}{/each}</div>
         </div>
       {/if}
 
@@ -251,7 +251,7 @@
               <strong>Niveau {g.difficulte}{g.titre ? ` — ${g.titre}` : ''}</strong>
               <span class="discret petit">{g.visibles.length} {g.visibles.length > 1 ? 'exercices' : 'exercice'}</span>
             </summary>
-            {#each g.visibles as ex (ex.id)}{@render ligne(ex)}{/each}
+            <div class="cartes-exo">{#each g.visibles as ex (ex.id)}{@render ligne(ex)}{/each}</div>
           </details>
         {:else}
           <p class="vide">Aucun exercice ne correspond à votre recherche.</p>
@@ -295,13 +295,14 @@
 
 <style>
   .page { min-height: 100%; }
-  .bandeau-haut { background: var(--c-structure); padding: 14px 24px; }
-  .logo { color: #fff; font-weight: bold; font-size: 16px; }
-  .contenu { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
+  .bandeau-haut { background: #fff; border-bottom: 1px solid var(--c-bordure-2); padding: 0 28px; height: 60px; display: flex; align-items: center; gap: 18px; }
+  .logo { color: var(--c-texte); font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+  .logo::before { content: 'CP'; width: 28px; height: 28px; border-radius: 7px; background: var(--c-action); color: #fff; display: grid; place-items: center; font-size: 12px; }
+  .contenu { max-width: 980px; margin: 0 auto; padding: 32px 16px; }
   .contenu > p { margin: 8px 0 20px; }
   .carte + .carte, .carte + form { margin-top: 16px; }
-  .tete-carte { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); flex-wrap: wrap; }
-  .tete-simple { padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); }
+  .tete-carte { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--c-bordure-3); flex-wrap: wrap; }
+  .tete-simple { padding: 14px 18px; border-bottom: 1px solid var(--c-bordure-3); }
   .reprise { border-left: 4px solid var(--c-action); }
   .lien { border-left: 4px solid var(--c-structure); margin-bottom: 16px; }
   .lien p { margin: 6px 0 0; }
@@ -315,24 +316,26 @@
   .separe { border-top: 1px solid var(--c-bordure-2); }
   .grille { display: grid; grid-template-columns: 1fr 1fr 160px; gap: 14px; }
   .filtres { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-  .onglets { display: inline-flex; border: 1px solid var(--c-structure); border-radius: 3px; overflow: hidden; }
-  .onglets button { font: inherit; border: 0; background: #fff; color: var(--c-structure); padding: 6px 14px; cursor: pointer; }
-  .onglets button[aria-pressed='true'] { background: var(--c-structure); color: #fff; font-weight: bold; }
+  .onglets { display: inline-flex; background: #eef2f6; border-radius: 8px; padding: 3px; gap: 2px; }
+  .onglets button { font: inherit; border: 0; background: transparent; color: var(--c-texte-2); padding: 6px 14px; cursor: pointer; border-radius: 6px; }
+  .onglets button[aria-pressed='true'] { background: #fff; color: var(--c-structure); font-weight: bold; box-shadow: var(--ombre); }
   .recherche { width: 260px; max-width: 100%; }
   .case { display: inline-flex; gap: 6px; align-items: center; }
   .bloc-niveaux { border-top: 1px solid var(--c-bordure-2); }
-  .recus { font-size: 14px; color: var(--c-structure); margin: 0; padding: 10px 14px; }
-  details.niveau + details.niveau { border-top: 1px solid var(--c-bordure-2); }
-  details.niveau > summary { padding: 10px 14px; cursor: pointer; display: flex; gap: 12px; align-items: baseline; }
-  details.niveau > summary strong { color: var(--c-structure); flex: 1; }
+  .recus { font-size: 14px; color: var(--c-structure); margin: 0; padding: 12px 18px 0; }
+  details.niveau + details.niveau { border-top: 1px solid var(--c-bordure-3); }
+  details.niveau > summary { padding: 12px 18px; cursor: pointer; display: flex; gap: 12px; align-items: baseline; }
+  details.niveau > summary strong { color: var(--c-texte); flex: 1; }
+  .cartes-exo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 4px 18px 16px; }
   .exercice {
-    display: flex; gap: 10px; align-items: flex-start; padding: 9px 14px 9px 30px; border-top: 1px solid var(--c-bordure-2); cursor: pointer;
+    display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--c-bordure-2); border-radius: 8px;
+    cursor: pointer; background: #fff; transition: border-color 0.12s, box-shadow 0.12s;
   }
-  .exercice:hover { background: var(--c-zebra); }
-  .exercice.choisi { background: var(--c-selection); }
+  .exercice:hover { border-color: #b8c7d8; box-shadow: var(--ombre); }
+  .exercice.choisi { border-color: var(--c-structure); box-shadow: 0 0 0 2px var(--c-selection); background: #fbfdff; }
   .exercice input { margin-top: 3px; }
   .infos { flex: 1; min-width: 0; }
-  .type { display: inline-block; font-size: 11px; font-weight: bold; padding: 1px 7px; border-radius: 3px; margin-left: 8px; white-space: nowrap; }
+  .type { display: inline-block; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 999px; margin-left: 6px; white-space: nowrap; }
   .type.dossier { background: var(--c-alerte-fond); color: var(--c-alerte-texte); border: 1px solid #f2c7ad; }
   .type.exo { background: var(--c-selection); color: var(--c-structure); }
   .etat { font-size: 12px; font-weight: bold; white-space: nowrap; }
@@ -347,5 +350,6 @@
   .autre { display: flex; gap: 16px; align-items: center; padding: 9px 14px; border-top: 1px solid var(--c-bordure-2); flex-wrap: wrap; }
   .tete-simple + .autre { border-top: 0; }
   .actions-confirmation { display: flex; gap: 8px; margin-top: 10px; }
+  @media (max-width: 760px) { .cartes-exo { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .grille { grid-template-columns: 1fr; } }
 </style>

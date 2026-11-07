@@ -6,6 +6,7 @@
   import { telecharger, telechargerBlob } from './fichiers-navigateur';
   import EspaceEnseignant from './vues/EspaceEnseignant.svelte';
   import AvancementEntete from './composants/AvancementEntete.svelte';
+  import Icone from './composants/Icone.svelte';
   import { dateHeure, periode } from './format';
   import Accueil from './vues/Accueil.svelte';
   import TableauDeBord from './vues/TableauDeBord.svelte';
@@ -128,6 +129,8 @@
       { titre: 'Cours', entrees: [{ vue: 'theorie', libelle: 'Théorie' }] },
     ];
   });
+  /** Libellé de la rubrique affichée, pour le fil d'Ariane de l'en-tête. */
+  const libelleVue = $derived(rubriques.flatMap((r) => r.entrees).find((e) => e.vue === etat.vue)?.libelle ?? '');
 </script>
 
 {#if etat.guide}
@@ -140,9 +143,10 @@
   {@const s = etat.session}
   <div class="app">
     <header class="entete" data-visite="entete">
-      <div class="logo">Compta PME</div>
+      <div class="logo"><span class="pastille-logo" aria-hidden="true">CP</span>Compta PME</div>
       <div class="dossier">
         <strong>{s.dossier.raisonSociale}</strong>
+        <span class="fil" aria-hidden="true">/ {libelleVue}</span>
         <span class="meta">{s.dossier.formeJuridique === 'raison individuelle' ? 'Raison individuelle' : s.dossier.formeJuridique}</span>
         <span class="meta">Exercice {periode(s.dossier.debut, s.dossier.fin)}</span>
         <span class="badge badge-niveau" title="Formation et niveau de difficulté">{etiquetteNiveau(s.exercice)}</span>
@@ -151,7 +155,12 @@
         </span>
       </div>
       {#if s.role === 'eleve'}<AvancementEntete />{/if}
-      {#if s.role === 'eleve'}<div class="eleve">{s.eleve.prenom} {s.eleve.nom} · {s.eleve.classe}</div>{/if}
+      {#if s.role === 'eleve'}
+        <div class="eleve" title={`${s.eleve.prenom} ${s.eleve.nom} · ${s.eleve.classe}`}>
+          <span class="initiales" aria-hidden="true">{(s.eleve.prenom[0] ?? '') + (s.eleve.nom[0] ?? '')}</span>
+          <span class="nom-eleve">{s.eleve.prenom} {s.eleve.nom} · {s.eleve.classe}</span>
+        </div>
+      {/if}
     </header>
 
     <nav class="lateral" aria-label="Navigation" data-visite="navigation">
@@ -165,7 +174,7 @@
             onclick={(ev) => {
               ev.preventDefault();
               etat.aller(e.vue);
-            }}>{e.libelle}</a
+            }}><Icone nom={e.vue} /><span>{e.libelle}</span></a
           >
         {/each}
       {/each}
@@ -228,49 +237,54 @@
 {/if}
 
 <style>
-  .app { display: grid; grid-template-columns: 210px minmax(0, 1fr); grid-template-rows: 52px minmax(0, 1fr); height: 100vh; }
+  .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); grid-template-rows: 60px minmax(0, 1fr); height: 100vh; }
   .entete {
     grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; padding: 0 20px;
     background: var(--c-fond); border-bottom: 1px solid var(--c-bordure);
   }
-  .logo { font-weight: bold; color: var(--c-structure); font-size: 16px; width: 170px; flex: none; }
+  .logo { font-weight: bold; color: var(--c-texte); font-size: 15px; width: 192px; flex: none; display: flex; align-items: center; gap: 10px; }
+  .pastille-logo { width: 28px; height: 28px; border-radius: 7px; background: var(--c-action); color: #fff; display: grid; place-items: center; font-size: 12px; }
+  .fil { color: var(--c-texte-2); white-space: nowrap; }
   .dossier { display: flex; align-items: baseline; gap: 16px; flex: 1; min-width: 0; }
   .dossier strong { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .meta { color: var(--c-texte-2); white-space: nowrap; }
   .badge-niveau { background: var(--c-structure); color: #fff; }
+  .entete .badge { align-self: center; }
   .badge-mode { background: var(--c-selection); color: var(--c-structure); }
-  .eleve { color: var(--c-texte-2); white-space: nowrap; }
-  .lateral { background: var(--c-structure); color: #fff; padding: 12px 0; overflow-y: auto; }
-  .rubrique { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #b9cde0; padding: 14px 20px 6px; }
-  .lateral a { display: block; padding: 8px 20px; color: #fff; text-decoration: none; border-left: 4px solid transparent; }
-  .lateral a:hover { background: var(--c-structure-2); }
-  .lateral a.actif { background: var(--c-structure-2); border-left-color: var(--c-accent); font-weight: bold; }
+  .eleve { color: var(--c-texte-2); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+  .initiales { width: 32px; height: 32px; border-radius: 50%; background: var(--c-selection); color: var(--c-structure); display: grid; place-items: center; font-weight: bold; font-size: 12px; text-transform: uppercase; }
+  .lateral { background: var(--c-nuit); color: #fff; padding: 12px; overflow-y: auto; gap: 2px; }
+  .rubrique { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #9fb6cc; padding: 14px 10px 6px; }
+  .lateral a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; color: #dce6f0; text-decoration: none; border-radius: 6px; }
+  .lateral a:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+  .lateral a.actif { background: rgba(255, 255, 255, 0.13); color: #fff; font-weight: bold; box-shadow: inset 3px 0 0 var(--c-accent); }
   .lateral { display: flex; flex-direction: column; }
-  .bas { margin-top: auto; padding: 16px 12px 4px; display: flex; flex-direction: column; gap: 6px; }
+  .bas { margin-top: auto; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 8px; }
   .action-lateral {
-    font: inherit; text-align: left; padding: 8px 10px; border-radius: 3px; cursor: pointer;
-    background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.35);
+    font: inherit; text-align: center; padding: 9px 10px; border-radius: 6px; cursor: pointer;
+    background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.28);
   }
-  .action-lateral:hover { background: var(--c-structure-2); }
+  .action-lateral:hover { background: rgba(255, 255, 255, 0.08); }
   .action-lateral.principale { background: var(--c-action); border-color: var(--c-action); font-weight: bold; }
-  .rappel-export { margin: 0 2px 4px; font-size: 12px; line-height: 1.35; color: #b9cde0; }
+  .rappel-export { margin: 0 2px 4px; font-size: 12px; line-height: 1.35; color: #9fb6cc; }
   .rappel-export.a-faire { color: #fff; border-left: 3px solid var(--c-accent); padding-left: 7px; }
-  .action-lateral.discrete { border: none; color: #b9cde0; font-size: 12px; padding: 4px 10px; }
+  .action-lateral.discrete { border: none; color: #9fb6cc; font-size: 12px; padding: 4px 10px; text-align: left; }
   .badge-mode.corrige { background: var(--c-action); color: #fff; }
   .bandeau-apercu {
     display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: -4px 0 16px; padding: 10px 14px;
-    background: var(--c-alerte-fond); border: 1px solid var(--c-accent); border-radius: 3px;
+    background: var(--c-alerte-fond); border: 1px solid var(--c-accent); border-radius: 8px;
   }
-  .principal { overflow: auto; padding: 20px 24px 40px; min-width: 0; }
+  .principal { overflow: auto; padding: 24px 28px 48px; min-width: 0; }
   @media (max-width: 1280px) {
-    .eleve { display: none; }
+    .nom-eleve { display: none; }
+    .fil { display: none; }
     /* Tablette : le nom de l'entreprise reste lisible ; forme juridique et période sont au tableau de bord. */
     .dossier .meta { display: none; }
     .entete { gap: 14px; }
   }
   @media (max-width: 1100px) {
-    .app { grid-template-columns: 170px minmax(0, 1fr); }
-    .logo { width: 130px; }
+    .app { grid-template-columns: 196px minmax(0, 1fr); }
+    .logo { width: 156px; }
     .principal { padding: 16px; }
   }
 </style>

@@ -2,7 +2,7 @@
   import { etat } from '../etat.svelte';
   import { bilan } from '../../engine/statements';
   import { estBoucle } from '../../engine/closing';
-  import { dt } from '../format';
+  import { dt, m } from '../format';
   import EtatEnCompte from '../composants/EtatEnCompte.svelte';
 
   const d = $derived(etat.dossier);
@@ -18,6 +18,10 @@
         ? `Bilan de clôture au ${dt(d.fin)}`
         : `Bilan au ${dt(derniereDate)}`,
   );
+  /** Chiffres clés lus dans le bilan affiché (liquidités = comptes 1000 à 1059, comme le tableau des flux). */
+  const postes = $derived(b.actif.flatMap((g) => g.postes));
+  const liquidites = $derived(postes.filter((p) => p.numero >= '1000' && p.numero <= '1059').reduce((x, p) => x + p.montant, 0));
+  const capitauxPropres = $derived(b.passif.find((g) => g.titre === 'Capitaux propres')?.total ?? 0);
 </script>
 
 <div class="titre">
@@ -41,6 +45,16 @@
   </div>
 {/if}
 
+<div class="chiffres" aria-label="Chiffres clés">
+  <div class="tuile"><span class="etiq">Total du bilan</span><span class="val num">{m(b.totalActif)}</span></div>
+  <div class="tuile"><span class="etiq">Liquidités</span><span class="val num">{m(liquidites)}</span></div>
+  <div class="tuile"><span class="etiq">Capitaux propres</span><span class="val num">{m(capitauxPropres)}</span></div>
+  <div class="tuile">
+    <span class="etiq">{b.resultat < 0 ? "Perte de l'exercice" : "Bénéfice de l'exercice"}</span>
+    <span class="val num" class:negatif={b.resultat < 0}>{m(Math.abs(b.resultat))}</span>
+  </div>
+</div>
+
 <EtatEnCompte
   gauche={{ titre: 'Actif', groupes: b.actif, total: b.totalActif, libelleTotal: "Total de l'actif" }}
   droite={{ titre: 'Passif', groupes: b.passif, total: b.totalPassif, libelleTotal: 'Total du passif' }}
@@ -56,5 +70,11 @@
 <style>
   .options { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
   .bandeau { margin-bottom: 16px; }
+  .chiffres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .tuile { background: #fff; border: 1px solid var(--c-bordure-2); border-radius: var(--rayon); box-shadow: var(--ombre); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .etiq { font-size: 12px; color: var(--c-texte-2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: bold; }
+  .val { font-size: 21px; font-weight: bold; color: var(--c-texte); }
+  .val.negatif { color: var(--c-negatif); }
+  @media (max-width: 1100px) { .chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   p { margin-top: 12px; }
 </style>

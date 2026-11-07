@@ -264,10 +264,12 @@
             </button>
           {/if}
         </div>
-        {#if operationCourante.piece && voirPiece}
-          <div class="zone-piece"><PieceVue piece={operationCourante.piece} /></div>
-        {/if}
       {/if}
+      <div class="plan-saisie" class:avec-piece={!!(operationCourante?.piece && voirPiece)}>
+      {#if operationCourante?.piece && voirPiece}
+        <div class="zone-piece"><PieceVue piece={operationCourante.piece} /></div>
+      {/if}
+      <div class="grille-saisie">
       <table>
         <thead>
           <tr>
@@ -331,6 +333,8 @@
       <div class="aide-clavier">
         <kbd>Tab</kbd> champ suivant · <kbd>Entrée</kbd> ligne suivante, puis validation quand l'écriture est équilibrée ·
         <kbd>Échap</kbd> retire la ligne · compte : cliquez dans le champ ou tapez une partie du nom du compte
+      </div>
+      </div>
       </div>
     </section>
 
@@ -473,40 +477,46 @@
 <style>
   .mise-en-page { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 16px; align-items: start; }
   .colonne-principale { min-width: 0; }
-  .saisie table th { background: var(--c-fond-2); color: var(--c-structure); border-bottom: 2px solid var(--c-structure); }
-  .saisie td { padding: 4px 6px; border-bottom: none; }
-  .operation-courante { padding: 8px 14px; background: var(--c-selection); border-bottom: 1px solid var(--c-bordure-2); }
+  .saisie td { padding: 5px 6px; border-bottom: none; }
+  .saisie tbody tr:hover td { background: none; }
+  .operation-courante { padding: 12px 18px; background: #f3f8fd; border-bottom: 1px solid var(--c-bordure-3); line-height: 1.45; }
   .bascule-piece { margin-left: 10px; font-size: 13px; }
-  .zone-piece { padding: 12px 14px; background: var(--c-fond-2); border-bottom: 1px solid var(--c-bordure-2); max-height: 420px; overflow-y: auto; }
+  .zone-piece { padding: 14px 18px; background: var(--c-fond-2); border-bottom: 1px solid var(--c-bordure-3); max-height: 420px; overflow-y: auto; }
+  .grille-saisie { min-width: 0; }
+  /* Grand écran : la pièce justificative à côté de la grille de saisie. */
+  @media (min-width: 1600px) {
+    .plan-saisie.avec-piece { display: grid; grid-template-columns: minmax(0, 1fr) 380px; }
+    .plan-saisie.avec-piece .zone-piece { order: 2; max-height: 560px; border-bottom: 0; border-left: 1px solid var(--c-bordure-3); }
+  }
   .retirer {
     border: none; background: none; color: var(--c-texte-2); font-size: 18px; line-height: 1; cursor: pointer; padding: 6px 4px;
   }
   .retirer:hover { color: var(--c-negatif); }
   .equilibre {
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    padding: 10px 14px; border-top: 1px solid var(--c-bordure-2);
+    padding: 12px 18px; border-top: 1px solid var(--c-bordure-3); background: var(--c-fond-tete);
   }
   .totaux { display: flex; gap: 24px; color: var(--c-texte-2); }
   .totaux b { color: var(--c-texte); }
   .etat-equilibre { flex: 1; }
-  .ecart { border-left: 4px solid var(--c-accent); padding: 4px 10px; color: var(--c-alerte-texte); font-weight: bold; background: var(--c-alerte-fond); }
+  .ecart { border-left: 4px solid var(--c-accent); padding: 5px 10px; color: var(--c-alerte-texte); font-weight: bold; background: var(--c-alerte-fond); border-radius: 6px; }
   .boutons { display: flex; gap: 8px; flex: none; }
   .erreurs { margin: 0 14px 10px; }
-  .aide-clavier { font-size: 12px; color: var(--c-texte-2); padding: 0 14px 10px; }
+  .aide-clavier { font-size: 12px; color: var(--c-texte-2); padding: 8px 18px 12px; background: var(--c-fond-tete); }
 
   .journal { font-size: 13px; table-layout: fixed; }
-  .journal td { padding: 5px 8px; overflow: hidden; }
-  .journal th { padding: 7px 8px; }
+  .journal td { padding: 8px 8px; overflow: hidden; }
+  .journal th { padding: 9px 8px; }
   .int { display: block; color: var(--c-texte-2); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .actions { text-align: right; white-space: nowrap; }
   tr.annulee td { color: #7a8591; }
   .barre { text-decoration: line-through; }
-  .statut { font-size: 12px; font-weight: bold; white-space: nowrap; }
-  .statut.juste { color: var(--c-ok); }
-  .statut.revoir { color: var(--c-alerte-texte); }
-  .statut.neutre { color: var(--c-texte-2); }
+  .statut { font-size: 12px; font-weight: bold; white-space: nowrap; display: inline-block; padding: 2px 9px; border-radius: 999px; }
+  .statut.juste { color: var(--c-ok); background: var(--c-ok-fond); }
+  .statut.revoir { color: var(--c-alerte-texte); background: var(--c-alerte-fond); }
+  .statut.neutre { color: var(--c-texte-2); background: #eef2f6; }
   tr.ligne-retour td { padding-top: 0; }
-  .retour { padding: 6px 10px; background: var(--c-alerte-fond); border-left: 4px solid var(--c-accent); font-size: 13px; }
+  .retour { padding: 7px 12px; background: var(--c-alerte-fond); border-left: 4px solid var(--c-accent); font-size: 13px; border-radius: 6px; }
   .retour.neutre { background: var(--c-fond-2); border-left-color: var(--c-bordure); color: var(--c-texte-2); }
   .solution { margin-left: 8px; font-weight: bold; }
   .solution-detail { margin-top: 6px; padding: 6px 10px; border-left: 4px solid var(--c-structure); background: var(--c-selection); font-size: 13px; }
