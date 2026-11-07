@@ -23,6 +23,7 @@
   import SyntheseCopies from './SyntheseCopies.svelte';
   import DossiersEnseignant from './DossiersEnseignant.svelte';
   import Relecture from './Relecture.svelte';
+  import BoutonLien from '../composants/BoutonLien.svelte';
 
   let code = $state('');
   let confirmation = $state('');
@@ -211,6 +212,18 @@
               if (m) apercu(m);
             }}>Aperçu</button
           >
+          <button
+            class="btn"
+            disabled={!modeleId}
+            onclick={() => {
+              const m = exercicesDemo.find((x) => x.id === modeleId);
+              if (m) {
+                const v = enseignant.creerVariante($state.snapshot(m) as Exercice);
+                message = `Variante d'évaluation « ${v.titre} » créée dans vos exercices : relisez-la (situation, textes), puis exportez-la pour les élèves.`;
+              }
+            }}>Variante d'évaluation</button
+          >
+          {#if modeleId}<BoutonLien exerciceId={modeleId} classe="btn" />{/if}
           <button class="btn" onclick={importer}>Importer un exercice…</button>
         </div>
         <div class="barre sauvegarde" role="group" aria-label="Sauvegarde">

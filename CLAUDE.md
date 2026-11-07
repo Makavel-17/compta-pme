@@ -25,6 +25,8 @@ Dossiers de pièces comptables (05.11.2026) : `src/data/dossiers/` — dix-neuf 
 
 Accueil et avancement (maquette `public/maquettes/accueil-avancement.html` validée le 06.11.2026) : reprise de l'exercice en cours (`etat.accueilOuvert`, « Changer d'exercice » n'efface plus rien, confirmation avant de remplacer un travail), choix CFC/MP mémorisé, recherche, niveaux repliés ; barre d'avancement et récapitulatif dans l'en-tête (`avancement()` dans `src/engine/correction.ts`, juste/à revoir seulement en entraînement). Plusieurs exercices par navigateur (06.11.2026) : `etat.autres` garde les exercices commencés, repris là où l'élève les a laissés ; un autre nom d'élève déclenche une confirmation puis efface le travail précédent.
 
+Partage avec les collègues et les classes (07.11.2026) : lien direct `?exercice=<id>` vers un exercice du logiciel (`src/ui/lien.ts`, bouton « Copier le lien pour les élèves ») ; « Variante d'évaluation » (`src/engine/variante.ts`) : montants × 2 ou 3, mode évaluation, enregistrée dans les exercices de l'enseignant (corrigé non public) ; avertissement : les corrigés des exercices fournis sont publics, à réserver à l'entraînement ; guide « Démarrer en 10 minutes avec sa classe ».
+
 Guide d'utilisation : contenu unique `src/data/guide.ts` (vue `Guide.svelte`) ; page autonome à partager `public/guide.html`, régénérée par `npm run guide` après toute modification du guide.
 
 Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fictive) créés dans la phase qui introduit le niveau.

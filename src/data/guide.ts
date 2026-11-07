@@ -249,6 +249,32 @@ export const GUIDE: PartieGuide[] = [
       "reste dans le navigateur de l'ordinateur utilisé : aucun compte, aucune inscription.",
     sections: [
       {
+        id: 'demarrer-classe',
+        titre: 'Démarrer en 10 minutes avec sa classe',
+        blocs: [
+          {
+            type: 'etapes',
+            items: [
+              'Ouvrez l’espace enseignant et choisissez votre propre code (aucun compte, rien à installer).',
+              'Entraînement : onglet « Dossiers » ou « Partir d’un exemple… », puis « Copier le lien pour les élèves ». Collez ' +
+                'le lien sur la plateforme de la classe : les élèves arrivent directement sur l’exercice.',
+              'Les élèves indiquent leur nom et leur classe, travaillent, puis cliquent sur « Exporter ma copie » et vous ' +
+                'remettent le fichier.',
+              'Évaluation : « Variante d’évaluation » crée dans vos exercices une copie aux montants différents, en mode ' +
+                'évaluation. Relisez-la, exportez-la pour les élèves ; son corrigé reste chez vous.',
+              'Correction : onglet « Copies », importez les fichiers reçus (notes, erreurs, CSV, PDF).',
+              'Sauvegardez vos exercices et partagez la sauvegarde avec vos collègues.',
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              'Les exercices et dossiers fournis avec le logiciel ont des corrigés publics : utilisez-les pour l’entraînement. ' +
+              'Pour une évaluation notée, utilisez une variante ou un exercice que vous avez créé.',
+          },
+        ],
+      },
+      {
         id: 'acces',
         titre: "Accéder à l'espace enseignant",
         blocs: [

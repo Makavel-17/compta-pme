@@ -7,6 +7,7 @@
   import { telecharger, telechargerBlob } from '../fichiers-navigateur';
   import { etat } from '../etat.svelte';
   import { enseignant } from '../enseignant.svelte';
+  import BoutonLien from '../composants/BoutonLien.svelte';
 
   const groupes = classerExercices(DOSSIERS);
   let enCours = $state<string | null>(null);
@@ -58,6 +59,13 @@
   }
 </script>
 
+<div class="avis-public" role="note">
+  <b>Entraînement ou évaluation ?</b> Les dossiers fournis avec le logiciel et leurs corrigés sont publics : tout élève
+  peut les retrouver. Utilisez-les pour l'entraînement. Pour une évaluation notée, cliquez sur « Variante
+  d'évaluation » : une copie aux montants différents est créée dans vos exercices, en mode évaluation, et son corrigé
+  ne quitte pas votre navigateur.
+</div>
+
 <p class="discret aide-haut">
   Un dossier par grand thème, chacun avec une entreprise fictive et 10 à 12 pièces comptables. Distribuez aux élèves le
   dossier PDF et le fichier d'exercice ; les pièces s'affichent aussi dans le journal. Les dossiers sont déjà proposés
@@ -78,7 +86,9 @@
           <tr>
             <td>
               <strong>{ex.raisonSociale}</strong> <span class="badge niveau">{etiquetteNiveau(ex)}</span>
-              <button class="btn-lien" onclick={() => apercu(ex)}>Aperçu</button><br />
+              <button class="btn-lien" onclick={() => apercu(ex)}>Aperçu</button>
+              <BoutonLien exerciceId={ex.id} />
+              <button class="btn-lien" onclick={() => enseignant.creerVariante($state.snapshot(ex) as Exercice)}>Variante d'évaluation</button><br />
               <span class="discret petit">{(ex.sujets ?? []).join(' · ')}</span>
             </td>
             <td class="num">{ex.operations.length}</td>
@@ -116,6 +126,7 @@
 </p>
 
 <style>
+  .avis-public { background: var(--c-alerte-fond); border-left: 4px solid var(--c-accent); padding: 10px 14px; margin-bottom: 12px; max-width: 900px; }
   .aide-haut { margin: 0 0 12px; max-width: 900px; }
   h2.filiere { font-size: 16px; color: var(--c-structure); margin: 18px 0 8px; }
   .carte { margin-bottom: 14px; }

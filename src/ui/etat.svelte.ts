@@ -122,7 +122,8 @@ class Etat {
       this.autres = Object.fromEntries(Object.entries(s.autres ?? {}).map(([k, v]) => [k, completer(v)!]));
     }
     // Arrivée sur le site (sans rubrique dans l'adresse) avec un travail en cours : l'accueil propose de le reprendre.
-    if (this.session?.role === 'eleve' && !this.session.apercu && (!location.hash || location.hash === '#')) this.accueilOuvert = true;
+    const lienExercice = new URLSearchParams(location.search).has('exercice');
+    if (this.session?.role === 'eleve' && !this.session.apercu && (lienExercice || !location.hash || location.hash === '#')) this.accueilOuvert = true;
     window.addEventListener('hashchange', () => (this.vue = vueDepuisAdresse()));
   }
 

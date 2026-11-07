@@ -7,6 +7,7 @@
   import { avancementSession, avecCorrection } from '../avancement';
   import { dateHeure, normaliser } from '../format';
   import BarreAvancement from '../composants/BarreAvancement.svelte';
+  import { exerciceDuLien, oublierLien } from '../lien';
 
   let { onEnseignant }: { onEnseignant: () => void } = $props();
 
@@ -17,6 +18,10 @@
   const av = $derived(enCours ? avancementSession(enCours) : null);
   const correction = $derived(enCours ? avecCorrection(enCours) : false);
   const exporte = $derived(enCours ? statutExport(enCours.dossier, $state.snapshot(enCours.fiches), enCours.dernierExport) : 'vide');
+
+  // ---- Lien direct donné par l'enseignant ----
+  const lienId = exerciceDuLien();
+  const exLien = lienId ? (exercicesDemo.find((e) => e.id === lienId) ?? null) : null;
 
   // ---- Exercices ----
   let importes = $state<Exercice[]>([]);
@@ -36,7 +41,7 @@
     }
   }
 
-  let filiere = $state<Filiere>(etat.prefs.filiere ?? (depart ? filiereDe(depart.exercice) : 'CFC'));
+  let filiere = $state<Filiere>(exLien ? filiereDe(exLien) : (etat.prefs.filiere ?? (depart ? filiereDe(depart.exercice) : 'CFC')));
   function choisirFiliere(f: Filiere) {
     filiere = f;
     etat.prefs.filiere = f;
@@ -76,7 +81,7 @@
   let prenom = $state(depart?.eleve.prenom ?? '');
   let nom = $state(depart?.eleve.nom ?? '');
   let classe = $state(depart?.eleve.classe ?? '');
-  let choix = $state(depart?.exercice.id ?? '');
+  let choix = $state(exLien?.id ?? depart?.exercice.id ?? '');
   let erreurs = $state<string[]>([]);
   /** Un autre élève sur le même ordinateur : confirmation avant d'effacer le travail enregistré. */
   let confirmer = $state(false);
@@ -99,6 +104,7 @@
     }
     if (autreEleve) etat.quitter();
     confirmer = false;
+    oublierLien();
     etat.commencer({ prenom: prenom.trim(), nom: nom.trim(), classe: classe.trim() }, ex);
   }
 </script>
@@ -111,6 +117,18 @@
       Logiciel de comptabilité en partie double, plan comptable suisse. Vos données restent dans ce navigateur :
       rien n'est envoyé en ligne.
     </p>
+
+    {#if exLien}
+      <section class="carte lien" aria-labelledby="titre-lien">
+        <h2 id="titre-lien" class="tete-simple">Exercice donné par votre enseignant</h2>
+        <div class="corps-carte">
+          <strong>{exLien.titre}</strong> <span class="discret petit">· {etiquetteNiveau(exLien)}</span>
+          <p class="petit">Indiquez votre prénom, votre nom et votre classe plus bas, puis cliquez sur « {etat.sessionDe(exLien.id) ? 'Reprendre' : 'Commencer'} ».</p>
+        </div>
+      </section>
+    {:else if lienId}
+      <div class="alerte" role="alert">Ce lien ne correspond à aucun exercice du logiciel. Demandez un nouveau lien à votre enseignant, ou choisissez l'exercice dans la liste.</div>
+    {/if}
 
     {#if enCours}
       <section class="carte reprise" aria-labelledby="titre-reprise">
@@ -285,6 +303,8 @@
   .tete-carte { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); flex-wrap: wrap; }
   .tete-simple { padding: 10px 14px; border-bottom: 1px solid var(--c-bordure-2); }
   .reprise { border-left: 4px solid var(--c-action); }
+  .lien { border-left: 4px solid var(--c-structure); margin-bottom: 16px; }
+  .lien p { margin: 6px 0 0; }
   .ligne-reprise { display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   .legende { display: flex; gap: 14px; font-size: 12px; color: var(--c-texte-2); margin-top: 6px; flex-wrap: wrap; }
   .pastille { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }

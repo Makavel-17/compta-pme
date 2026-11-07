@@ -105,13 +105,14 @@ footer { margin-top: 48px; border-top: 1px solid var(--bordure); padding-top: 12
 </header>
 
 <section class="demarrage" aria-labelledby="demarrer">
-  <h2 id="demarrer">Démarrer en cinq minutes</h2>
+  <h2 id="demarrer">Démarrer en 10 minutes avec sa classe</h2>
   <ol>
-    <li>Ouvrez le site, puis cliquez sur « Espace enseignant » et choisissez votre propre code d'accès.</li>
-    <li>Onglet « Exercices » : « Partir d'un exemple… », puis « Copier cet exemple » pour obtenir un exercice à adapter.</li>
-    <li>Modifiez l'entreprise, le bilan d'ouverture et les opérations, puis saisissez le corrigé dans le journal.</li>
-    <li>« Exporter pour les élèves » : déposez le fichier obtenu sur la plateforme de la classe.</li>
-    <li>Récupérez les copies des élèves et importez-les dans l'onglet « Copies » pour obtenir les notes.</li>
+    <li><b>Votre espace.</b> Ouvrez le site, cliquez sur « Espace enseignant » et choisissez votre propre code. Rien à installer, aucun compte.</li>
+    <li><b>Un exercice d'entraînement.</b> Onglet « Dossiers » (ou « Partir d'un exemple… » dans « Exercices ») : cliquez sur « Copier le lien pour les élèves » et collez ce lien sur la plateforme de la classe. Les élèves arrivent directement sur l'exercice ; pour les pièces sur papier, donnez aussi le « Paquet élèves (ZIP) ».</li>
+    <li><b>Le travail des élèves.</b> Ils indiquent leur nom et leur classe, comptabilisent avec un retour immédiat, puis cliquent sur « Exporter ma copie » et vous remettent le fichier.</li>
+    <li><b>Une évaluation.</b> Cliquez sur « Variante d'évaluation » : une copie aux montants différents, en mode évaluation, est créée dans vos exercices. Relisez-la, cliquez sur « Exporter pour les élèves » et remettez le fichier ; les élèves l'ouvrent avec « Ouvrir un exercice reçu… ». Son corrigé ne quitte pas votre navigateur.</li>
+    <li><b>La correction.</b> Onglet « Copies » : importez tous les fichiers reçus ; notes, détail des erreurs, résultats pour Excel et copies corrigées en PDF.</li>
+    <li><b>Ne rien perdre, partager.</b> « Sauvegarder tous mes exercices » crée un fichier à garder et à transmettre à vos collègues (« Restaurer une sauvegarde… » chez eux).</li>
   </ol>
 </section>
 
