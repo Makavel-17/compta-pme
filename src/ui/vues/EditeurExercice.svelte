@@ -68,6 +68,12 @@
   let repTantiemes = $state<number | null>(rep0?.tantiemes ?? null);
   let repLibres = $state<number | null>(rep0?.reservesLibres ?? null);
   let repHolding = $state(rep0?.holding ?? false);
+  const seuil0 = source.parametres.seuil;
+  let seuilUnite = $state(seuil0?.unite ?? '');
+  let seuilPrix = $state<number | null>(seuil0?.prixVente ?? null);
+  let seuilCout = $state<number | null>(seuil0?.coutVariable ?? null);
+  let seuilFixes = $state<number | null>(seuil0?.chargesFixes ?? null);
+  let seuilQuantite = $state(seuil0 ? String(seuil0.quantite) : '');
   let actif = $state<LigneBilan[]>(versLignes(source.ouvertureActif));
   let passif = $state<LigneBilan[]>(versLignes(source.ouverturePassif));
   let operations = $state<LigneOp[]>(
@@ -168,6 +174,16 @@
                 tauxDividende: Math.round((Number(repTaux.replace(',', '.')) || 0) * 100),
                 tantiemes: repTantiemes ?? 0,
                 reservesLibres: repLibres ?? 0,
+              }
+            : undefined,
+        seuil:
+          niveau === 'MP' && seuilUnite.trim() && seuilPrix !== null && seuilCout !== null && seuilFixes !== null
+            ? {
+                unite: seuilUnite.trim(),
+                prixVente: seuilPrix,
+                coutVariable: seuilCout,
+                chargesFixes: seuilFixes,
+                quantite: Math.max(0, Math.round(Number(seuilQuantite) || 0)),
               }
             : undefined,
       },
@@ -366,6 +382,20 @@
   </section>
 {/if}
 
+{#if niveau === 'MP'}
+  <section class="carte">
+    <h2>Seuil de rentabilité (fiche de l'élève, facultative)</h2>
+    <div class="corps-carte grille">
+      <div><label class="bloc" for="seuil-u">Unité vendue (au singulier)</label><input id="seuil-u" class="champ" bind:value={seuilUnite} placeholder="vélo" /></div>
+      <div><label class="bloc" for="seuil-p">Prix de vente par unité</label><ChampMontant id="seuil-p" libelle="Prix de vente par unité" bind:valeur={seuilPrix} /></div>
+      <div><label class="bloc" for="seuil-c">Coût variable par unité</label><ChampMontant id="seuil-c" libelle="Coût variable par unité" bind:valeur={seuilCout} /></div>
+      <div><label class="bloc" for="seuil-f">Charges fixes de la période</label><ChampMontant id="seuil-f" libelle="Charges fixes" bind:valeur={seuilFixes} /></div>
+      <div><label class="bloc" for="seuil-q">Quantité vendue prévue</label><input id="seuil-q" class="champ montant num" inputmode="numeric" bind:value={seuilQuantite} /></div>
+    </div>
+    <p class="petit discret aide-seuil">Laissez l'unité vide pour ne pas proposer la fiche aux élèves.</p>
+  </section>
+{/if}
+
 <section class="carte">
   <h2>Comptes de l'exercice</h2>
   <div class="corps-carte">
@@ -495,6 +525,7 @@
 {/if}
 
 <style>
+  .aide-seuil { padding: 0 14px 12px; margin: 0; }
   .boutons { display: flex; gap: 8px; }
   section { margin-bottom: 16px; }
   .grille { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; align-items: start; }

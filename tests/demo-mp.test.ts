@@ -24,7 +24,7 @@ function corrige(): Dossier {
 describe('exercice de démonstration MP', () => {
   it('est valide, en SA, avec répartition et analyse', () => {
     expect(controlerExercice(demoMp, plan)).toEqual({ erreurs: [], avertissements: [] });
-    expect([...fonctionsExercice(demoMp)].sort()).toEqual(['analyse', 'repartition', 'tva']);
+    expect([...fonctionsExercice(demoMp)].sort()).toEqual(['analyse', 'degres', 'flux', 'repartition', 'tva']);
     expect(creerDossier(demoMp, plan).plan.find((c) => c.numero === '2800')!.intitule).toBe('Capital-actions');
   });
 

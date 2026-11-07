@@ -21,6 +21,9 @@ export type Vue =
   | 'salaire'
   | 'repartition'
   | 'analyse'
+  | 'degres'
+  | 'flux'
+  | 'seuil'
   | 'bouclement'
   | 'theorie';
 
@@ -59,6 +62,9 @@ export interface Fiches {
   salaire?: FicheSalaire;
   repartition?: Record<string, number | null>;
   analyse?: Record<string, string>;
+  degres?: Record<string, string>;
+  flux?: Record<string, string>;
+  seuil?: Record<string, string>;
 }
 
 interface Preferences {
@@ -81,7 +87,7 @@ function completer(s: (Partial<Session> & Omit<Session, 'suivi' | 'role' | 'fich
   return s ? { ...s, suivi: s.suivi ?? {}, role: s.role ?? 'eleve', fiches: s.fiches ?? {} } : null;
 }
 
-const VUES: Vue[] = ['tableau', 'journal', 'comptes', 'grandlivre', 'balance', 'bilan', 'resultat', 'tva', 'salaire', 'repartition', 'analyse', 'bouclement', 'theorie'];
+const VUES: Vue[] = ['tableau', 'journal', 'comptes', 'grandlivre', 'balance', 'bilan', 'resultat', 'tva', 'salaire', 'repartition', 'analyse', 'degres', 'flux', 'seuil', 'bouclement', 'theorie'];
 
 function vueDepuisAdresse(): Vue {
   const h = location.hash.replace('#', '') as Vue;

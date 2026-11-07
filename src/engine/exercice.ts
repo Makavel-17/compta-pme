@@ -10,13 +10,14 @@ import type { ModeBouclement } from './closing';
 import type { Compte, Niveau } from './plan';
 import { comptesDuNiveau, NIVEAUX } from './plan';
 import type { DonneesRepartition } from './repartition';
+import type { DonneesSeuil } from './tableaux';
 import type { PieceComptable } from './pieces';
 
 export type LibellesT = 'SI/SF' | 'San/Spb';
 export type Mode = 'entrainement' | 'evaluation';
 
 /** Rubriques de l'application ; une rubrique non activée n'apparaît pas. */
-export type Fonction = 'tva' | 'salaire' | 'calculatriceTva' | 'repartition' | 'analyse';
+export type Fonction = 'tva' | 'salaire' | 'calculatriceTva' | 'repartition' | 'analyse' | 'degres' | 'flux' | 'seuil';
 
 export interface Operation {
   numero: string;
@@ -79,6 +80,8 @@ export interface Exercice {
     bouclementAutomatique?: boolean;
     /** MP, sociétés : données de la répartition du bénéfice décidée par l'assemblée générale. */
     repartition?: DonneesRepartition;
+    /** MP : données de la fiche « Seuil de rentabilité » (prix, coût variable, charges fixes, quantité). */
+    seuil?: DonneesSeuil;
   };
   corrige?: EcritureCorrigee[];
   /** Points par opération (numéro → points) ; 1 point par défaut. */
@@ -113,6 +116,9 @@ export function fonctionsExercice(ex: Exercice): Set<Fonction> {
   if (cfc2 && ex.parametres.calculatriceTva) f.add('calculatriceTva');
   if (ex.niveau === 'MP') {
     f.add('analyse');
+    f.add('degres');
+    f.add('flux');
+    if (ex.parametres.seuil) f.add('seuil');
     if (ex.formeJuridique !== 'raison individuelle') f.add('repartition');
   }
   return f;

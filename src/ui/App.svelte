@@ -20,6 +20,9 @@
   import Salaire from './vues/Salaire.svelte';
   import Repartition from './vues/Repartition.svelte';
   import Theorie from './vues/Theorie.svelte';
+  import FicheDegres from './vues/FicheDegres.svelte';
+  import FicheFlux from './vues/FicheFlux.svelte';
+  import FicheSeuil from './vues/FicheSeuil.svelte';
   import Analyse from './vues/Analyse.svelte';
   import Visite from './composants/Visite.svelte';
   import Guide from './vues/Guide.svelte';
@@ -108,7 +111,10 @@
         entrees: [
           { vue: 'bilan', libelle: 'Bilan' },
           { vue: 'resultat', libelle: 'Compte de résultat' },
+          ...(f.has('degres') ? [{ vue: 'degres' as Vue, libelle: 'Résultat par degrés' }] : []),
+          ...(f.has('flux') ? [{ vue: 'flux' as Vue, libelle: 'Flux de trésorerie' }] : []),
           ...(f.has('analyse') ? [{ vue: 'analyse' as Vue, libelle: 'Analyse' }] : []),
+          ...(f.has('seuil') ? [{ vue: 'seuil' as Vue, libelle: 'Seuil de rentabilité' }] : []),
         ],
       },
       {
@@ -210,6 +216,9 @@
       {:else if etat.vue === 'salaire' && etat.fonctions.has('salaire')}<Salaire />
       {:else if etat.vue === 'repartition' && etat.fonctions.has('repartition')}<Repartition />
       {:else if etat.vue === 'analyse' && etat.fonctions.has('analyse')}<Analyse />
+      {:else if etat.vue === 'degres' && etat.fonctions.has('degres')}<FicheDegres />
+      {:else if etat.vue === 'flux' && etat.fonctions.has('flux')}<FicheFlux />
+      {:else if etat.vue === 'seuil' && etat.fonctions.has('seuil')}<FicheSeuil />
       {:else if etat.vue === 'theorie'}<Theorie />
       {:else}<TableauDeBord />
       {/if}
