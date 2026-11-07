@@ -203,6 +203,8 @@ export const GUIDE: PartieGuide[] = [
               'Décompte de salaire : calculez les retenues et le salaire net avant de passer l’écriture.',
               'TVA : le décompte TVA due moins impôt préalable, d’après vos comptes.',
               'Répartition du bénéfice et Analyse (maturité) : calculez les montants et les ratios demandés.',
+              'Résultat par degrés, Flux de trésorerie et Seuil de rentabilité (maturité) : calculez chaque degré ou chaque ' +
+                'flux d’après vos comptes avant bouclement ; en entraînement, chaque résultat est contrôlé.',
               "Bouclement : passez vous-même les écritures de bouclement au journal (pièces B1, B2…). Selon l'exercice, " +
                 'elles sont corrigées comme les opérations.',
             ],
@@ -410,7 +412,7 @@ export const GUIDE: PartieGuide[] = [
           {
             type: 'p',
             texte:
-              "Dix-sept dossiers prêts à l'emploi, un par grand thème (CFC niveaux 1 à 4, maturité niveaux 1 à 5). Chacun présente " +
+              "Dix-huit dossiers prêts à l'emploi, un par grand thème (CFC niveaux 1 à 4, maturité niveaux 1 à 5). Chacun présente " +
               'une entreprise fictive et 10 à 12 pièces : factures, tickets de caisse, quittances, avis bancaires, fiches de ' +
               "salaire, notes internes. L'élève doit trouver lui-même l'écriture à partir du document.",
           },

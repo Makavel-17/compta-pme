@@ -17,9 +17,9 @@
       lignes: [
         { cle: 'mcu', libelle: `Marge contributive par ${donnees.unite}`, formule: 'prix de vente − coût variable', type: 'chf', attendu: r.margeContributiveUnitaire },
         { cle: 'taux', libelle: 'Taux de marge contributive', formule: 'marge contributive ÷ prix de vente × 100', type: 'pc', attendu: r.tauxMargeContributive },
-        { cle: 'seuilQ', libelle: `Seuil de rentabilité en quantité (${donnees.unite}s)`, formule: 'charges fixes ÷ marge contributive unitaire', type: 'nombre', attendu: r.seuilQuantite, fort: true },
+        { cle: 'seuilQ', libelle: 'Seuil de rentabilité en quantité (unités)', formule: 'charges fixes ÷ marge contributive unitaire', type: 'nombre', attendu: r.seuilQuantite, fort: true },
         { cle: 'seuilCA', libelle: "Seuil de rentabilité en chiffre d'affaires", formule: 'charges fixes ÷ taux de marge contributive', type: 'chf', attendu: r.seuilChiffreAffaires, fort: true },
-        { cle: 'resultat', libelle: `Résultat pour ${donnees.quantite} ${donnees.unite}s`, formule: 'quantité × marge contributive − charges fixes', type: 'chf', attendu: r.resultatQuantite, fort: true },
+        { cle: 'resultat', libelle: `Résultat pour ${donnees.quantite} unités vendues`, formule: 'quantité × marge contributive − charges fixes', type: 'chf', attendu: r.resultatQuantite, fort: true },
       ],
     },
   ]);

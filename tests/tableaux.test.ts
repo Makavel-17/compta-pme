@@ -41,3 +41,14 @@ describe('tableaux MP', () => {
     expect(r.resultatQuantite).toBe(18000000);
   });
 });
+
+describe('dossier Rhône Mobilité SA', () => {
+  it('donne les résultats attendus pour les trois tableaux', async () => {
+    const { dossierRhoneMobilite: ex } = await import('../src/data/dossiers/mp-tableaux');
+    const d = corrige(ex);
+    const g = degres(d);
+    expect([g.margeBrute, g.ebitda, g.ebit, g.resultatNetExploitation, g.ebt, g.resultat]).toEqual([49000000, 15000000, 13100000, 13100000, 15300000, 14100000]);
+    const fl = fluxTresorerie(d);
+    expect([fl.exploitation, fl.investissement, fl.financement, fl.variationLiquidites]).toEqual([16000000, -4000000, -5000000, 7000000]);
+  });
+});

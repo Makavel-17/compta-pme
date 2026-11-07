@@ -12,6 +12,7 @@ import { ecrituresDeBouclement } from '../engine/closing';
 import { bilan, compteDeResultat } from '../engine/statements';
 import { repartir } from '../engine/repartition';
 import { RATIOS, ratios } from '../engine/analyse';
+import { degres, fluxTresorerie, seuil } from '../engine/tableaux';
 import { formatMontant as m } from '../engine/money';
 import { formatDate as dt } from '../engine/dates';
 import { cote, lignesEtat } from './copie';
@@ -327,6 +328,60 @@ export async function genererPdfCorrige(
       styles: { font: 'helvetica', fontSize: 8.5, cellPadding: 1.3 },
       headStyles: { fillColor: BLEU, textColor: 255 },
       columnStyles: { 2: { halign: 'right', cellWidth: 24 } },
+    });
+    y = finY(doc, y) + 8;
+  }
+
+  if (ex.niveau === 'MP' && difficulteDe(ex) >= 5) {
+    const g = degres(d);
+    const fl = fluxTresorerie(d);
+    const tableau = (titre: string, lignes: [string, string][]) => {
+      y = titreSection(doc, titre, y);
+      autoTable(doc, {
+        startY: y,
+        margin: { left: MARGE, right: MARGE },
+        body: lignes,
+        styles: { font: 'helvetica', fontSize: 9, cellPadding: 1.4 },
+        columnStyles: { 1: { halign: 'right', cellWidth: 34 } },
+      });
+      y = finY(doc, y) + 8;
+    };
+    tableau('Compte de résultat à plusieurs degrés (avant bouclement)', [
+      ['Marge brute', m(g.margeBrute)],
+      ['EBITDA', m(g.ebitda)],
+      ['EBIT', m(g.ebit)],
+      ["Résultat net d'exploitation", m(g.resultatNetExploitation)],
+      ['EBT (résultat avant impôts)', m(g.ebt)],
+      ["Résultat de l'exercice", m(g.resultat)],
+    ]);
+    tableau('Tableau des flux de trésorerie (méthode indirecte)', [
+      ['Bénéfice', m(fl.benefice)],
+      ['+ Amortissements', m(fl.amortissements)],
+      ['+/- Variation des provisions', m(fl.variationProvisions)],
+      ['-/+ Variation des créances, stocks et actifs transitoires', m(-fl.variationActifsCirculants)],
+      ["+/- Variation des dettes d'exploitation et passifs transitoires", m(fl.variationDettesExploitation)],
+      ["= Cash flow d'exploitation", m(fl.exploitation)],
+      ["Flux d'investissement", m(fl.investissement)],
+      ['Flux de financement', m(fl.financement)],
+      ['Variation des liquidités', m(fl.variationLiquidites)],
+    ]);
+  }
+  if (ex.parametres.seuil) {
+    const x = ex.parametres.seuil;
+    const r = seuil(x);
+    y = titreSection(doc, `Seuil de rentabilité (${x.unite})`, y);
+    autoTable(doc, {
+      startY: y,
+      margin: { left: MARGE, right: MARGE },
+      body: [
+        ['Marge contributive par unité', m(r.margeContributiveUnitaire)],
+        ['Taux de marge contributive', `${r.tauxMargeContributive.toFixed(1)} %`],
+        ['Seuil en quantité', String(Math.round(r.seuilQuantite * 100) / 100)],
+        ["Seuil en chiffre d'affaires", m(r.seuilChiffreAffaires)],
+        [`Résultat pour ${x.quantite} unités`, m(r.resultatQuantite)],
+      ],
+      styles: { font: 'helvetica', fontSize: 9, cellPadding: 1.4 },
+      columnStyles: { 1: { halign: 'right', cellWidth: 34 } },
     });
     y = finY(doc, y) + 8;
   }

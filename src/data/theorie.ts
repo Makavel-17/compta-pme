@@ -1362,6 +1362,30 @@ export const CHAPITRES: Chapitre[] = [
           },
         ],
       },
+      {
+        titre: 'Immeuble locatif (hors exploitation)',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Une entreprise peut posséder un immeuble entièrement loué à des tiers, sans rapport avec son activité. Ses " +
+              "loyers et ses charges (entretien, chauffage, assurance, impôt foncier, intérêts hypothécaires, amortissement, " +
+              "salaire du concierge) sont hors exploitation : comptes 8100 Produits hors exploitation et 8000 Charges hors " +
+              "exploitation. Le résultat de l'immeuble n'influence ainsi ni la marge brute, ni l'EBIT.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Loyers des locataires encaissés par la banque, 9'600.00", lignes: s('1020', '8100', 9600) },
+              {
+                cas: "Annuité : intérêt hypothécaire 4'500.00 et remboursement 6'000.00, débités par la banque",
+                lignes: [D('8000', 4500), D('2401', 6000), C('1020', 10500)],
+              },
+              { cas: "Amortissement indirect de l'immeuble locatif, 5'000.00", lignes: s('8000', '1609', 5000) },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -1486,6 +1510,138 @@ export const CHAPITRES: Chapitre[] = [
               "Pour analyser une entreprise, on « apure » ses comptes : on remplace les valeurs comptables prudentes par des " +
               "valeurs proches de la réalité (bilan interne). Les ratios calculés sur le bilan interne donnent une image " +
               'plus fidèle que ceux calculés sur le bilan publié (bilan externe).',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'resultat-degres',
+    titre: 'Compte de résultat à plusieurs degrés',
+    niveau: 'MP',
+    resume: "Présenter le compte de résultat en étapes successives, de la marge brute au résultat de l'exercice.",
+    sections: [
+      {
+        titre: 'Les degrés selon le plan comptable PME',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le compte de résultat en liste soustrait les charges par étapes. Chaque degré répond à une question : " +
+              "l'entreprise vend-elle assez cher ? son exploitation est-elle rentable avant les choix de financement ? que " +
+              "rapportent ses activités annexes et hors exploitation ?",
+          },
+          {
+            type: 'tableau',
+            entetes: ['Degré', 'Calcul'],
+            lignes: [
+              ['Marge brute', "Chiffre d'affaires (classe 3) − charges de marchandises (classe 4)"],
+              ['EBITDA', 'Marge brute − charges de personnel (5) − autres charges d’exploitation (60 à 67)'],
+              ['EBIT (résultat économique)', 'EBITDA − amortissements (68)'],
+              ["Résultat net d'exploitation", 'EBIT − charges financières + produits financiers (69)'],
+              ['EBT (résultat avant impôts)', '± activités annexes (7) ± hors exploitation (80, 81) ± exceptionnels (85)'],
+              ["Résultat de l'exercice", 'EBT − impôts (89)'],
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "EBITDA : résultat avant intérêts, impôts et amortissements. EBIT : résultat avant intérêts et impôts. EBT : " +
+              "résultat avant impôts. L'EBIT permet de comparer des entreprises sans tenir compte de leur financement.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'flux',
+    titre: 'Tableau des flux de trésorerie',
+    niveau: 'MP',
+    resume: 'Expliquer la variation des liquidités par trois flux : exploitation, investissement et financement.',
+    bases: ['CO art. 961b (tableau des flux de trésorerie des grandes entreprises)'],
+    sections: [
+      {
+        titre: 'Trois secteurs',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Le bénéfice n'est pas de l'argent en caisse. Le tableau des flux de trésorerie montre d'où viennent et où " +
+              "vont les liquidités (caisse, poste, banque). Les encaissements sont positifs, les décaissements négatifs.",
+          },
+          {
+            type: 'liste',
+            items: [
+              "Exploitation : l'argent produit par l'activité ; positif, on parle de cash flow, négatif de cash drain.",
+              'Investissement : achats d’immobilisations (sorties) et ventes d’immobilisations (entrées).',
+              'Financement : emprunts reçus ou remboursés, augmentations de capital, dividendes versés.',
+            ],
+          },
+          {
+            type: 'retenir',
+            texte: 'Flux d’exploitation + flux d’investissement + flux de financement = variation des liquidités.',
+          },
+        ],
+      },
+      {
+        titre: 'Cash flow par la méthode indirecte',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "On part du bénéfice et on corrige ce qui n'a pas d'effet sur les liquidités : on rajoute les amortissements " +
+              "et l'augmentation des provisions (charges sans sortie d'argent). On tient compte ensuite des variations du " +
+              "fonds de roulement : une augmentation des créances, des stocks ou des actifs transitoires immobilise de " +
+              "l'argent (on la soustrait) ; une augmentation des dettes fournisseurs ou des passifs transitoires en libère (on l'ajoute).",
+          },
+          {
+            type: 'tableau',
+            entetes: ['Élément', 'Montant'],
+            lignes: [
+              ['Bénéfice', "40'000.00"],
+              ['+ Amortissements', "12'000.00"],
+              ['+ Augmentation des provisions', "3'000.00"],
+              ['− Augmentation des créances clients', "−8'000.00"],
+              ['+ Augmentation des dettes fournisseurs', "5'000.00"],
+              ['= Cash flow d’exploitation', "52'000.00"],
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'seuil',
+    titre: 'Seuil de rentabilité',
+    niveau: 'MP',
+    resume: 'Combien faut-il vendre pour couvrir toutes les charges ? Marge contributive et point mort.',
+    sections: [
+      {
+        titre: 'Charges fixes, charges variables et marge contributive',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Les charges variables évoluent avec la quantité vendue (marchandises, emballages, commissions) ; les charges " +
+              "fixes restent les mêmes quelle que soit la quantité (loyer, salaires fixes, assurances, amortissements). Chaque " +
+              "unité vendue rapporte une marge contributive qui sert d'abord à couvrir les charges fixes.",
+          },
+          {
+            type: 'tableau',
+            entetes: ['Grandeur', 'Calcul'],
+            lignes: [
+              ['Marge contributive par unité', 'Prix de vente − coût variable par unité'],
+              ['Taux de marge contributive', 'Marge contributive ÷ prix de vente × 100'],
+              ['Seuil de rentabilité en quantité', 'Charges fixes ÷ marge contributive par unité'],
+              ["Seuil de rentabilité en chiffre d'affaires", 'Charges fixes ÷ taux de marge contributive'],
+              ['Résultat pour une quantité', 'Quantité × marge contributive par unité − charges fixes'],
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              "Exemple : prix 80.00, coût variable 50.00, charges fixes 60'000.00. Marge contributive 30.00 (37,5 %) ; " +
+              "seuil 2'000 unités, soit 160'000.00 de chiffre d'affaires. Au-delà, chaque unité vendue augmente le bénéfice de 30.00.",
           },
         ],
       },

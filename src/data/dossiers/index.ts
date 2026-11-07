@@ -9,10 +9,11 @@ import { complementZufferey, dossierTerroirs, dossierZufferey } from './mp-opera
 import { complementCarrosserie, dossierCarrosserie, dossierSports } from './mp-immeubles-analyse';
 import { dossierBrasserie, dossierLemanbio } from './mp-capital';
 import { complementAteliers, dossierAteliers } from './mp-reserves-latentes';
+import { dossierRhoneMobilite } from './mp-tableaux';
 
 export const DOSSIERS: Exercice[] = [
   dossierSaveurs, dossierPolyglotte, dossierOutils, dossierMenuiserie, dossierBabel,
-  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierBrasserie, dossierLemanbio, dossierAteliers, dossierOptique, dossierPrecimeca, dossierCarrosserie, dossierSports,
+  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierBrasserie, dossierLemanbio, dossierAteliers, dossierOptique, dossierPrecimeca, dossierCarrosserie, dossierSports, dossierRhoneMobilite,
 ];
 
 /** Version d'évaluation d'un dossier : même contenu, aucun retour pendant la saisie, corrigé absent du fichier élève. */
