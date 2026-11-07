@@ -10,10 +10,11 @@ import { complementCarrosserie, dossierCarrosserie, dossierSports } from './mp-i
 import { dossierBrasserie, dossierLemanbio } from './mp-capital';
 import { complementAteliers, dossierAteliers } from './mp-reserves-latentes';
 import { dossierRhoneMobilite } from './mp-tableaux';
+import { complementCartonnages, dossierCartonnages } from './mp-dissolution';
 
 export const DOSSIERS: Exercice[] = [
   dossierSaveurs, dossierPolyglotte, dossierOutils, dossierMenuiserie, dossierBabel,
-  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierBrasserie, dossierLemanbio, dossierAteliers, dossierOptique, dossierPrecimeca, dossierCarrosserie, dossierSports, dossierRhoneMobilite,
+  dossierMeubles, dossierBoulangerie, dossierFleurs, dossierTerroirs, dossierZufferey, dossierBrasserie, dossierLemanbio, dossierAteliers, dossierCartonnages, dossierOptique, dossierPrecimeca, dossierCarrosserie, dossierSports, dossierRhoneMobilite,
 ];
 
 /** Version d'évaluation d'un dossier : même contenu, aucun retour pendant la saisie, corrigé absent du fichier élève. */
@@ -27,6 +28,7 @@ export const DOSSIERS_EVALUATION: Exercice[] = DOSSIERS.map(versionEvaluation);
 /** Tableaux complémentaires du corrigé PDF, par identifiant de dossier. */
 export const COMPLEMENTS_CORRIGE: Record<string, TableauComplement[]> = {
   [dossierAteliers.id]: complementAteliers,
+  [dossierCartonnages.id]: complementCartonnages,
   [dossierZufferey.id]: complementZufferey,
   [dossierCarrosserie.id]: complementCarrosserie,
 };

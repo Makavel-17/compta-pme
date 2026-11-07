@@ -67,3 +67,14 @@ describe('corrigés complémentaires : concordance avec les comptes', () => {
     expect(COMPLEMENTS_CORRIGE[ex.id]![0]!.lignes[2]![1]).toBe(formatMontant(resultat));
   });
 });
+
+describe('dissolution des réserves latentes : concordance du corrigé', () => {
+  it('le bénéfice publié du tableau est celui du dossier corrigé', async () => {
+    const { COMPLEMENTS_CORRIGE } = await import('../src/data/dossiers');
+    const { dossierCorrige } = await import('../src/pdf/dossier');
+    const { resultatExercice } = await import('../src/engine/statements');
+    const { formatMontant } = await import('../src/engine/money');
+    const ex = DOSSIERS.find((d) => d.id === 'dossier-mp3-cartonnages-du-leman-dissolution')!;
+    expect(COMPLEMENTS_CORRIGE[ex.id]![1]!.lignes[0]![1]).toBe(formatMontant(resultatExercice(dossierCorrige(ex, plan))));
+  });
+});

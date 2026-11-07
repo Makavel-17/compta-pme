@@ -1502,6 +1502,33 @@ export const CHAPITRES: Chapitre[] = [
         ],
       },
       {
+        titre: 'Dissolution des réserves latentes',
+        blocs: [
+          {
+            type: 'p',
+            texte:
+              "Dissoudre une réserve latente, c'est ramener un poste à sa valeur réelle. L'écriture inverse celle qui avait " +
+              "créé la réserve : on crédite le compte de charge qui avait été débité. Le bénéfice comptable augmente d'autant, " +
+              "alors que l'entreprise ne s'est pas enrichie : le bénéfice réel est alors inférieur au bénéfice publié.",
+          },
+          {
+            type: 'ecritures',
+            exemples: [
+              { cas: "Ducroire de 6'000.00 ramené au risque réel de 2'000.00", lignes: s('1109', '3805', 4000) },
+              { cas: "Reprise d'un amortissement excessif sur les machines, 5'000.00", lignes: s('1509', '6800', 5000) },
+              { cas: "Provision pour réparations devenue trop élevée, réduite de 3'000.00", lignes: s('2600', '6100', 3000) },
+              { cas: "Stock porté de 40'000.00 à sa valeur réelle de 52'000.00", lignes: s('1200', '4280', 12000) },
+            ],
+          },
+          {
+            type: 'retenir',
+            texte:
+              'Bénéfice réel = bénéfice comptable + variation des réserves latentes ; une dissolution est une variation ' +
+              'négative.',
+          },
+        ],
+      },
+      {
         titre: "L'apurement",
         blocs: [
           {
