@@ -1,13 +1,13 @@
 // Théorie : rappels de cours rédigés pour l'application, en nos propres mots.
 // Les manuels E&S (CREME-CIIP) sont protégés : aucune phrase, aucun exemple ni exercice n'en est repris.
 // Numéros et intitulés de comptes : plan du cours (src/data/plan-pme.csv). Montants des exemples en francs.
-// Contenu PROPOSÉ, à faire relire par l'enseignant (voir THEORIE_VALIDEE).
+// Contenu validé par l'enseignant le 07.11.2026 (THEORIE_VALIDEE).
 
 import type { Niveau } from '../engine/plan';
 import { RATIOS } from '../engine/analyse';
 
 /** Passe à true une fois le contenu relu et validé par l'enseignant (retire la mention « proposé »). */
-export const THEORIE_VALIDEE = false;
+export const THEORIE_VALIDEE = true;
 
 /** Ligne d'un exemple d'écriture : une ligne simple (débit et crédit) ou une ligne d'écriture composée (un seul côté). */
 export interface LigneExemple {

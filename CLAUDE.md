@@ -29,7 +29,7 @@ Guide d'utilisation : contenu unique `src/data/guide.ts` (vue `Guide.svelte`) ; 
 
 Trois exercices de démonstration (un par niveau, ~15 opérations, entreprise fictive) créés dans la phase qui introduit le niveau.
 
-**Statut du contenu (06.11.2026)** : l'enseignant demande de considérer **tous les exercices et dossiers comme validés** (mention « proposé » retirée des titres). Il transmettra plus tard les retours de ses collègues (fichier « Exporter mes remarques » de l'onglet Relecture) : les appliquer alors. La théorie garde la mention « Contenu proposé » (`THEORIE_VALIDEE = false`) tant qu'elle n'est pas explicitement validée.
+**Statut du contenu (06.11.2026)** : l'enseignant demande de considérer **tous les exercices et dossiers comme validés** (mention « proposé » retirée des titres). Il transmettra plus tard les retours de ses collègues (fichier « Exporter mes remarques » de l'onglet Relecture) : les appliquer alors. La théorie est validée elle aussi depuis le 07.11.2026 (`THEORIE_VALIDEE = true`, mention « proposé » retirée).
 
 ## Contraintes techniques
 
